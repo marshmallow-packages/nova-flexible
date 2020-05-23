@@ -1,6 +1,6 @@
 <?php
 
-namespace Whitecube\NovaFlexibleContent\Value;
+namespace Marshmallow\Nova\Flexible\Value;
 
 interface ResolverInterface
 {

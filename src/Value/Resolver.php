@@ -1,6 +1,6 @@
 <?php
 
-namespace Whitecube\NovaFlexibleContent\Value;
+namespace Marshmallow\Nova\Flexible\Value;
 
 use Illuminate\Support\Collection;
 
@@ -31,7 +31,7 @@ class Resolver implements ResolverInterface
      *
      * @param  mixed  $resource
      * @param  string $attribute
-     * @param  Whitecube\NovaFlexibleContent\Layouts\Collection $layouts
+     * @param  Marshmallow\Nova\Flexible\Layouts\Collection $layouts
      * @return Illuminate\Support\Collection
      */
     public function get($resource, $attribute, $layouts)

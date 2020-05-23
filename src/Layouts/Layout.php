@@ -1,15 +1,15 @@
 <?php
 
-namespace Whitecube\NovaFlexibleContent\Layouts;
+namespace Marshmallow\Nova\Flexible\Layouts;
 
 use ArrayAccess;
 use JsonSerializable;
 use Laravel\Nova\Fields\FieldCollection;
 use Laravel\Nova\Http\Requests\NovaRequest;
-use Whitecube\NovaFlexibleContent\Flexible;
-use Whitecube\NovaFlexibleContent\Http\ScopedRequest;
-use Whitecube\NovaFlexibleContent\Http\FlexibleAttribute;
-use Whitecube\NovaFlexibleContent\Concerns\HasFlexible;
+use Marshmallow\Nova\Flexible\Flexible;
+use Marshmallow\Nova\Flexible\Http\ScopedRequest;
+use Marshmallow\Nova\Flexible\Http\FlexibleAttribute;
+use Marshmallow\Nova\Flexible\Concerns\HasFlexible;
 use Illuminate\Database\Eloquent\Concerns\HasAttributes;
 use Illuminate\Database\Eloquent\Concerns\HidesAttributes;
 use Illuminate\Contracts\Support\Arrayable;
@@ -48,6 +48,12 @@ class Layout implements LayoutInterface, JsonSerializable, ArrayAccess, Arrayabl
      * @var string
      */
     protected $title;
+
+    protected $description = 'No description avaiable';
+
+    protected $image = 'https://marshmallow.test/cdn/flex/sections-content-sections.svg';
+
+    protected $tags = ['Custom'];
 
     /**
      * The layout's registered fields
@@ -221,7 +227,7 @@ class Layout implements LayoutInterface, JsonSerializable, ArrayAccess, Arrayabl
         $fields = array_map(function($field) {
             return clone $field;
         }, $this->fields->toArray());
-        
+
         return new static(
             $this->title,
             $this->name,
@@ -267,7 +273,9 @@ class Layout implements LayoutInterface, JsonSerializable, ArrayAccess, Arrayabl
      */
     public function filterForDetail(NovaRequest $request, $resource)
     {
-        $this->fields = $this->fields->filterForDetail($request, $resource);
+        if (method_exists($this->fields, 'filterForDetail')) {
+            $this->fields = $this->fields->filterForDetail($request, $resource);
+        }
     }
 
     /**
@@ -373,7 +381,7 @@ class Layout implements LayoutInterface, JsonSerializable, ArrayAccess, Arrayabl
      * The default behaviour when removed
      *
      * @param  Flexible $flexible
-     * @param  Whitecube\NovaFlexibleContent\Layout $layout
+     * @param  Marshmallow\Nova\Flexible\Layout $layout
      *
      * @return mixed
      */
@@ -563,6 +571,9 @@ class Layout implements LayoutInterface, JsonSerializable, ArrayAccess, Arrayabl
         return [
             'name' => $this->name,
             'title' => $this->title,
+            'description' => $this->description,
+            'tags' => $this->tags,
+            'image' => $this->image,
             'fields' => $this->fields->jsonSerialize()
         ];
     }

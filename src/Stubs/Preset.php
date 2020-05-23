@@ -2,8 +2,8 @@
 
 namespace App\Nova\Flexible\Presets;
 
-use Whitecube\NovaFlexibleContent\Flexible;
-use Whitecube\NovaFlexibleContent\Layouts\Preset;
+use Marshmallow\Nova\Flexible\Flexible;
+use Marshmallow\Nova\Flexible\Layouts\Preset;
 
 class :classname extends Preset
 {

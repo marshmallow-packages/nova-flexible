@@ -1,12 +1,15 @@
 <?php
 
-namespace Whitecube\NovaFlexibleContent\Concerns;
+namespace Marshmallow\Nova\Flexible\Concerns;
 
-use Whitecube\NovaFlexibleContent\Layouts\Layout;
-use Whitecube\NovaFlexibleContent\Layouts\Collection;
-use Illuminate\Support\Collection as BaseCollection;
 use Laravel\Nova\NovaServiceProvider;
-use Whitecube\NovaFlexibleContent\Value\FlexibleCast;
+use Marshmallow\Nova\Flexible\Facades\Flex;
+use Marshmallow\Nova\Flexible\Layouts\Layout;
+use Marshmallow\Nova\Flexible\Layouts\Collection;
+use Marshmallow\Nova\Flexible\Value\FlexibleCast;
+use Illuminate\Support\Collection as BaseCollection;
+use Marshmallow\Nova\Flexible\Layouts\MarshmallowLayout;
+use Marshmallow\Nova\Flexible\Layouts\Defaults\WysiwygLayout;
 
 trait HasFlexible {
 
@@ -15,7 +18,7 @@ trait HasFlexible {
      *
      * @param string $attribute
      * @param array  $layoutMapping
-     * @return \Whitecube\NovaFlexibleContent\Layouts\Collection
+     * @return \Marshmallow\Nova\Flexible\Layouts\Collection
      */
     public function flexible($attribute, $layoutMapping = [])
     {
@@ -29,7 +32,7 @@ trait HasFlexible {
      *
      * @param array $value
      * @param array $layoutMapping
-     * @return \Whitecube\NovaFlexibleContent\Layouts\Collection
+     * @return \Marshmallow\Nova\Flexible\Layouts\Collection
      */
     public function cast($value, $layoutMapping = [])
     {
@@ -40,18 +43,30 @@ trait HasFlexible {
         return $this->toFlexible($value ?: null, $layoutMapping);
     }
 
+    public function flex($column)
+    {
+        return $this->toFlexible(
+            $this->{$column},
+            Flex::getLayouts()
+        );
+    }
+
     /**
      * Parse a Flexible Content from value
      *
      * @param mixed $value
      * @param array $layoutMapping
-     * @return \Whitecube\NovaFlexibleContent\Layouts\Collection
+     * @return \Marshmallow\Nova\Flexible\Layouts\Collection
      */
     public function toFlexible($value, $layoutMapping = [])
     {
         $flexible = $this->getFlexibleArrayFromValue($value);
 
         if(is_null($flexible)) {
+            return new Collection();
+        }
+
+        if(!is_array($flexible)) {
             return new Collection();
         }
 
@@ -103,7 +118,7 @@ trait HasFlexible {
      *
      * @param mixed $item
      * @param array $layoutMapping
-     * @return null|Whitecube\NovaFlexibleContent\Layouts\LayoutInterface
+     * @return null|Marshmallow\Nova\Flexible\Layouts\LayoutInterface
      */
     protected function getMappedLayout($item, array $layoutMapping)
     {
@@ -145,13 +160,13 @@ trait HasFlexible {
      * @param string $key
      * @param array  $attributes
      * @param array  $layoutMapping
-     * @return \Whitecube\NovaFlexibleContent\Layouts\LayoutInterface
+     * @return \Marshmallow\Nova\Flexible\Layouts\LayoutInterface
      */
     protected function createMappedLayout($name, $key, $attributes, array $layoutMapping)
     {
         $classname = array_key_exists($name, $layoutMapping)
             ? $layoutMapping[$name]
-            : Layout::class;
+            : MarshmallowLayout::class;
 
         $layout = new $classname($name, $name, [], $key, $attributes);
 

@@ -1,8 +1,8 @@
 <?php
 
-namespace Whitecube\NovaFlexibleContent\Value;
+namespace Marshmallow\Nova\Flexible\Value;
 
-use Whitecube\NovaFlexibleContent\Concerns\HasFlexible;
+use Marshmallow\Nova\Flexible\Concerns\HasFlexible;
 use Illuminate\Contracts\Database\Eloquent\CastsAttributes;
 
 class FlexibleCast implements CastsAttributes
@@ -12,7 +12,9 @@ class FlexibleCast implements CastsAttributes
     /**
      * @var array
      */
-    protected $layouts = [];
+    protected $layouts = [
+        'wysiwyg' => \Marshmallow\Nova\Flexible\Layouts\Defaults\WysiwygLayout::class,
+    ];
 
     /**
      * @var Illuminate\Database\Eloquent\Model

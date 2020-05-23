@@ -1,6 +1,6 @@
 {
-    "name": "whitecube/nova-flexible-content",
-    "description": "Flexible Content & Repeater Fields for Laravel Nova.",
+    "name": "marshmallow/nova-flexible",
+    "description": "Flexible Content & Repeater Fields for Laravel Nova base on the flexible package from WhiteCube.",
     "license": "MIT",
     "keywords": [
         "laravel",
@@ -13,6 +13,9 @@
     ],
     "authors": [
         {
+            "name": "Stef van Esch",
+            "email": "stef@marshmallow.dev"
+        }, {
             "name": "Toon Van den Bos",
             "email": "toon@whitecube.be"
         }
@@ -22,13 +25,13 @@
     },
     "autoload": {
         "psr-4": {
-            "Whitecube\\NovaFlexibleContent\\": "src/"
+            "Marshmallow\\Nova\\Flexible\\": "src/"
         }
     },
     "extra": {
         "laravel": {
             "providers": [
-                "Whitecube\\NovaFlexibleContent\\FieldServiceProvider"
+                "Marshmallow\\Nova\\Flexible\\FieldServiceProvider"
             ]
         }
     },

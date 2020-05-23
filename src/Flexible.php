@@ -1,17 +1,17 @@
 <?php
 
-namespace Whitecube\NovaFlexibleContent;
+namespace Marshmallow\Nova\Flexible;
 
 use Illuminate\Support\Str;
 use Laravel\Nova\Fields\Field;
 use Laravel\Nova\Http\Requests\NovaRequest;
-use Whitecube\NovaFlexibleContent\Http\ScopedRequest;
-use Whitecube\NovaFlexibleContent\Value\Resolver;
-use Whitecube\NovaFlexibleContent\Value\ResolverInterface;
-use Whitecube\NovaFlexibleContent\Layouts\Preset;
-use Whitecube\NovaFlexibleContent\Layouts\Layout;
-use Whitecube\NovaFlexibleContent\Layouts\LayoutInterface;
-use Whitecube\NovaFlexibleContent\Layouts\Collection as LayoutsCollection;
+use Marshmallow\Nova\Flexible\Http\ScopedRequest;
+use Marshmallow\Nova\Flexible\Value\Resolver;
+use Marshmallow\Nova\Flexible\Value\ResolverInterface;
+use Marshmallow\Nova\Flexible\Layouts\Preset;
+use Marshmallow\Nova\Flexible\Layouts\Layout;
+use Marshmallow\Nova\Flexible\Layouts\LayoutInterface;
+use Marshmallow\Nova\Flexible\Layouts\Collection as LayoutsCollection;
 
 class Flexible extends Field
 {
@@ -25,7 +25,7 @@ class Flexible extends Field
     /**
      * The available layouts collection
      *
-     * @var Whitecube\NovaFlexibleContent\Layouts\Collection
+     * @var Marshmallow\Nova\Flexible\Layouts\Collection
      */
     protected $layouts;
 
@@ -39,7 +39,7 @@ class Flexible extends Field
     /**
      * The field's value setter & getter
      *
-     * @var Whitecube\NovaFlexibleContent\Value\ResolverInterface
+     * @var Marshmallow\Nova\Flexible\Value\ResolverInterface
      */
     protected $resolver;
 
@@ -72,7 +72,8 @@ class Flexible extends Field
         $this->button('Add layout');
 
         // The original menu as default
-        $this->menu('flexible-drop-menu');
+        $this->menu('flexible-component-selector');
+        // $this->menu('flexible-drop-menu');
 
         $this->hideFromIndex();
     }
@@ -219,7 +220,7 @@ class Flexible extends Field
     /**
      * Push a layout instance into the layouts collection
      *
-     * @param Whitecube\NovaFlexibleContent\Layouts\LayoutInterface $layout
+     * @param Marshmallow\Nova\Flexible\Layouts\LayoutInterface $layout
      * @return void
      */
     protected function registerLayout(LayoutInterface $layout)
@@ -266,6 +267,8 @@ class Flexible extends Field
         $this->buildGroups($resource, $attribute);
 
         $this->value = $this->resolveGroupsForDisplay($this->groups);
+
+        dd($this->value);
     }
 
     /**
@@ -440,7 +443,7 @@ class Flexible extends Field
      * Find an existing group based on its key
      *
      * @param  string $key
-     * @return \Whitecube\NovaFlexibleContent\Layouts\Layout
+     * @return \Marshmallow\Nova\Flexible\Layouts\Layout
      */
     protected function findGroup($key)
     {
@@ -454,7 +457,7 @@ class Flexible extends Field
      *
      * @param  string $layout
      * @param  string $key
-     * @return \Whitecube\NovaFlexibleContent\Layouts\Layout
+     * @return \Marshmallow\Nova\Flexible\Layouts\Layout
      */
     protected function newGroup($layout, $key)
     {
@@ -592,7 +595,7 @@ class Flexible extends Field
      * Return a previously registered validation key
      *
      * @param  string $key
-     * @return null|\Whitecube\NovaFlexibleContent\Http\FlexibleAttribute
+     * @return null|\Marshmallow\Nova\Flexible\Http\FlexibleAttribute
      */
     public static function getValidationKey($key)
     {

@@ -33,9 +33,23 @@
         </div>
         <div class="-mb-1 flex flex-col min-h-full w-full">
             <div :class="titleStyle" v-if="group.title">
-                <div class="leading-normal py-1 px-8"
+                <div class="leading-normal pl-2"
                     :class="{'border-b border-40': !collapsed}">
-                    <p class="text-80">{{ group.title }}</p>
+                    <div class="flex">
+                        <div class="w-3/4">
+                            <p class="text-80 mt-1">
+                                {{ group.title }}
+                            </p>
+                        </div>
+                        <div class="w-1/4 text-right" v-if="collapsed">
+                            <button type="button" class="group-control btn border-l border-40 w-8 h-8" title="Move up" @click.prevent="moveUp">
+                                <icon type="arrow-up" view-box="0 0 8 4.8" width="10" height="10" />
+                            </button>
+                            <button type="button" class="group-control btn border-l border-40 w-8 h-8 mr-1" title="Move down" @click.prevent="moveDown">
+                                <icon type="arrow-down" view-box="0 0 8 4.8" width="10" height="10" />
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div :class="containerStyle">
@@ -80,6 +94,7 @@ export default {
             return classes;
         },
         containerStyle() {
+
             let classes = ['flex-grow', 'border-b', 'border-r', 'border-l', 'border-60', 'rounded-b-lg'];
             if(!this.group.title) {
                 classes.push('border-t');
