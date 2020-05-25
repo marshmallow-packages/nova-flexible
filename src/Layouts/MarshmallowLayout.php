@@ -46,8 +46,37 @@ class MarshmallowLayout extends Layout
      *
      * @return string Public url of an image
      */
-    public function getImage(string $field)
+    public function getImage(string $field = 'image')
     {
         return asset('storage/' . $this->{$field});
+    }
+
+    /**
+     * [hasImage description]
+     *
+     * @param string $field [description]
+     *
+     * @return boolean        [description]
+     */
+    public function hasImage(string $field = 'image')
+    {
+        return (array_key_exists($field, $this->attributes));
+    }
+
+    /**
+     * [hasTag description]
+     *
+     * @param [type] $tags [description]
+     *
+     * @return boolean [description]
+     */
+    public function hasTag($tags)
+    {
+        foreach ($tags as $tag) {
+            if (in_array($tag, $this->tags)) {
+                return true;
+            }
+        }
+        return false;
     }
 }
