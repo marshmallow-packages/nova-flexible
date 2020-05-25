@@ -8,12 +8,36 @@ use Marshmallow\Nova\Flexible\Facades\Flex;
 
 trait HasFlexable
 {
-    protected function getFlex()
+    protected function getFlex($name = 'Layout', $tags = [])
     {
-        $flex = Flexible::make('Layout');
-        foreach (Flex::getLayouts() as $layout) {
+        $ignore = [];
+        if ($this instanceof MarshmallowLayout) {
+            $ignore[] = $this->name();
+        }
+
+        $flex = Flexible::make($name);
+        foreach (Flex::getLayouts() as $layout_slug => $layout) {
+            if (in_array($layout_slug, $ignore)) {
+                continue;
+            }
+
+            $layout_instance = new $layout;
+            if (!empty($tags) && !$layout_instance->hasTag($tags)) {
+                continue;
+            }
+
             $flex->addLayout($layout)->collapsed();
         }
         return $flex;
+    }
+
+    protected function getFlexByTag($tag, $name = 'Layout')
+    {
+        return $this->getFlex($name, [$tag]);
+    }
+
+    protected function getFlexByTags($tags, $name = 'Layout')
+    {
+        return $this->getFlex($name, $tags);
     }
 }
