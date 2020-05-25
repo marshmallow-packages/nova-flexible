@@ -111,7 +111,7 @@ class LayoutCommand extends Command
 
     protected function getStubContent($stub_name)
     {
-        return file_get_contents(__dir__ . '/../../Stubs/'. $stub_name .'.stub');
+        return file_get_contents(__dir__ . '/../Stubs/'. $stub_name .'.stub');
     }
 
     protected function parseStubContent($stub_name)
