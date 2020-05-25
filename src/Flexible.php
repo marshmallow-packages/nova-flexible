@@ -267,8 +267,6 @@ class Flexible extends Field
         $this->buildGroups($resource, $attribute);
 
         $this->value = $this->resolveGroupsForDisplay($this->groups);
-
-        dd($this->value);
     }
 
     /**
