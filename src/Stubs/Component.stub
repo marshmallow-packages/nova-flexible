@@ -3,7 +3,7 @@
 namespace App\View\Components;
 
 use Illuminate\View\Component;
-use Marshmallow\Pages\Flexible\Layouts\Layout;
+use Marshmallow\Nova\Flexible\Layouts\MarshmallowLayout;
 
 class {{component_class}} extends Component
 {
@@ -13,7 +13,7 @@ class {{component_class}} extends Component
      *
      * @return void
      */
-    public function __construct(Layout $layout)
+    public function __construct(MarshmallowLayout $layout)
     {
         $this->layout = $layout;
     }

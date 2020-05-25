@@ -14,7 +14,7 @@
 
 namespace App\Flexible\Layouts;
 
-use Marshmallow\Pages\Flexible\Layouts\Layout;
+use Marshmallow\Nova\Flexible\Layouts\MarshmallowLayout;
 
 /**
  * Class that holds the logic to connect this layout
@@ -26,7 +26,7 @@ use Marshmallow\Pages\Flexible\Layouts\Layout;
  * @license  MIT Licence
  * @link     https://marshmallow.dev
  */
-class {{class}} extends Layout
+class {{class}} extends MarshmallowLayout
 {
     {{use}}
     /**
