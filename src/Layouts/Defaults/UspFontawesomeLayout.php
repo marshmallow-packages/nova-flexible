@@ -6,6 +6,7 @@ use Laravel\Nova\Fields\Text;
 use Mdixon18\Fontawesome\Fontawesome;
 use Marshmallow\Nova\Flexible\Flexible;
 use Marshmallow\Nova\Flexible\Layouts\Layout;
+use Marshmallow\Nova\Flexible\Layouts\MarshmallowLayout;
 use Marshmallow\Nova\Flexible\Layouts\Defaults\Traits\HasItems;
 
 // use Laravel\Nova\Fields\Text;
@@ -15,7 +16,7 @@ use Marshmallow\Nova\Flexible\Layouts\Defaults\Traits\HasItems;
 // use Marshmallow\Pages\Flexible\Layouts\Layout;
 // use Marshmallow\Pages\Flexible\Layouts\Traits\HasItems;
 
-class UspFontawesomeLayout extends Layout
+class UspFontawesomeLayout extends MarshmallowLayout
 {
     use HasItems;
 
