@@ -27,6 +27,10 @@ class FieldServiceProvider extends ServiceProvider
             Nova::script('nova-flexible-content', __DIR__.'/../dist/js/field.js');
             Nova::style('nova-flexible-content', __DIR__.'/../dist/css/field.css');
         });
+
+        $this->publishes([
+            __DIR__ . '/../config/flexible.php' => config_path('flexible.php'),
+        ]);
     }
 
     /**
@@ -36,6 +40,11 @@ class FieldServiceProvider extends ServiceProvider
      */
     public function register()
     {
+    	$this->mergeConfigFrom(
+            __DIR__.'/../config/flexible.php',
+            'flexible'
+        );
+
         if (!$this->app->runningInConsole()) return;
 
         $this->commands([
