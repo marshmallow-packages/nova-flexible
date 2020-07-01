@@ -126,28 +126,22 @@ trait HasFlexible {
         $key = null;
         $attributes = [];
 
-        if(is_string($item)) {
+        if (is_string($item)) {
             $item = json_decode($item);
         }
 
-        if(is_array($item)) {
+        if (is_array($item)) {
             $name = $item['layout'] ?? null;
             $key = $item['key'] ?? null;
             $attributes = (array) $item['attributes'] ?? [];
-        }
-        elseif(is_a($item, \stdClass::class)) {
+        } elseif (is_a($item, \stdClass::class)) {
             $name = $item->layout ?? null;
             $key = $item->key ?? null;
             $attributes = (array) $item->attributes ?? [];
-        }
-        elseif(is_a($item, Layout::class)) {
+        } elseif (is_a($item, Layout::class)) {
             $name = $item->name();
             $key = $item->key();
             $attributes = $item->getAttributes();
-        }
-
-        if(is_null($name) || !$attributes) {
-            return;
         }
 
         return $this->createMappedLayout($name, $key, $attributes, $layoutMapping);
