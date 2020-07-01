@@ -12,8 +12,7 @@ class LayoutCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'marshmallow:layout
-                            {--empty : Create a layout without fields}';
+    protected $signature = 'marshmallow:layout';
 
     /**
      * The console command description.
@@ -59,6 +58,7 @@ class LayoutCommand extends Command
         $this->name = $this->ask('Please provide a slug for your layout', $name_examle);
         $this->layout_class = $this->ask('Please provide a class name for your layout', $class_examle);
         $this->component_class_path = $this->ask('Please enter a name for you component', '\App\View\Components\\' . $component_example . '::class');
+        $this->empty_component = $this->confirm('Is this an empty component?');
 
         $this->component_class_name = $this->getComponentClassFromPath($this->component_class_path);
 
@@ -66,9 +66,9 @@ class LayoutCommand extends Command
         $this->fields = $this->getStubContent('LayoutFields');
         $this->use = '';
 
-        if ($this->option('empty')) {
+        if ($this->empty_component) {
             $this->fields = '';
-            $this->use = 'use \Marshmallow\Pages\Flexible\Layouts\Traits\EmptyLayout;';
+            $this->use = 'use \Marshmallow\Nova\Flexible\Layouts\Defaults\Traits\EmptyLayout;';
         }
 
         file_put_contents(
