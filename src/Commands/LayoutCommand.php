@@ -4,7 +4,6 @@ namespace Marshmallow\Nova\Flexible\Commands;
 
 use Illuminate\Support\Str;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Artisan;
 
 class LayoutCommand extends Command
 {
