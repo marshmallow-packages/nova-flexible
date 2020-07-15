@@ -12,16 +12,16 @@ composer require marshmallow/nova-flexible
 ```php
 class Page extends Resource
 {
-    use Marshmallow\Nova\Flexible\Nova\Traits\HasFlexable;
+	use \Marshmallow\Nova\Flexible\Nova\Traits\HasFlexable;
 
-    public function fields(Request $request)
-    {
-        return [
-            // ...
-            $this->getFlex(),
-            // ...
-        ];
-    }
+	public function fields(Request $request)
+	{
+		return [
+			// ...
+			$this->getFlex(),
+			// ...
+		];
+	}
 }
 ```
 
@@ -29,15 +29,15 @@ class Page extends Resource
 ```php
 class Page extends Model
 {
-    use Marshmallow\Nova\Flexible\Concerns\HasFlexible;
+	use \Marshmallow\Nova\Flexible\Concerns\HasFlexible;
 
-    protected $casts = [
-        /**
-         * 'layout' in the example below references the field
-         * in the model where the json is stored.
-         */
-        'layout' => \Marshmallow\Nova\Flexible\Casts\FlexibleCast::class,
-    ];
+	protected $casts = [
+		/**
+		 * 'layout' in the example below references the field
+		 * in the model where the json is stored.
+		 */
+		'layout' => \Marshmallow\Nova\Flexible\Casts\FlexibleCast::class,
+	];
 }
 ```
 
