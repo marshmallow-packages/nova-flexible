@@ -55,7 +55,7 @@ class {{class}} extends MarshmallowLayout
      *
      * @var string
      */
-    protected $image = 'https://marshmallow.dev/cdn/flex/default.svg';
+    protected $image = 'https://marshmallow.dev/cdn/flex/default.jpg';
 
     /**
      * Tags on which this layout can be filtered
