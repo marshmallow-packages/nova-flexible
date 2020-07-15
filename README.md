@@ -8,6 +8,12 @@ This is a fork from the package of `whitecube/nova-flexible-content`. This is fo
 composer require marshmallow/nova-flexible
 ```
 
+### Publish the config
+You need to publish the config to add more layouts to your flex. Please run the command below:
+```bash
+php artisan vendor:publish --provider="Marshmallow\Nova\Flexible\FieldServiceProvider"
+```
+
 ### Prepare your Nova Resource
 ```php
 class Page extends Resource
