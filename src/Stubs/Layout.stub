@@ -30,7 +30,7 @@ class {{class}} extends MarshmallowLayout
 {
     {{use}}
     /**
-     * The layout's unique identifier
+     * The layout's name
      *
      * @var string
      */
@@ -42,6 +42,27 @@ class {{class}} extends MarshmallowLayout
      * @var string
      */
     protected $title = '{{title}}';
+
+    /**
+     * The displayed description
+     *
+     * @var string
+     */
+    protected $description = 'Layout description for {{title}}';
+
+    /**
+     * The displayed image
+     *
+     * @var string
+     */
+    protected $image = 'https://marshmallow.dev/cdn/flex/default.svg';
+
+    /**
+     * Tags on which this layout can be filtered
+     *
+     * @var string
+     */
+    protected $tags = ['Custom'];
 
     {{fields}}
 
