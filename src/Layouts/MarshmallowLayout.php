@@ -15,7 +15,6 @@ namespace Marshmallow\Nova\Flexible\Layouts;
 
 use Marshmallow\Nova\Flexible\Layouts\Layout;
 
-
 /**
  * Collection of functions available to all layouts
  *
@@ -82,4 +81,14 @@ class MarshmallowLayout extends Layout
         }
         return false;
     }
+
+    /**
+     * Get the unique key of this Flex by $layout->key
+     * so it can be used in blade files
+     * @return string unique key for this flex
+     */
+    public function getKeyAttribute()
+	{
+	    return $this->key;
+	}
 }
