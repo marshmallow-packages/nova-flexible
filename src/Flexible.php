@@ -69,7 +69,7 @@ class Flexible extends Field
     {
         parent::__construct($name, $attribute, $resolveCallback);
 
-        $this->button('Add layout');
+        $this->button(__('Add layout'));
 
         // The original menu as default
         $this->menu('flexible-component-selector');
@@ -168,6 +168,15 @@ class Flexible extends Field
 
         if($count === 3) {
             $this->registerLayout(new Layout($arguments[0], $arguments[1], $arguments[2]));
+            return $this;
+        }
+
+        if($count === 4) {
+
+        	$callback = $arguments[3];
+        	$layout = $callback(new Layout($arguments[0], $arguments[1], $arguments[2]));
+
+            $this->registerLayout($layout);
             return $this;
         }
 

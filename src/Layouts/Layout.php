@@ -4,6 +4,7 @@ namespace Marshmallow\Nova\Flexible\Layouts;
 
 use ArrayAccess;
 use JsonSerializable;
+use Laravel\Nova\Fields\Field;
 use Laravel\Nova\Fields\FieldCollection;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Marshmallow\Nova\Flexible\Flexible;
@@ -27,6 +28,13 @@ class Layout implements LayoutInterface, JsonSerializable, ArrayAccess, Arrayabl
      * @var string
      */
     protected $name;
+
+    /**
+     * This is the field that is used to display the
+     * title in a group.
+     * @var string
+     */
+    protected $titleFromContent = 'title';
 
     /**
      * The layout's unique identifier
@@ -119,6 +127,12 @@ class Layout implements LayoutInterface, JsonSerializable, ArrayAccess, Arrayabl
         $this->model = $model;
 
         return $this;
+    }
+
+    public function setTitleFromContent($titleFromContent)
+    {
+    	$this->titleFromContent = $titleFromContent;
+    	return $this;
     }
 
     /**
@@ -224,9 +238,9 @@ class Layout implements LayoutInterface, JsonSerializable, ArrayAccess, Arrayabl
      */
     public function duplicateAndHydrate($key, array $attributes = [])
     {
-        $fields = array_map(function($field) {
-            return clone $field;
-        }, $this->fields->toArray());
+    	$fields = $this->fields->map(function($field) {
+            return $this->cloneField($field);
+        });
 
         return new static(
             $this->title,
@@ -235,6 +249,25 @@ class Layout implements LayoutInterface, JsonSerializable, ArrayAccess, Arrayabl
             $key,
             $attributes
         );
+    }
+
+    /**
+     * Create a working field clone instance
+     *
+     * @param  \Laravel\Nova\Fields\Field $original
+     * @return \Laravel\Nova\Fields\Field
+     */
+    protected function cloneField(Field $original) {
+        $field = clone $original;
+
+        $callables = ['displayCallback','resolveCallback','fillCallback','requiredCallback'];
+
+        foreach ($callables as $callable) {
+            if(!is_a($field->$callable ?? null, \Closure::class)) continue;
+            $field->$callable = $field->$callable->bindTo($field);
+        }
+
+        return $field;
     }
 
     /**
@@ -574,6 +607,7 @@ class Layout implements LayoutInterface, JsonSerializable, ArrayAccess, Arrayabl
             'description' => $this->description,
             'tags' => $this->tags,
             'image' => $this->image,
+            'title_from_content' => $this->titleFromContent,
             'fields' => $this->fields->jsonSerialize()
         ];
     }
