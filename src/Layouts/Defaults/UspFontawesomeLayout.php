@@ -5,16 +5,8 @@ namespace Marshmallow\Nova\Flexible\Layouts\Defaults;
 use Laravel\Nova\Fields\Text;
 use Mdixon18\Fontawesome\Fontawesome;
 use Marshmallow\Nova\Flexible\Flexible;
-use Marshmallow\Nova\Flexible\Layouts\Layout;
 use Marshmallow\Nova\Flexible\Layouts\MarshmallowLayout;
 use Marshmallow\Nova\Flexible\Layouts\Defaults\Traits\HasItems;
-
-// use Laravel\Nova\Fields\Text;
-// use Laravel\Nova\Fields\Markdown;
-
-// use Whitecube\NovaFlexibleContent\Flexible;
-// use Marshmallow\Pages\Flexible\Layouts\Layout;
-// use Marshmallow\Pages\Flexible\Layouts\Traits\HasItems;
 
 class UspFontawesomeLayout extends MarshmallowLayout
 {
@@ -38,7 +30,7 @@ class UspFontawesomeLayout extends MarshmallowLayout
 
     protected $description = 'Create USPs with a Fontawesome icon.';
 
-    protected $image = 'https://marshmallow.test/cdn/flex/sections-feature-sections.svg';
+    protected $image = 'https://marshmallow.dev/cdn/flex/font-awesome.jpg';
 
     protected $tags = ['USP', 'Marshmallow'];
 

@@ -3,11 +3,7 @@
 namespace Marshmallow\Nova\Flexible\Layouts\Defaults;
 
 use Laravel\Nova\Fields\Text;
-use Marshmallow\Nova\Flexible\Layouts\Layout;
 use Marshmallow\Nova\Flexible\Layouts\MarshmallowLayout;
-// use Laravel\Nova\Fields\Markdown;
-// use Marshmallow\Pages\Flexible\Layouts\Layout;
-// use Marshmallow\Pages\Flexible\Layouts\Traits\EmptyLayout;
 
 class WysiwygLayout extends MarshmallowLayout
 {
@@ -25,9 +21,9 @@ class WysiwygLayout extends MarshmallowLayout
      */
     protected $title = 'Title + Text';
 
-    protected $description = 'Lorem ipsum dolor sit amet, consectetuer adipiscing elit.';
+    protected $description = 'A What You See Is What You Get editor.';
 
-    protected $image = 'https://marshmallow.test/cdn/flex/sections-content-sections.svg';
+    protected $image = 'https://marshmallow.dev/cdn/flex/wysiwyg.jpg';
 
     protected $tags = ['Content', 'Marshmallow'];
 
@@ -44,7 +40,7 @@ class WysiwygLayout extends MarshmallowLayout
         ];
     }
 
-    protected function getComponentClass ()
+    protected function getComponentClass()
     {
         return \Marshmallow\Nova\Flexible\View\Components\Wysiwyg::class;
     }
