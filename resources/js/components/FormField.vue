@@ -172,7 +172,7 @@ export default {
             collapsed = collapsed || false;
 
             let fields = attributes || JSON.parse(JSON.stringify(layout.fields)),
-                group = new Group(layout.name, layout.title, fields, this.field, key, collapsed);
+                group = new Group(layout.name, layout.title, fields, this.field, key, collapsed, layout);
 
             this.groups[group.key] = group;
             this.order.push(group.key);

@@ -171,6 +171,15 @@ class Flexible extends Field
             return $this;
         }
 
+        if($count === 4) {
+
+        	$callback = $arguments[3];
+        	$layout = $callback(new Layout($arguments[0], $arguments[1], $arguments[2]));
+
+            $this->registerLayout($layout);
+            return $this;
+        }
+
         if($count === 6) {
             $this->registerLayout(new Layout($arguments[0], $arguments[1], $arguments[2], $arguments[3], $arguments[4], $arguments[5]));
             return $this;

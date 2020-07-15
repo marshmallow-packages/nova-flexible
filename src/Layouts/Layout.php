@@ -30,6 +30,13 @@ class Layout implements LayoutInterface, JsonSerializable, ArrayAccess, Arrayabl
     protected $name;
 
     /**
+     * This is the field that is used to display the
+     * title in a group.
+     * @var string
+     */
+    protected $titleFromContent = 'title';
+
+    /**
      * The layout's unique identifier
      *
      * @var string
@@ -120,6 +127,12 @@ class Layout implements LayoutInterface, JsonSerializable, ArrayAccess, Arrayabl
         $this->model = $model;
 
         return $this;
+    }
+
+    public function setTitleFromContent($titleFromContent)
+    {
+    	$this->titleFromContent = $titleFromContent;
+    	return $this;
     }
 
     /**
@@ -594,6 +607,7 @@ class Layout implements LayoutInterface, JsonSerializable, ArrayAccess, Arrayabl
             'description' => $this->description,
             'tags' => $this->tags,
             'image' => $this->image,
+            'title_from_content' => $this->titleFromContent,
             'fields' => $this->fields->jsonSerialize()
         ];
     }

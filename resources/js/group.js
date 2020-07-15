@@ -1,12 +1,21 @@
 export default class Group {
 
-    constructor(name, title, fields, field, key, collapsed = true) {
+    constructor(name, title, fields, field, key, collapsed = true, layout) {
         this.name = name;
         this.title = title;
         this.fields = fields;
         this.key = key || this.getTemporaryUniqueKey(field.attribute);
         this.collapsed = collapsed;
         this.readonly = field.readonly;
+
+        if (layout.title_from_content) {
+        	for (var i = this.fields.length - 1; i >= 0; i--) {
+	        	if (this.fields[i].sortableUriKey == layout.title_from_content) {
+	        		this.title_from_content = this.fields[i].value;
+	        	}
+	        }
+        }
+
 
         this.renameFields();
     }

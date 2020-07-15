@@ -43,15 +43,26 @@ class UspFontawesomeLayout extends MarshmallowLayout
     {
         return [
             Flexible::make('USPS')
-                ->addLayout('USP', 'uspfontawesome', [
-                    Text::make('Title'),
-                    Fontawesome::make('Icon'),
-                    config('pages.wysiwyg')::make('Content'),
-                ])->button('Add USP')->fullWidth()->collapsed()
+                ->addLayout(
+                	'USP',
+                	'uspfontawesome',
+                	[
+	                    Text::make('Title'),
+	                    Text::make('Title2'),
+	                    Fontawesome::make('Icon'),
+	                    config('pages.wysiwyg')::make('Content'),
+                	],
+                	function ($created_layout) {
+                		return $created_layout->setTitleFromContent('title2');
+	                }
+	            )
+                ->button('Add USP')
+                ->fullWidth()
+                ->collapsed()
         ];
     }
 
-    protected function getComponentClass ()
+    protected function getComponentClass()
     {
         return \Marshmallow\Nova\Flexible\View\Components\UspFontawesome::class;
     }

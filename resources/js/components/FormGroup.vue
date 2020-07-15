@@ -39,10 +39,13 @@
 						<div class="w-3/4">
 							<p class="text-80 mt-1">
 								<span class="mr-4 font-semibold">#{{ index + 1 }}</span>
+								<span v-if="group.title_from_content">
+									<span class="mr-4 font-semibold">{{ group.title_from_content }}</span>
+								</span>
 								{{ group.title }}
 							</p>
 						</div>
-						<div class="w-1/4 text-right" v-if="collapsed">
+						<div class="w-1/4 text-right" v-if="!readonly && collapsed">
 							<button type="button" class="group-control btn border-l border-40 w-8 h-8" title="Move up" @click.prevent="moveUp">
 								<icon type="arrow-up" view-box="0 0 8 4.8" width="10" height="10" />
 							</button>
