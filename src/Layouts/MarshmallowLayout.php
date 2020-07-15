@@ -87,8 +87,26 @@ class MarshmallowLayout extends Layout
      * so it can be used in blade files
      * @return string unique key for this flex
      */
-    public function getKeyAttribute()
+    public function getKeyAttribute(): string
 	{
 	    return $this->key;
 	}
+
+	/**
+	 * Get the target of a link by checking if the url
+	 * is local or not.
+	 * @param   string $attribute Field name in the Flex object
+	 * @return  string|null A blank target or null if its local
+	 */
+	public function getLinkTarget(string $attribute): ?string
+    {
+        if (strpos($this->{$attribute}, 'http') === false) {
+            return null;
+        }
+
+        if (substr($this->{$attribute}, 0, strlen(env('APP_URL'))) == env('APP_URL')) {
+            return null;
+        }
+        return 'target="_blank"';
+    }
 }
