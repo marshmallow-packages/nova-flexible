@@ -37,7 +37,7 @@
 					:class="{'border-b border-40': !collapsed}">
 					<div class="flex">
 						<div class="w-3/4">
-							<p class="text-80 mt-1">
+							<p class="single-row text-80 mt-1">
 								<span class="mr-4 font-semibold">#{{ index + 1 }}</span>
 								<span v-if="group.title_from_content">
 									<span class="mr-4 font-semibold">{{ group.title_from_content }}</span>
@@ -195,5 +195,10 @@ export default {
 
 	.closebtn {
 		/*color: #B7CAD6;*/
+	}
+
+	.single-row {
+		height: 19px;
+    	overflow: hidden;
 	}
 </style>
