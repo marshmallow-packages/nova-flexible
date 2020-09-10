@@ -3,6 +3,7 @@
 namespace Marshmallow\Nova\Flexible;
 
 use Laravel\Nova\Nova;
+use Marshmallow\Nova\Flexible\Flex;
 use Laravel\Nova\Events\ServingNova;
 use Illuminate\Support\ServiceProvider;
 use Marshmallow\Nova\Flexible\Commands\CreateCast;
