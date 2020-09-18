@@ -19,7 +19,7 @@ class Flex
     {
         if (!empty(config('flexible.layouts'))) {
             $layouts_array = [];
-            foreach (config('flexible.layouts') as $layout) {
+            foreach (config('flexible.layouts') as $key => $layout) {
                 if (is_callable($layout)) {
                     $callable_result = $layout();
                     if (!is_array($callable_result)) {
@@ -27,7 +27,7 @@ class Flex
                     }
                     $layouts_array = array_merge($layouts_array, $callable_result);
                 } else {
-                    $layouts_array[] = $layout;
+                    $layouts_array[$key] = $layout;
                 }
             }
 
