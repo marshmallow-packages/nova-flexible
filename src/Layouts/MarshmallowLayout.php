@@ -33,6 +33,15 @@ class MarshmallowLayout extends Layout
      */
     public function render()
     {
+        /**
+         * If the database contains a layout json but the layout classes
+         * have been removed because they where deprecated, we wil
+         * return an empty string so no exception will be thrown.
+         */
+        if (!method_exists($this, 'getComponentClass')) {
+            return '';
+        }
+
         $component_class_name = $this->getComponentClass();
         return (new $component_class_name($this))->render();
     }
