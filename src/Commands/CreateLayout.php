@@ -77,7 +77,7 @@ class CreateLayout extends Command
      */
     public function getClassnameArgument()
     {
-        if(!$this->argument('classname')) {
+        if (! $this->argument('classname')) {
             return $this->ask('Please provide a class name for your layout');
         }
 
@@ -91,7 +91,7 @@ class CreateLayout extends Command
      */
     public function getNameArgument()
     {
-        if(!$this->argument('name')) {
+        if (! $this->argument('name')) {
             return strtolower($this->classname);
         }
 
@@ -120,7 +120,7 @@ class CreateLayout extends Command
     {
         $directory = dirname($path);
 
-        if(!$this->files->isDirectory($directory)) {
+        if (! $this->files->isDirectory($directory)) {
             $this->files->makeDirectory($directory, 0755, true, true);
         }
 
@@ -134,15 +134,16 @@ class CreateLayout extends Command
      */
     protected function buildClass()
     {
-        return str_replace([
+        return str_replace(
+            [
                 ':classname',
-                ':name'
-            ], [
+                ':name',
+            ],
+            [
                 $this->classname,
-                $this->name
+                $this->name,
             ],
             $this->files->get(__DIR__ . '/../Stubs/Layout.php')
         );
     }
-
 }

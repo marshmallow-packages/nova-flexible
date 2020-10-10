@@ -27,7 +27,7 @@ class Wysiwyg extends Component
     public function render()
     {
         return view('marshmallow::components.wysiwyg')->with([
-        	'layout' => $this->layout,
+            'layout' => $this->layout,
         ]);
     }
 }

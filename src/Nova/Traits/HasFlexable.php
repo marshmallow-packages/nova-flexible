@@ -2,9 +2,8 @@
 
 namespace Marshmallow\Nova\Flexible\Nova\Traits;
 
-use Marshmallow\Pages\Facades\Page;
-use Marshmallow\Nova\Flexible\Flexible;
 use Marshmallow\Nova\Flexible\Facades\Flex;
+use Marshmallow\Nova\Flexible\Flexible;
 
 trait HasFlexable
 {
@@ -22,12 +21,13 @@ trait HasFlexable
             }
 
             $layout_instance = new $layout;
-            if (!empty($tags) && !$layout_instance->hasTag($tags)) {
+            if (! empty($tags) && ! $layout_instance->hasTag($tags)) {
                 continue;
             }
 
             $flex->addLayout($layout)->collapsed();
         }
+
         return $flex;
     }
 

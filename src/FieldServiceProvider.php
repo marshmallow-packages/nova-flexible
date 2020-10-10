@@ -2,15 +2,14 @@
 
 namespace Marshmallow\Nova\Flexible;
 
-use Laravel\Nova\Nova;
-use Marshmallow\Nova\Flexible\Flex;
-use Laravel\Nova\Events\ServingNova;
 use Illuminate\Support\ServiceProvider;
+use Laravel\Nova\Events\ServingNova;
+use Laravel\Nova\Nova;
 use Marshmallow\Nova\Flexible\Commands\CreateCast;
 use Marshmallow\Nova\Flexible\Commands\CreateLayout;
 use Marshmallow\Nova\Flexible\Commands\CreatePreset;
-use Marshmallow\Nova\Flexible\Commands\LayoutCommand;
 use Marshmallow\Nova\Flexible\Commands\CreateResolver;
+use Marshmallow\Nova\Flexible\Commands\LayoutCommand;
 use Marshmallow\Nova\Flexible\Http\Middleware\InterceptFlexibleAttributes;
 
 class FieldServiceProvider extends ServiceProvider
@@ -41,12 +40,14 @@ class FieldServiceProvider extends ServiceProvider
      */
     public function register()
     {
-    	$this->mergeConfigFrom(
+        $this->mergeConfigFrom(
             __DIR__.'/../config/flexible.php',
             'flexible'
         );
 
-        if (!$this->app->runningInConsole()) return;
+        if (! $this->app->runningInConsole()) {
+            return;
+        }
 
         $this->commands([
             CreateCast::class,

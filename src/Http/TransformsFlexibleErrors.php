@@ -2,10 +2,10 @@
 
 namespace Marshmallow\Nova\Flexible\Http;
 
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Str;
 use Marshmallow\Nova\Flexible\Flexible;
-use Illuminate\Http\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 
 trait TransformsFlexibleErrors
@@ -45,7 +45,7 @@ trait TransformsFlexibleErrors
      */
     protected function updateResponseErrors($data)
     {
-        if(!($data['errors'] ?? null)) {
+        if (! ($data['errors'] ?? null)) {
             return $data;
         }
 
@@ -65,11 +65,12 @@ trait TransformsFlexibleErrors
     {
         $parsed = [];
 
-        foreach($errors as $key => $messages) {
+        foreach ($errors as $key => $messages) {
             $attribute = Flexible::getValidationKey($key);
 
-            if(!$attribute) {
+            if (! $attribute) {
                 $parsed[$key] = $messages;
+
                 continue;
             }
 
@@ -93,11 +94,11 @@ trait TransformsFlexibleErrors
         $attribute = str_replace('_', ' ', Str::snake($attribute->name));
 
         // We translate the attribute if it exists
-        if(Lang::has('validation.attributes.'.$attribute)) {
+        if (Lang::has('validation.attributes.'.$attribute)) {
             $attribute = trans('validation.attributes.'.$attribute);
         }
 
-        return array_map(function($message) use ($search, $attribute) {
+        return array_map(function ($message) use ($search, $attribute) {
             return str_replace(
                 [$search, Str::upper($search), Str::ucfirst($search)],
                 [$attribute, Str::upper($attribute), Str::ucfirst($attribute)],

@@ -3,18 +3,18 @@
 namespace Marshmallow\Nova\Flexible\Layouts;
 
 use ArrayAccess;
+use Illuminate\Contracts\Support\Arrayable;
+use Illuminate\Database\Eloquent\Concerns\HasAttributes;
+use Illuminate\Database\Eloquent\Concerns\HidesAttributes;
+use Illuminate\Database\Eloquent\Model;
 use JsonSerializable;
 use Laravel\Nova\Fields\Field;
 use Laravel\Nova\Fields\FieldCollection;
 use Laravel\Nova\Http\Requests\NovaRequest;
-use Marshmallow\Nova\Flexible\Flexible;
-use Marshmallow\Nova\Flexible\Http\ScopedRequest;
-use Marshmallow\Nova\Flexible\Http\FlexibleAttribute;
 use Marshmallow\Nova\Flexible\Concerns\HasFlexible;
-use Illuminate\Database\Eloquent\Concerns\HasAttributes;
-use Illuminate\Database\Eloquent\Concerns\HidesAttributes;
-use Illuminate\Contracts\Support\Arrayable;
-use Illuminate\Database\Eloquent\Model;
+use Marshmallow\Nova\Flexible\Flexible;
+use Marshmallow\Nova\Flexible\Http\FlexibleAttribute;
+use Marshmallow\Nova\Flexible\Http\ScopedRequest;
 
 class Layout implements LayoutInterface, JsonSerializable, ArrayAccess, Arrayable
 {
@@ -89,7 +89,6 @@ class Layout implements LayoutInterface, JsonSerializable, ArrayAccess, Arrayabl
      */
     protected $removeCallbackMethod;
 
-
     /**
      * The parent model instance
      *
@@ -131,8 +130,9 @@ class Layout implements LayoutInterface, JsonSerializable, ArrayAccess, Arrayabl
 
     public function setTitleFromContent($titleFromContent)
     {
-    	$this->titleFromContent = $titleFromContent;
-    	return $this;
+        $this->titleFromContent = $titleFromContent;
+
+        return $this;
     }
 
     /**
@@ -238,7 +238,7 @@ class Layout implements LayoutInterface, JsonSerializable, ArrayAccess, Arrayabl
      */
     public function duplicateAndHydrate($key, array $attributes = [])
     {
-    	$fields = $this->fields->map(function($field) {
+        $fields = $this->fields->map(function ($field) {
             return $this->cloneField($field);
         });
 
@@ -257,13 +257,16 @@ class Layout implements LayoutInterface, JsonSerializable, ArrayAccess, Arrayabl
      * @param  \Laravel\Nova\Fields\Field $original
      * @return \Laravel\Nova\Fields\Field
      */
-    protected function cloneField(Field $original) {
+    protected function cloneField(Field $original)
+    {
         $field = clone $original;
 
         $callables = ['displayCallback','resolveCallback','fillCallback','requiredCallback'];
 
         foreach ($callables as $callable) {
-            if(!is_a($field->$callable ?? null, \Closure::class)) continue;
+            if (! is_a($field->$callable ?? null, \Closure::class)) {
+                continue;
+            }
             $field->$callable = $field->$callable->bindTo($field);
         }
 
@@ -273,12 +276,12 @@ class Layout implements LayoutInterface, JsonSerializable, ArrayAccess, Arrayabl
     /**
      * Resolve fields using given attributes.
      *
-     * @param  boolean $empty
+     * @param  bool $empty
      * @return void
      */
     public function resolve($empty = false)
     {
-        $this->fields->each(function($field) use ($empty) {
+        $this->fields->each(function ($field) use ($empty) {
             $field->resolve($empty ? $this->duplicate($this->inUseKey()) : $this);
         });
     }
@@ -333,7 +336,7 @@ class Layout implements LayoutInterface, JsonSerializable, ArrayAccess, Arrayabl
             // groups use the same layout, the current values will be lost
             // since each group uses the same fields by reference. That's
             // why we need to serialize the field's current state.
-            'attributes' => $this->fields->jsonSerialize()
+            'attributes' => $this->fields->jsonSerialize(),
         ];
     }
 
@@ -345,10 +348,10 @@ class Layout implements LayoutInterface, JsonSerializable, ArrayAccess, Arrayabl
      */
     public function fill(ScopedRequest $request)
     {
-        return  $this->fields->map(function($field) use ($request) {
-                    return $field->fill($request, $this);
-                })
-                ->filter(function($callback) {
+        return  $this->fields->map(function ($field) use ($request) {
+            return $field->fill($request, $this);
+        })
+                ->filter(function ($callback) {
                     return is_callable($callback);
                 })
                 ->values()
@@ -365,9 +368,9 @@ class Layout implements LayoutInterface, JsonSerializable, ArrayAccess, Arrayabl
      */
     public function generateRules(ScopedRequest $request, $specificty, $key)
     {
-        return  $this->fields->map(function($field) use ($request, $specificty, $key) {
-                    return $this->getScopedFieldRules($field, $request, $specificty, $key);
-                })
+        return  $this->fields->map(function ($field) use ($request, $specificty, $key) {
+            return $this->getScopedFieldRules($field, $request, $specificty, $key);
+        })
                 ->collapse()
                 ->all();
     }
@@ -387,10 +390,11 @@ class Layout implements LayoutInterface, JsonSerializable, ArrayAccess, Arrayabl
 
         $rules = call_user_func([$field, $method], $request);
 
-        return  collect($rules)->mapWithKeys(function($validatorRules, $attribute) use ($key, $field) {
-                    $key = $key . '.attributes.' . $attribute;
-                    return [$key => $this->wrapScopedFieldRules($field, $validatorRules)];
-                })
+        return  collect($rules)->mapWithKeys(function ($validatorRules, $attribute) use ($key, $field) {
+            $key = $key . '.attributes.' . $attribute;
+
+            return [$key => $this->wrapScopedFieldRules($field, $validatorRules)];
+        })
                 ->filter()
                 ->all();
     }
@@ -418,7 +422,8 @@ class Layout implements LayoutInterface, JsonSerializable, ArrayAccess, Arrayabl
      *
      * @return mixed
      */
-    protected function removeCallback(Flexible $flexible, $layout) {
+    protected function removeCallback(Flexible $flexible, $layout)
+    {
         return;
     }
 
@@ -431,11 +436,11 @@ class Layout implements LayoutInterface, JsonSerializable, ArrayAccess, Arrayabl
      */
     protected function wrapScopedFieldRules($field, array $rules)
     {
-        if(!$rules) {
+        if (! $rules) {
             return;
         }
 
-        if(is_a($rules['attribute'] ?? null, FlexibleAttribute::class)) {
+        if (is_a($rules['attribute'] ?? null, FlexibleAttribute::class)) {
             return $rules;
         }
 
@@ -544,7 +549,9 @@ class Layout implements LayoutInterface, JsonSerializable, ArrayAccess, Arrayabl
     protected function cleanAttributes($attributes)
     {
         foreach ($attributes as $key => $value) {
-            if(!is_string($value) || strlen($value)) continue;
+            if (! is_string($value) || strlen($value)) {
+                continue;
+            }
             $attributes[$key] = null;
         }
 
@@ -608,7 +615,7 @@ class Layout implements LayoutInterface, JsonSerializable, ArrayAccess, Arrayabl
             'tags' => $this->tags,
             'image' => $this->image,
             'title_from_content' => $this->titleFromContent,
-            'fields' => $this->fields->jsonSerialize()
+            'fields' => $this->fields->jsonSerialize(),
         ];
     }
 
@@ -621,7 +628,9 @@ class Layout implements LayoutInterface, JsonSerializable, ArrayAccess, Arrayabl
      */
     protected function getProcessedKey($key)
     {
-        if(strpos($key, '-') === false && strlen($key) === 16) return $key;
+        if (strpos($key, '-') === false && strlen($key) === 16) {
+            return $key;
+        }
 
         // The key is either generated by Javascript or not strong enough.
         // Before assigning a new valid key we'll keep track of this one
@@ -629,12 +638,10 @@ class Layout implements LayoutInterface, JsonSerializable, ArrayAccess, Arrayabl
         $this->_key = $key;
 
         if (function_exists("random_bytes")) {
-            $bytes = random_bytes(ceil(16/2));
-        }
-        elseif (function_exists("openssl_random_pseudo_bytes")) {
-            $bytes = openssl_random_pseudo_bytes(ceil(16/2));
-        }
-        else {
+            $bytes = random_bytes(ceil(16 / 2));
+        } elseif (function_exists("openssl_random_pseudo_bytes")) {
+            $bytes = openssl_random_pseudo_bytes(ceil(16 / 2));
+        } else {
             throw new \Exception("No cryptographically secure random function available");
         }
 
@@ -650,5 +657,4 @@ class Layout implements LayoutInterface, JsonSerializable, ArrayAccess, Arrayabl
     {
         return $this->attributesToArray();
     }
-
 }

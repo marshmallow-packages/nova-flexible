@@ -4,26 +4,29 @@ namespace Marshmallow\Nova\Flexible\Layouts\Defaults\Traits;
 
 trait HasItems
 {
-	public function items ()
-	{
-		$items = [];
-		foreach ($this->{$this->items_attribute} as $item) {
-			$items[] = (object) $item['attributes'];
-		}
-		return $items;
-	}
+    public function items()
+    {
+        $items = [];
+        foreach ($this->{$this->items_attribute} as $item) {
+            $items[] = (object) $item['attributes'];
+        }
 
-	public function __get ($parameter)
-	{
-		switch ($parameter) {
-			case 'items':
-				if (!isset($this->items_attribute) || !$this->items_attribute) {
-					throw new \Exception('Please set `protected $items_attribute` in ' . get_class($this), 1);
-				}
-				return $this->items();
-				break;
-		}
+        return $items;
+    }
 
-		return parent::__get($parameter);
-	}
+    public function __get($parameter)
+    {
+        switch ($parameter) {
+            case 'items':
+                if (! isset($this->items_attribute) || ! $this->items_attribute) {
+                    throw new \Exception('Please set `protected $items_attribute` in ' . get_class($this), 1);
+                }
+
+                return $this->items();
+
+                break;
+        }
+
+        return parent::__get($parameter);
+    }
 }

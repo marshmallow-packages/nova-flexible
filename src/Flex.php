@@ -3,10 +3,8 @@
 namespace Marshmallow\Nova\Flexible;
 
 use Exception;
-use Illuminate\Support\Facades\Route;
-use Marshmallow\MultiLanguage\Models\Language;
-use Marshmallow\Nova\Flexible\Layouts\Defaults\WysiwygLayout;
 use Marshmallow\Nova\Flexible\Layouts\Defaults\UspFontawesomeLayout;
+use Marshmallow\Nova\Flexible\Layouts\Defaults\WysiwygLayout;
 
 class Flex
 {
@@ -17,12 +15,12 @@ class Flex
 
     public function getLayouts()
     {
-        if (!empty(config('flexible.layouts'))) {
+        if (! empty(config('flexible.layouts'))) {
             $layouts_array = [];
             foreach (config('flexible.layouts') as $key => $layout) {
                 if (is_callable($layout)) {
                     $callable_result = $layout();
-                    if (!is_array($callable_result)) {
+                    if (! is_array($callable_result)) {
                         throw new Exception('Your layout callable should return an array');
                     }
                     $layouts_array = array_merge($layouts_array, $callable_result);
@@ -37,8 +35,10 @@ class Flex
                     $this->default_layouts
                 );
             }
+
             return $layouts_array;
         }
+
         return $this->default_layouts;
     }
 
@@ -48,6 +48,7 @@ class Flex
         foreach ($page->layout as $layout) {
             $html .= $layout->render();
         }
+
         return $html;
     }
 }

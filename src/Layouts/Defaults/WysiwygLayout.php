@@ -7,7 +7,7 @@ use Marshmallow\Nova\Flexible\Layouts\MarshmallowLayout;
 
 class WysiwygLayout extends MarshmallowLayout
 {
-	/**
+    /**
      * The layout's unique identifier
      *
      * @var string
@@ -35,7 +35,7 @@ class WysiwygLayout extends MarshmallowLayout
     public function fields()
     {
         return [
-        	Text::make('Title'),
+            Text::make('Title'),
             config('pages.wysiwyg')::make('Content'),
         ];
     }

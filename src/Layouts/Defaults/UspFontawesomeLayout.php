@@ -3,10 +3,10 @@
 namespace Marshmallow\Nova\Flexible\Layouts\Defaults;
 
 use Laravel\Nova\Fields\Text;
-use Mdixon18\Fontawesome\Fontawesome;
 use Marshmallow\Nova\Flexible\Flexible;
-use Marshmallow\Nova\Flexible\Layouts\MarshmallowLayout;
 use Marshmallow\Nova\Flexible\Layouts\Defaults\Traits\HasItems;
+use Marshmallow\Nova\Flexible\Layouts\MarshmallowLayout;
+use Mdixon18\Fontawesome\Fontawesome;
 
 class UspFontawesomeLayout extends MarshmallowLayout
 {
@@ -14,7 +14,7 @@ class UspFontawesomeLayout extends MarshmallowLayout
 
     protected $items_attribute = 'usps';
 
-	/**
+    /**
      * The layout's unique identifier
      *
      * @var string
@@ -44,21 +44,21 @@ class UspFontawesomeLayout extends MarshmallowLayout
         return [
             Flexible::make('USPS')
                 ->addLayout(
-                	'USP',
-                	'uspfontawesome',
-                	[
-	                    Text::make('Title'),
-	                    Text::make('Title2'),
-	                    Fontawesome::make('Icon'),
-	                    config('pages.wysiwyg')::make('Content'),
-                	],
-                	function ($created_layout) {
-                		return $created_layout->setTitleFromContent('title2');
-	                }
-	            )
+                    'USP',
+                    'uspfontawesome',
+                    [
+                        Text::make('Title'),
+                        Text::make('Title2'),
+                        Fontawesome::make('Icon'),
+                        config('pages.wysiwyg')::make('Content'),
+                    ],
+                    function ($created_layout) {
+                        return $created_layout->setTitleFromContent('title2');
+                    }
+                )
                 ->button('Add USP')
                 ->fullWidth()
-                ->collapsed()
+                ->collapsed(),
         ];
     }
 

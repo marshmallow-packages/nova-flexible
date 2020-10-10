@@ -69,7 +69,7 @@ class CreateCast extends Command
      */
     public function getClassnameArgument()
     {
-        if(!$this->argument('classname')) {
+        if (! $this->argument('classname')) {
             return $this->ask('Please provide a class name for your layout');
         }
 
@@ -98,7 +98,7 @@ class CreateCast extends Command
     {
         $directory = dirname($path);
 
-        if(!$this->files->isDirectory($directory)) {
+        if (! $this->files->isDirectory($directory)) {
             $this->files->makeDirectory($directory, 0755, true, true);
         }
 
@@ -112,13 +112,14 @@ class CreateCast extends Command
      */
     protected function buildClass()
     {
-        return str_replace([
+        return str_replace(
+            [
                 ':classname',
-            ], [
+            ],
+            [
                 $this->classname,
             ],
             $this->files->get(__DIR__ . '/../Stubs/Cast.php')
         );
     }
-
 }

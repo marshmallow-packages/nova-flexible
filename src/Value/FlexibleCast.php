@@ -2,8 +2,8 @@
 
 namespace Marshmallow\Nova\Flexible\Value;
 
-use Marshmallow\Nova\Flexible\Concerns\HasFlexible;
 use Illuminate\Contracts\Database\Eloquent\CastsAttributes;
+use Marshmallow\Nova\Flexible\Concerns\HasFlexible;
 
 class FlexibleCast implements CastsAttributes
 {

@@ -6,7 +6,6 @@ use Illuminate\Support\Collection;
 
 class Resolver implements ResolverInterface
 {
-
     /**
      * Set the field's value
      *
@@ -17,11 +16,11 @@ class Resolver implements ResolverInterface
      */
     public function set($model, $attribute, $groups)
     {
-        return $model->$attribute = $groups->map(function($group) {
+        return $model->$attribute = $groups->map(function ($group) {
             return [
                 'layout' => $group->name(),
                 'key' => $group->key(),
-                'attributes' => $group->getAttributes()
+                'attributes' => $group->getAttributes(),
             ];
         });
     }
@@ -38,10 +37,12 @@ class Resolver implements ResolverInterface
     {
         $value = $this->extractValueFromResource($resource, $attribute);
 
-        return collect($value)->map(function($item) use ($layouts) {
+        return collect($value)->map(function ($item) use ($layouts) {
             $layout = $layouts->find($item->layout);
 
-            if(!$layout) return;
+            if (! $layout) {
+                return;
+            }
 
             return $layout->duplicateAndHydrate($item->key, (array) $item->attributes);
         })->filter()->values();
@@ -58,18 +59,19 @@ class Resolver implements ResolverInterface
     {
         $value = data_get($resource, str_replace('->', '.', $attribute)) ?? [];
 
-        if($value instanceof Collection) {
+        if ($value instanceof Collection) {
             $value = $value->toArray();
-        } else if (is_string($value)) {
+        } elseif (is_string($value)) {
             $value = json_decode($value) ?? [];
         }
 
         // Fail silently in case data is invalid
-        if (!is_array($value)) return [];
+        if (! is_array($value)) {
+            return [];
+        }
 
-        return array_map(function($item) {
+        return array_map(function ($item) {
             return is_array($item) ? (object) $item : $item;
         }, $value);
     }
-
 }

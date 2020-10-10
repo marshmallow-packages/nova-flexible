@@ -13,8 +13,6 @@
  */
 namespace Marshmallow\Nova\Flexible\Layouts;
 
-use Marshmallow\Nova\Flexible\Layouts\Layout;
-
 /**
  * Collection of functions available to all layouts
  *
@@ -38,14 +36,14 @@ class MarshmallowLayout extends Layout
          * have been removed because they where deprecated, we wil
          * return an empty string so no exception will be thrown.
          */
-        if (!method_exists($this, 'getComponentClass')) {
+        if (! method_exists($this, 'getComponentClass')) {
             return '';
         }
 
         $component_class_name = $this->getComponentClass();
+
         return (new $component_class_name($this))->render();
     }
-
 
     /**
      * Get the public url of an image
@@ -56,9 +54,10 @@ class MarshmallowLayout extends Layout
      */
     public function getImage(string $field = 'image')
     {
-        if (!$this->hasImage($field)) {
+        if (! $this->hasImage($field)) {
             return;
         }
+
         return asset('storage/' . $this->attributes[$field]);
     }
 
@@ -67,7 +66,7 @@ class MarshmallowLayout extends Layout
      *
      * @param string $field [description]
      *
-     * @return boolean        [description]
+     * @return bool        [description]
      */
     public function hasImage(string $field = 'image')
     {
@@ -79,7 +78,7 @@ class MarshmallowLayout extends Layout
      *
      * @param [type] $tags [description]
      *
-     * @return boolean [description]
+     * @return bool [description]
      */
     public function hasTag($tags)
     {
@@ -88,6 +87,7 @@ class MarshmallowLayout extends Layout
                 return true;
             }
         }
+
         return false;
     }
 
@@ -97,17 +97,17 @@ class MarshmallowLayout extends Layout
      * @return string unique key for this flex
      */
     public function getKeyAttribute(): string
-	{
-	    return $this->key;
-	}
+    {
+        return $this->key;
+    }
 
-	/**
-	 * Get the target of a link by checking if the url
-	 * is local or not.
-	 * @param   string $attribute Field name in the Flex object
-	 * @return  string|null A blank target or null if its local
-	 */
-	public function getLinkTarget(string $attribute): ?string
+    /**
+     * Get the target of a link by checking if the url
+     * is local or not.
+     * @param   string $attribute Field name in the Flex object
+     * @return  string|null A blank target or null if its local
+     */
+    public function getLinkTarget(string $attribute): ?string
     {
         if (strpos($this->{$attribute}, 'http') === false) {
             return null;
@@ -116,6 +116,7 @@ class MarshmallowLayout extends Layout
         if (substr($this->{$attribute}, 0, strlen(env('APP_URL'))) == env('APP_URL')) {
             return null;
         }
+
         return 'target="_blank"';
     }
 }

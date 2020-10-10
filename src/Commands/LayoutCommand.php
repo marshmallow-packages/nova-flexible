@@ -2,8 +2,8 @@
 
 namespace Marshmallow\Nova\Flexible\Commands;
 
-use Illuminate\Support\Str;
 use Illuminate\Console\Command;
+use Illuminate\Support\Str;
 
 class LayoutCommand extends Command
 {
@@ -92,6 +92,7 @@ class LayoutCommand extends Command
         $path = explode('::class', $path);
         $path = $path[0];
         $path = explode('\\', $path);
+
         return end($path);
     }
 
@@ -116,6 +117,7 @@ class LayoutCommand extends Command
     protected function parseStubContent($stub_name)
     {
         $content = $this->getStubContent($stub_name);
+
         return strtr($content, $this->getParams());
     }
 
@@ -135,7 +137,7 @@ class LayoutCommand extends Command
             app_path('Flexible/Layouts'),
         ];
         foreach ($structure as $folder) {
-            if (!file_exists($folder)) {
+            if (! file_exists($folder)) {
                 mkdir($folder);
             }
         }

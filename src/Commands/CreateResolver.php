@@ -69,7 +69,7 @@ class CreateResolver extends Command
      */
     public function getClassnameArgument()
     {
-        if(!$this->argument('classname')) {
+        if (! $this->argument('classname')) {
             return $this->ask('Please provide a class name for your resolver');
         }
 
@@ -98,7 +98,7 @@ class CreateResolver extends Command
     {
         $directory = dirname($path);
 
-        if(!$this->files->isDirectory($directory)) {
+        if (! $this->files->isDirectory($directory)) {
             $this->files->makeDirectory($directory, 0755, true, true);
         }
 
@@ -118,5 +118,4 @@ class CreateResolver extends Command
             $this->files->get(__DIR__ . '/../Stubs/Resolver.php')
         );
     }
-
 }

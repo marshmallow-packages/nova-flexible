@@ -2,17 +2,16 @@
 
 namespace Marshmallow\Nova\Flexible\Concerns;
 
+use Illuminate\Support\Collection as BaseCollection;
 use Laravel\Nova\NovaServiceProvider;
 use Marshmallow\Nova\Flexible\Facades\Flex;
-use Marshmallow\Nova\Flexible\Layouts\Layout;
 use Marshmallow\Nova\Flexible\Layouts\Collection;
-use Marshmallow\Nova\Flexible\Value\FlexibleCast;
-use Illuminate\Support\Collection as BaseCollection;
+use Marshmallow\Nova\Flexible\Layouts\Layout;
 use Marshmallow\Nova\Flexible\Layouts\MarshmallowLayout;
-use Marshmallow\Nova\Flexible\Layouts\Defaults\WysiwygLayout;
+use Marshmallow\Nova\Flexible\Value\FlexibleCast;
 
-trait HasFlexible {
-
+trait HasFlexible
+{
     /**
      * Parse a Flexible Content attribute
      *
@@ -36,7 +35,7 @@ trait HasFlexible {
      */
     public function cast($value, $layoutMapping = [])
     {
-        if(app()->getProvider(NovaServiceProvider::class)) {
+        if (app()->getProvider(NovaServiceProvider::class)) {
             return $value;
         }
 
@@ -62,11 +61,11 @@ trait HasFlexible {
     {
         $flexible = $this->getFlexibleArrayFromValue($value);
 
-        if(is_null($flexible)) {
+        if (is_null($flexible)) {
             return new Collection();
         }
 
-        if(!is_array($flexible)) {
+        if (! is_array($flexible)) {
             return new Collection();
         }
 
@@ -83,16 +82,17 @@ trait HasFlexible {
      */
     protected function getFlexibleArrayFromValue($value)
     {
-        if(is_string($value)) {
+        if (is_string($value)) {
             $value = json_decode($value);
+
             return is_array($value) ? $value : null;
         }
 
-        if(is_a($value, BaseCollection::class)) {
+        if (is_a($value, BaseCollection::class)) {
             return $value->toArray();
         }
 
-        if(is_array($value)) {
+        if (is_array($value)) {
             return $value;
         }
 
@@ -108,7 +108,7 @@ trait HasFlexible {
      */
     protected function getMappedFlexibleLayouts(array $flexible, array $layoutMapping)
     {
-        return array_map(function($item) use ($layoutMapping) {
+        return array_map(function ($item) use ($layoutMapping) {
             return $this->getMappedLayout($item, $layoutMapping);
         }, $flexible);
     }
@@ -172,5 +172,4 @@ trait HasFlexible {
 
         return $layout;
     }
-
 }

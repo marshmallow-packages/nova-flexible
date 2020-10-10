@@ -2,20 +2,16 @@
 
 namespace Marshmallow\Nova\Flexible\Concerns;
 
-use Spatie\MediaLibrary\InteractsWithMedia;
-use Spatie\MediaLibrary\MediaCollections\MediaRepository;
-use Marshmallow\Nova\Flexible\FileAdder\FileAdder;
+use Ebess\AdvancedNovaMediaLibrary\Fields\Media;
+use Illuminate\Support\Collection;
 use Marshmallow\Nova\Flexible\FileAdder\FileAdderFactory;
 use Marshmallow\Nova\Flexible\Flexible;
 use Spatie\MediaLibrary\HasMedia;
-use Laravel\Nova\Http\Requests\NovaRequest;
-use Laravel\Nova\Nova;
-use Illuminate\Support\Collection;
-use Ebess\AdvancedNovaMediaLibrary\Fields\Media;
-use Marshmallow\Nova\Flexible\Http\ScopedRequest;
+use Spatie\MediaLibrary\InteractsWithMedia;
+use Spatie\MediaLibrary\MediaCollections\MediaRepository;
 
-trait HasMediaLibrary {
-
+trait HasMediaLibrary
+{
     use InteractsWithMedia;
 
     /**
@@ -27,7 +23,7 @@ trait HasMediaLibrary {
     {
         $model = Flexible::getOriginModel() ?? $this->model;
 
-        if(is_null($model) || !($model instanceof HasMedia)) {
+        if (is_null($model) || ! ($model instanceof HasMedia)) {
             throw new \Exception('Origin HasMedia model not found.');
         }
 
@@ -81,7 +77,7 @@ trait HasMediaLibrary {
     public function resolveForDisplay(array $attributes = [])
     {
         $this->fields->each(function ($field) use ($attributes) {
-            if(is_subclass_of($field, Media::class)) {
+            if (is_subclass_of($field, Media::class)) {
                 $field->resolveForDisplay($this->getMediaModel(), $field->attribute . $this->getSuffix());
             } else {
                 $field->resolveForDisplay($attributes);
@@ -90,5 +86,4 @@ trait HasMediaLibrary {
 
         return $this->getResolvedValue();
     }
-
 }

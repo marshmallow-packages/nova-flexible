@@ -3,8 +3,8 @@
 namespace Marshmallow\Nova\Flexible\FileAdder;
 
 use Illuminate\Database\Eloquent\Model;
-use Spatie\MediaLibrary\MediaCollections\FileAdderFactory as OriginalFileAdderFactory;
 use Marshmallow\Nova\Flexible\FileAdder\FileAdder as NewFileAdder;
+use Spatie\MediaLibrary\MediaCollections\FileAdderFactory as OriginalFileAdderFactory;
 
 class FileAdderFactory extends OriginalFileAdderFactory
 {

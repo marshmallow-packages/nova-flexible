@@ -27,7 +27,7 @@ class UspFontawesome extends Component
     public function render()
     {
         return view('marshmallow::components.usp-fontawesome')->with([
-        	'layout' => $this->layout,
+            'layout' => $this->layout,
         ]);
     }
 }

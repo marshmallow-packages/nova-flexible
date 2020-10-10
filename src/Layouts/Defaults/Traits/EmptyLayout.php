@@ -6,10 +6,10 @@ use Laravel\Nova\Fields\Heading;
 
 trait EmptyLayout
 {
-	public function fields()
+    public function fields()
     {
         return [
-        	Heading::make('This layout has no settings'),
+            Heading::make('This layout has no settings'),
         ];
     }
 }
