@@ -1,79 +1,35 @@
 <?php
 
-/**
- * {{class}}
- *
- * PHP version 7.4
- *
- * @category ComponentLayout
- * @package  Marshmallow\Pages
- * @author   Stef van Esch <stef@marshmallow.dev>
- * @license  MIT Licence
- * @link     https://marshmallow.dev
- */
+namespace App\Nova\Flexible\Layouts;
 
-namespace App\Flexible\Layouts;
+use Marshmallow\Nova\Flexible\Layouts\Layout;
 
-use Marshmallow\Nova\Flexible\Layouts\MarshmallowLayout;
-
-/**
- * Class that holds the logic to connect this layout
- * to the occosiated views en component
- *
- * @category ComponentLayout
- * @package  Marshmallow\Pages
- * @author   Stef van Esch <stef@marshmallow.dev>
- * @license  MIT Licence
- * @link     https://marshmallow.dev
- */
-class {{class}} extends MarshmallowLayout
+class :classname extends Layout
 {
-    {{use}}
     /**
-     * The layout's name
+     * The layout's unique identifier
      *
      * @var string
      */
-    protected $name = '{{name}}';
+    protected $name = ':name';
 
     /**
      * The displayed title
      *
      * @var string
      */
-    protected $title = '{{title}}';
+    protected $title = ':classname';
 
     /**
-     * The displayed description
+     * Get the fields displayed by the layout.
      *
-     * @var string
+     * @return array
      */
-    protected $description = 'Layout description for {{title}}';
-
-    /**
-     * The displayed image
-     *
-     * @var string
-     */
-    protected $image = 'https://marshmallow.dev/cdn/flex/default.jpg';
-
-    /**
-     * Tags on which this layout can be filtered
-     *
-     * @var string
-     */
-    protected $tags = ['Custom'];
-
-    {{fields}}
-
-    /**
-     * Get the Component class that handles the views
-     * for this layout
-     *
-     * @return string Class of the compontent class
-     */
-    protected function getComponentClass()
+    public function fields()
     {
-        return {{component_class_path}};
+        return [
+            // Define the layout's fields.
+        ];
     }
+
 }
