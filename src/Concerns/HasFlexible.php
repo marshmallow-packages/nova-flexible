@@ -168,6 +168,7 @@ trait HasFlexible
             ? $this->model
             : $this;
 
+        $layout->onLoad();
         $layout->setModel($model);
 
         return $layout;

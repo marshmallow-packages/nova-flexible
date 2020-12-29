@@ -55,7 +55,7 @@ class MarshmallowLayout extends Layout
     public function getImage(string $field = 'image')
     {
         if (! $this->hasImage($field)) {
-            return;
+            return null;
         }
 
         return asset('storage/' . $this->attributes[$field]);
@@ -118,5 +118,10 @@ class MarshmallowLayout extends Layout
         }
 
         return 'target="_blank"';
+    }
+
+    public function onLoad()
+    {
+        //
     }
 }
