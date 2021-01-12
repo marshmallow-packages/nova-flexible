@@ -3,10 +3,10 @@
 namespace Marshmallow\Nova\Flexible\Layouts\Defaults;
 
 use Laravel\Nova\Fields\Text;
-use Marshmallow\Nova\Flexible\Flexible;
-use Marshmallow\Nova\Flexible\Layouts\Defaults\Traits\HasItems;
-use Marshmallow\Nova\Flexible\Layouts\MarshmallowLayout;
 use Mdixon18\Fontawesome\Fontawesome;
+use Marshmallow\Nova\Flexible\Flexible;
+use Marshmallow\Nova\Flexible\Layouts\MarshmallowLayout;
+use Marshmallow\Nova\Flexible\Layouts\Defaults\Traits\HasItems;
 
 class UspFontawesomeLayout extends MarshmallowLayout
 {

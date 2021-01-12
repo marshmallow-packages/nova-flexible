@@ -2,13 +2,13 @@
 
 namespace Marshmallow\Nova\Flexible\Concerns;
 
-use Illuminate\Support\Collection as BaseCollection;
 use Laravel\Nova\NovaServiceProvider;
 use Marshmallow\Nova\Flexible\Facades\Flex;
-use Marshmallow\Nova\Flexible\Layouts\Collection;
 use Marshmallow\Nova\Flexible\Layouts\Layout;
-use Marshmallow\Nova\Flexible\Layouts\MarshmallowLayout;
+use Marshmallow\Nova\Flexible\Layouts\Collection;
 use Marshmallow\Nova\Flexible\Value\FlexibleCast;
+use Illuminate\Support\Collection as BaseCollection;
+use Marshmallow\Nova\Flexible\Layouts\MarshmallowLayout;
 
 trait HasFlexible
 {
@@ -42,11 +42,12 @@ trait HasFlexible
         return $this->toFlexible($value ?: null, $layoutMapping);
     }
 
-    public function flex($column)
+    public function flex($column, $with = [])
     {
         return $this->toFlexible(
             $this->{$column},
-            Flex::getLayouts()
+            Flex::getLayouts(),
+            $with
         );
     }
 
@@ -57,7 +58,7 @@ trait HasFlexible
      * @param array $layoutMapping
      * @return \Marshmallow\Nova\Flexible\Layouts\Collection
      */
-    public function toFlexible($value, $layoutMapping = [])
+    public function toFlexible($value, $layoutMapping = [], $with = [])
     {
         $flexible = $this->getFlexibleArrayFromValue($value);
 
@@ -70,7 +71,7 @@ trait HasFlexible
         }
 
         return new Collection(
-            array_filter($this->getMappedFlexibleLayouts($flexible, $layoutMapping))
+            array_filter($this->getMappedFlexibleLayouts($flexible, $layoutMapping, $with))
         );
     }
 
@@ -106,10 +107,10 @@ trait HasFlexible
      * @param array $layoutMapping
      * @return array
      */
-    protected function getMappedFlexibleLayouts(array $flexible, array $layoutMapping)
+    protected function getMappedFlexibleLayouts(array $flexible, array $layoutMapping, array $with = [])
     {
-        return array_map(function ($item) use ($layoutMapping) {
-            return $this->getMappedLayout($item, $layoutMapping);
+        return array_map(function ($item) use ($layoutMapping, $with) {
+            return $this->getMappedLayout($item, $layoutMapping, $with);
         }, $flexible);
     }
 
@@ -118,9 +119,9 @@ trait HasFlexible
      *
      * @param mixed $item
      * @param array $layoutMapping
-     * @return null|Marshmallow\Nova\Flexible\Layouts\LayoutInterface
+     * @return null|\Marshmallow\Nova\Flexible\Layouts\LayoutInterface
      */
-    protected function getMappedLayout($item, array $layoutMapping)
+    protected function getMappedLayout($item, array $layoutMapping, array $with = [])
     {
         $name = null;
         $key = null;
@@ -144,7 +145,7 @@ trait HasFlexible
             $attributes = $item->getAttributes();
         }
 
-        return $this->createMappedLayout($name, $key, $attributes, $layoutMapping);
+        return $this->createMappedLayout($name, $key, $attributes, $layoutMapping, $with);
     }
 
     /**
@@ -156,7 +157,7 @@ trait HasFlexible
      * @param array  $layoutMapping
      * @return \Marshmallow\Nova\Flexible\Layouts\LayoutInterface
      */
-    protected function createMappedLayout($name, $key, $attributes, array $layoutMapping)
+    protected function createMappedLayout($name, $key, $attributes, array $layoutMapping, array $with = [])
     {
         $classname = array_key_exists($name, $layoutMapping)
             ? $layoutMapping[$name]
@@ -170,6 +171,7 @@ trait HasFlexible
 
         $layout->onLoad();
         $layout->setModel($model);
+        $layout->setWith($with);
 
         return $layout;
     }

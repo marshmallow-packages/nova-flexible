@@ -2,19 +2,21 @@
 
 namespace Marshmallow\Nova\Flexible\Layouts;
 
+use Closure;
+use Exception;
 use ArrayAccess;
-use Illuminate\Contracts\Support\Arrayable;
-use Illuminate\Database\Eloquent\Concerns\HasAttributes;
-use Illuminate\Database\Eloquent\Concerns\HidesAttributes;
-use Illuminate\Database\Eloquent\Model;
 use JsonSerializable;
 use Laravel\Nova\Fields\Field;
-use Laravel\Nova\Fields\FieldCollection;
-use Laravel\Nova\Http\Requests\NovaRequest;
-use Marshmallow\Nova\Flexible\Concerns\HasFlexible;
+use Illuminate\Database\Eloquent\Model;
 use Marshmallow\Nova\Flexible\Flexible;
-use Marshmallow\Nova\Flexible\Http\FlexibleAttribute;
+use Laravel\Nova\Fields\FieldCollection;
+use Illuminate\Contracts\Support\Arrayable;
+use Laravel\Nova\Http\Requests\NovaRequest;
 use Marshmallow\Nova\Flexible\Http\ScopedRequest;
+use Marshmallow\Nova\Flexible\Concerns\HasFlexible;
+use Marshmallow\Nova\Flexible\Http\FlexibleAttribute;
+use Illuminate\Database\Eloquent\Concerns\HasAttributes;
+use Illuminate\Database\Eloquent\Concerns\HidesAttributes;
 
 class Layout implements LayoutInterface, JsonSerializable, ArrayAccess, Arrayable
 {
@@ -57,7 +59,7 @@ class Layout implements LayoutInterface, JsonSerializable, ArrayAccess, Arrayabl
      */
     protected $title;
 
-    protected $description = 'No description avaiable';
+    protected $description = 'No description available';
 
     protected $image = 'https://marshmallow.test/cdn/flex/sections-content-sections.svg';
 
@@ -92,9 +94,14 @@ class Layout implements LayoutInterface, JsonSerializable, ArrayAccess, Arrayabl
     /**
      * The parent model instance
      *
-     * @var Illuminate\Database\Eloquent\Model
+     * @var \Illuminate\Database\Eloquent\Model
      */
     protected $model;
+
+    /**
+     * @var array data that will be loaded into the view
+     */
+    protected $with = [];
 
     /**
      * Create a new base Layout instance
@@ -126,6 +133,16 @@ class Layout implements LayoutInterface, JsonSerializable, ArrayAccess, Arrayabl
         $this->model = $model;
 
         return $this;
+    }
+
+    public function setWith(array $with = [])
+    {
+        $this->with = $with;
+    }
+
+    public function getWith()
+    {
+        return $this->with;
     }
 
     public function setTitleFromContent($titleFromContent)
@@ -264,7 +281,7 @@ class Layout implements LayoutInterface, JsonSerializable, ArrayAccess, Arrayabl
         $callables = ['displayCallback','resolveCallback','fillCallback','requiredCallback'];
 
         foreach ($callables as $callable) {
-            if (! is_a($field->$callable ?? null, \Closure::class)) {
+            if (! is_a($field->$callable ?? null, Closure::class)) {
                 continue;
             }
             $field->$callable = $field->$callable->bindTo($field);
@@ -341,7 +358,7 @@ class Layout implements LayoutInterface, JsonSerializable, ArrayAccess, Arrayabl
     }
 
     /**
-     * Fill attributes using underlaying fields and incoming request
+     * Fill attributes using underlying fields and incoming request
      *
      * @param ScopedRequest $request
      * @return array
@@ -361,15 +378,15 @@ class Layout implements LayoutInterface, JsonSerializable, ArrayAccess, Arrayabl
     /**
      * Get validation rules for fields concerned by given request
      *
-     * @param  ScopedRequest $request
-     * @param  string $specificty
-     * @param  string $key
+     * @param ScopedRequest $request
+     * @param string $specificity
+     * @param string $key
      * @return array
      */
-    public function generateRules(ScopedRequest $request, $specificty, $key)
+    public function generateRules(ScopedRequest $request, string $specificity, $key)
     {
-        return  $this->fields->map(function ($field) use ($request, $specificty, $key) {
-            return $this->getScopedFieldRules($field, $request, $specificty, $key);
+        return  $this->fields->map(function ($field) use ($request, $specificity, $key) {
+            return $this->getScopedFieldRules($field, $request, $specificity, $key);
         })
                 ->collapse()
                 ->all();
@@ -380,13 +397,13 @@ class Layout implements LayoutInterface, JsonSerializable, ArrayAccess, Arrayabl
      *
      * @param  \Laravel\Nova\Fields\Field $field
      * @param  ScopedRequest $request
-     * @param  null|string $specificty
+     * @param  null|string $specificity
      * @param  string $key
      * @return array
      */
-    protected function getScopedFieldRules($field, ScopedRequest $request, $specificty, $key)
+    protected function getScopedFieldRules($field, ScopedRequest $request, $specificity, $key)
     {
-        $method = 'get' . ucfirst($specificty) . 'Rules';
+        $method = 'get' . ucfirst($specificity) . 'Rules';
 
         $rules = call_user_func([$field, $method], $request);
 
@@ -418,7 +435,7 @@ class Layout implements LayoutInterface, JsonSerializable, ArrayAccess, Arrayabl
      * The default behaviour when removed
      *
      * @param  Flexible $flexible
-     * @param  Marshmallow\Nova\Flexible\Layout $layout
+     * @param  Layout $layout
      *
      * @return mixed
      */
@@ -437,7 +454,7 @@ class Layout implements LayoutInterface, JsonSerializable, ArrayAccess, Arrayabl
     protected function wrapScopedFieldRules($field, array $rules)
     {
         if (! $rules) {
-            return;
+            return null;
         }
 
         if (is_a($rules['attribute'] ?? null, FlexibleAttribute::class)) {
@@ -624,7 +641,7 @@ class Layout implements LayoutInterface, JsonSerializable, ArrayAccess, Arrayabl
      *
      * @param string $key
      * @return string
-     * @throws \Exception
+     * @throws Exception
      */
     protected function getProcessedKey($key)
     {
@@ -642,7 +659,7 @@ class Layout implements LayoutInterface, JsonSerializable, ArrayAccess, Arrayabl
         } elseif (function_exists("openssl_random_pseudo_bytes")) {
             $bytes = openssl_random_pseudo_bytes(ceil(16 / 2));
         } else {
-            throw new \Exception("No cryptographically secure random function available");
+            throw new Exception("No cryptographically secure random function available");
         }
 
         return substr(bin2hex($bytes), 0, 16);

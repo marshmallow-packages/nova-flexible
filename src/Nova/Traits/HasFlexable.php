@@ -2,8 +2,8 @@
 
 namespace Marshmallow\Nova\Flexible\Nova\Traits;
 
-use Marshmallow\Nova\Flexible\Facades\Flex;
 use Marshmallow\Nova\Flexible\Flexible;
+use Marshmallow\Nova\Flexible\Facades\Flex;
 
 trait HasFlexable
 {

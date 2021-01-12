@@ -2,8 +2,9 @@
 
 namespace Marshmallow\Nova\Flexible\Value;
 
-use Illuminate\Contracts\Database\Eloquent\CastsAttributes;
 use Marshmallow\Nova\Flexible\Concerns\HasFlexible;
+use Illuminate\Contracts\Database\Eloquent\CastsAttributes;
+use Marshmallow\Nova\Flexible\Layouts\Defaults\WysiwygLayout;
 
 class FlexibleCast implements CastsAttributes
 {
@@ -13,11 +14,11 @@ class FlexibleCast implements CastsAttributes
      * @var array
      */
     protected $layouts = [
-        'wysiwyg' => \Marshmallow\Nova\Flexible\Layouts\Defaults\WysiwygLayout::class,
+        'wysiwyg' => WysiwygLayout::class,
     ];
 
     /**
-     * @var Illuminate\Database\Eloquent\Model
+     * @var \Illuminate\Database\Eloquent\Model
      */
     protected $model;
 

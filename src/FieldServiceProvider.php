@@ -2,13 +2,9 @@
 
 namespace Marshmallow\Nova\Flexible;
 
-use Illuminate\Support\ServiceProvider;
-use Laravel\Nova\Events\ServingNova;
 use Laravel\Nova\Nova;
-use Marshmallow\Nova\Flexible\Commands\CreateCast;
-use Marshmallow\Nova\Flexible\Commands\CreateLayout;
-use Marshmallow\Nova\Flexible\Commands\CreatePreset;
-use Marshmallow\Nova\Flexible\Commands\CreateResolver;
+use Laravel\Nova\Events\ServingNova;
+use Illuminate\Support\ServiceProvider;
 use Marshmallow\Nova\Flexible\Commands\LayoutCommand;
 use Marshmallow\Nova\Flexible\Http\Middleware\InterceptFlexibleAttributes;
 
@@ -50,10 +46,6 @@ class FieldServiceProvider extends ServiceProvider
         }
 
         $this->commands([
-            CreateCast::class,
-            CreateLayout::class,
-            CreatePreset::class,
-            CreateResolver::class,
             LayoutCommand::class,
         ]);
     }

@@ -2,7 +2,9 @@
 
 namespace Marshmallow\Nova\Flexible\Facades;
 
-class Flex extends \Illuminate\Support\Facades\Facade
+use Illuminate\Support\Facades\Facade;
+
+class Flex extends Facade
 {
     protected static function getFacadeAccessor()
     {

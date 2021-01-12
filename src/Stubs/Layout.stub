@@ -18,7 +18,7 @@ class {{class}} extends MarshmallowLayout
      *
      * @var string
      */
-    protected $title = '{{title}}';
+    protected $title = '{{class}}';
 
     /**
      * Get the fields displayed by the layout.
