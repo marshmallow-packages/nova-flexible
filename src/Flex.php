@@ -3,14 +3,12 @@
 namespace Marshmallow\Nova\Flexible;
 
 use Exception;
-use Marshmallow\Nova\Flexible\Layouts\Defaults\UspFontawesomeLayout;
 use Marshmallow\Nova\Flexible\Layouts\Defaults\WysiwygLayout;
 
 class Flex
 {
     protected $default_layouts = [
         'wysiwyg' => WysiwygLayout::class,
-        'uspfontawesome' => UspFontawesomeLayout::class,
     ];
 
     public function getLayouts()

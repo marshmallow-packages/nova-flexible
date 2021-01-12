@@ -2,23 +2,8 @@
 
 namespace Marshmallow\Nova\Flexible\View\Components;
 
-use Illuminate\View\Component;
-use Marshmallow\Nova\Flexible\Layouts\Layout;
-
 class Wysiwyg extends Component
 {
-    protected $layout;
-
-    /**
-     * Create a new component instance.
-     *
-     * @return void
-     */
-    public function __construct(Layout $layout)
-    {
-        $this->layout = $layout;
-    }
-
     /**
      * Get the view / contents that represent the component.
      *
@@ -26,8 +11,13 @@ class Wysiwyg extends Component
      */
     public function render()
     {
-        return view('marshmallow::components.wysiwyg')->with([
-            'layout' => $this->layout,
-        ]);
+        return view('marshmallow::components.wysiwyg')->with(array_merge(
+            $this->baseLayoutWith(),
+            [
+                /**
+                 * Custom with data can be added here
+                 */
+            ]
+        ));
     }
 }
