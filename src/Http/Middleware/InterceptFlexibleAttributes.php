@@ -4,10 +4,10 @@ namespace Marshmallow\Nova\Flexible\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Marshmallow\Nova\Flexible\Http\FlexibleAttribute;
 use Marshmallow\Nova\Flexible\Http\ParsesFlexibleAttributes;
 use Marshmallow\Nova\Flexible\Http\TransformsFlexibleErrors;
-use Symfony\Component\HttpFoundation\Response;
 
 class InterceptFlexibleAttributes
 {

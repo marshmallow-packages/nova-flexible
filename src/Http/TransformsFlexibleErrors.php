@@ -2,9 +2,9 @@
 
 namespace Marshmallow\Nova\Flexible\Http;
 
+use Illuminate\Support\Str;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Lang;
-use Illuminate\Support\Str;
 use Marshmallow\Nova\Flexible\Flexible;
 use Symfony\Component\HttpFoundation\Response;
 

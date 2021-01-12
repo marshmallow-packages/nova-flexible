@@ -1,24 +1,24 @@
 <?php
 
-namespace App\Nova\Flexible\Layouts;
+namespace App\Flexible\Layouts;
 
-use Marshmallow\Nova\Flexible\Layouts\Layout;
+use Marshmallow\Nova\Flexible\Layouts\MarshmallowLayout;
 
-class :classname extends Layout
+class {{class}} extends MarshmallowLayout
 {
     /**
      * The layout's unique identifier
      *
      * @var string
      */
-    protected $name = ':name';
+    protected $name = '{{name}}';
 
     /**
      * The displayed title
      *
      * @var string
      */
-    protected $title = ':classname';
+    protected $title = '{{class}}';
 
     /**
      * Get the fields displayed by the layout.
@@ -32,4 +32,14 @@ class :classname extends Layout
         ];
     }
 
+    /**
+     * Get the Component class that handles the views
+     * for this layout
+     *
+     * @return string Class of the compontent class
+     */
+    protected function getComponentClass()
+    {
+        return {{component_class_path}};
+    }
 }

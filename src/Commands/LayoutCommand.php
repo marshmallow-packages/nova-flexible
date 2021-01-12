@@ -2,8 +2,8 @@
 
 namespace Marshmallow\Nova\Flexible\Commands;
 
-use Illuminate\Console\Command;
 use Illuminate\Support\Str;
+use Illuminate\Console\Command;
 
 class LayoutCommand extends Command
 {
@@ -21,15 +21,17 @@ class LayoutCommand extends Command
      */
     protected $description = 'Create a new layout and connecting resource';
 
-    /**
-     * Create a new command instance.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        parent::__construct();
-    }
+    protected $component_class_name = '';
+
+    protected $title = '';
+
+    protected $layout_class = '';
+
+    protected $component_class_path = '';
+
+    protected $fields = '';
+
+    protected $use = '';
 
     /**
      * Execute the console command.
@@ -45,8 +47,8 @@ class LayoutCommand extends Command
         $slug = str_slug($this->title);
         $upper_camel = ucfirst(Str::camel(str_slug($this->title)));
 
-        $name_examle = $slug;
-        $class_examle = (strpos($upper_camel, 'Layout') === false)
+        $name_example = $slug;
+        $class_example = (strpos($upper_camel, 'Layout') === false)
                                 ? $upper_camel . 'Layout'
                                 : $upper_camel;
 
@@ -55,8 +57,8 @@ class LayoutCommand extends Command
                                 : $upper_camel;
 
 
-        $this->name = $this->ask('Please provide a slug for your layout', $name_examle);
-        $this->layout_class = $this->ask('Please provide a class name for your layout', $class_examle);
+        $this->name = $this->ask('Please provide a slug for your layout', $name_example);
+        $this->layout_class = $this->ask('Please provide a class name for your layout', $class_example);
         $this->component_class_path = $this->ask('Please enter a name for you component', '\App\View\Components\\' . $component_example . '::class');
         $this->empty_component = $this->confirm('Is this an empty component?');
 
@@ -85,6 +87,8 @@ class LayoutCommand extends Command
             resource_path('views/components/'. $slug .'.blade.php'),
             $this->parseStubContent('View')
         );
+
+        return 0;
     }
 
     protected function getComponentClassFromPath($path)

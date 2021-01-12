@@ -11,7 +11,7 @@ class Resolver implements ResolverInterface
      *
      * @param  mixed  $model
      * @param  string $attribute
-     * @param  Illuminate\Support\Collection $groups
+     * @param  \Illuminate\Support\Collection $groups
      * @return string
      */
     public function set($model, $attribute, $groups)
@@ -30,8 +30,8 @@ class Resolver implements ResolverInterface
      *
      * @param  mixed  $resource
      * @param  string $attribute
-     * @param  Marshmallow\Nova\Flexible\Layouts\Collection $layouts
-     * @return Illuminate\Support\Collection
+     * @param  \Marshmallow\Nova\Flexible\Layouts\Collection $layouts
+     * @return \Illuminate\Support\Collection
      */
     public function get($resource, $attribute, $layouts)
     {
@@ -41,7 +41,7 @@ class Resolver implements ResolverInterface
             $layout = $layouts->find($item->layout);
 
             if (! $layout) {
-                return;
+                return null;
             }
 
             return $layout->duplicateAndHydrate($item->key, (array) $item->attributes);

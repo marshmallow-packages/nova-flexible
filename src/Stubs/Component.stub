@@ -1,8 +1,10 @@
 <?php
 
-namespace Marshmallow\Nova\Flexible\View\Components;
+namespace App\View\Components;
 
-class Wysiwyg extends Component
+use Marshmallow\Nova\Flexible\View\Components\Component;
+
+class {{component_class}} extends Component
 {
     /**
      * Get the view / contents that represent the component.
@@ -11,7 +13,7 @@ class Wysiwyg extends Component
      */
     public function render()
     {
-        return view('marshmallow::components.wysiwyg')->with(array_merge(
+        return view('components.{{name}}')->with(array_merge(
             $this->baseLayoutWith(),
             [
                 /**
