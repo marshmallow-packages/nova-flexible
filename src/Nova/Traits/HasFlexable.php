@@ -25,7 +25,8 @@ trait HasFlexable
                 continue;
             }
 
-            $flex->addLayout($layout)->collapsed();
+            $flex->addLayout($layout)
+                 ->collapsed();
         }
 
         return $flex;

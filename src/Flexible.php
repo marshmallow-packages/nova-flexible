@@ -225,6 +225,13 @@ class Flexible extends Field
         return $this;
     }
 
+    public function deletionNotAllowed(bool $value = true)
+    {
+        $this->withMeta(['deletion_not_allowed' => $value]);
+
+        return $this;
+    }
+
     public function collapsed(bool $value = true)
     {
         $this->withMeta(['collapsed' => $value]);
