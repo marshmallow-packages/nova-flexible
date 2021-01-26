@@ -140,8 +140,14 @@ class Layout implements LayoutInterface, JsonSerializable, ArrayAccess, Arrayabl
         $this->with = $with;
     }
 
-    public function getWith()
+    public function getWith($key = null)
     {
+        if ($key) {
+            if (array_key_exists($key, $this->with)) {
+                return $this->with[$key];
+            }
+            return null;
+        }
         return $this->with;
     }
 
