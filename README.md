@@ -74,6 +74,12 @@ protected $titleFromContent = 'title';
 )
 ```
 
+## Disable deleting
+```php
+$flex->addLayout($layout)
+     ->deletionNotAllowed();
+```
+
 - - -
 
 ## Credits

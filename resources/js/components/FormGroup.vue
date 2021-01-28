@@ -15,7 +15,12 @@
 					<button type="button" class="group-control btn border-t border-r border-40 w-8 h-8 block" :title="__('Move down')" @click.prevent="moveDown">
 						<icon type="arrow-down" view-box="0 0 8 4.8" width="10" height="10" />
 					</button>
-					<button type="button" class="group-control btn border-t border-r border-40 w-8 h-8 block" :title="__('Delete')" @click.prevent="confirmRemove">
+					<button type="button"
+                            data-henk="barry"
+                            class="group-control btn border-t border-r border-40 w-8 h-8 block"
+                            :title="__('Delete')"
+                            v-if="! field.deletion_not_allowed"
+                            @click.prevent="confirmRemove">
 						<icon type="delete" view-box="0 0 20 20" width="16" height="16" />
 					</button>
 					<portal to="modals">
@@ -85,6 +90,7 @@ export default {
 		return {
 			removeMessage: false,
 			collapsed: this.group.collapsed,
+            deletion_not_allowed: this.group.deletion_not_allowed,
 			readonly: this.group.readonly,
 		};
 	},
