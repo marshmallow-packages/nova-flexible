@@ -21,6 +21,27 @@ class {{class}} extends MarshmallowLayout
     protected $title = '{{class}}';
 
     /**
+     * Description as shown in the layout selector.
+     *
+     * @var string
+     */
+    protected $description = 'No description available';
+
+    /**
+     * Image use in the layout selector
+     *
+     * @var string
+     */
+    protected $image = 'https://marshmallow.dev/cdn/flex/sections-content-sections.svg';
+
+    /**
+     * Add this layout to these tags.
+     *
+     * @var array
+     */
+    protected $tags = ['Custom'];
+
+    /**
      * Get the fields displayed by the layout.
      *
      * @return array
