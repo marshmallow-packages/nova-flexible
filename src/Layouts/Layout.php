@@ -59,10 +59,25 @@ class Layout implements LayoutInterface, JsonSerializable, ArrayAccess, Arrayabl
      */
     protected $title;
 
+    /**
+     * Description as shown in the layout selector.
+     *
+     * @var string
+     */
     protected $description = 'No description available';
 
-    protected $image = 'https://marshmallow.test/cdn/flex/sections-content-sections.svg';
+    /**
+     * Image use in the layout selector
+     *
+     * @var string
+     */
+    protected $image = 'https://marshmallow.dev/cdn/flex/sections-content-sections.svg';
 
+    /**
+     * Add this layout to these tags.
+     *
+     * @var array
+     */
     protected $tags = ['Custom'];
 
     /**
