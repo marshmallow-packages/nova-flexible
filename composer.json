@@ -15,13 +15,14 @@
         {
             "name": "Stef van Esch",
             "email": "stef@marshmallow.dev"
-        }, {
+        },
+        {
             "name": "Toon Van den Bos",
             "email": "toon@whitecube.be"
         }
     ],
     "require": {
-        "php": ">=7.1.0",
+        "php": "^7.1|^8.0",
         "marshmallow/nova-tinymce": "^1.0"
     },
     "autoload": {
