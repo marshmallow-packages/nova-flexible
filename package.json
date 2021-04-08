@@ -22,5 +22,5 @@
         "vue": "^2.5.0",
         "vue-loader": "^15.9.6",
         "vue-multiselect": "^2.1.6"
-    }
+    },
 }
