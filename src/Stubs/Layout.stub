@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Flexible\Layouts;
+namespace App\Flexible\Layouts{{subdirectory}};
 
 use Marshmallow\Nova\Flexible\Layouts\MarshmallowLayout;
 
@@ -18,7 +18,7 @@ class {{class}} extends MarshmallowLayout
      *
      * @var string
      */
-    protected $title = '{{class}}';
+    protected $title = '{{title}}';
 
     /**
      * Description as shown in the layout selector.

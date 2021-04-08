@@ -6,6 +6,7 @@ use Laravel\Nova\Nova;
 use Laravel\Nova\Events\ServingNova;
 use Illuminate\Support\ServiceProvider;
 use Marshmallow\Nova\Flexible\Commands\LayoutCommand;
+use Marshmallow\Nova\Flexible\Commands\MakeLayoutCommand;
 use Marshmallow\Nova\Flexible\Http\Middleware\InterceptFlexibleAttributes;
 
 class FieldServiceProvider extends ServiceProvider
@@ -20,8 +21,8 @@ class FieldServiceProvider extends ServiceProvider
         $this->addMiddleware();
 
         Nova::serving(function (ServingNova $event) {
-            Nova::script('nova-flexible-content', __DIR__.'/../dist/js/field.js');
-            Nova::style('nova-flexible-content', __DIR__.'/../dist/css/field.css');
+            Nova::script('nova-flexible-content', __DIR__ . '/../dist/js/field.js');
+            Nova::style('nova-flexible-content', __DIR__ . '/../dist/css/field.css');
         });
 
         $this->publishes([
@@ -37,16 +38,17 @@ class FieldServiceProvider extends ServiceProvider
     public function register()
     {
         $this->mergeConfigFrom(
-            __DIR__.'/../config/flexible.php',
+            __DIR__ . '/../config/flexible.php',
             'flexible'
         );
 
-        if (! $this->app->runningInConsole()) {
+        if (!$this->app->runningInConsole()) {
             return;
         }
 
         $this->commands([
             LayoutCommand::class,
+            MakeLayoutCommand::class,
         ]);
     }
 
@@ -65,7 +67,7 @@ class FieldServiceProvider extends ServiceProvider
             return;
         }
 
-        if (! $this->app->configurationIsCached()) {
+        if (!$this->app->configurationIsCached()) {
             config()->set('nova.middleware', array_merge(
                 config('nova.middleware', []),
                 [InterceptFlexibleAttributes::class]
