@@ -48,12 +48,12 @@ class MakeLayoutCommand extends GeneratorCommand
 
         $this->title = Str::afterLast($name_path, '/');
         if (Str::contains($name_path, '/')) {
-            $this->subdirectory = Str::before($name_path, '/');
+            $this->subdirectory = '\\' . Str::before($name_path, '/');
         }
         $this->component_class_name = $name_path;
-        $this->component_class_path = str_replace('/', '\\', '\App\View\Components\\' . $name_path . '::class');
+        $this->component_class_path = str_replace('/', '\\', '\App\View\Components\\' . $name_path . 'Component::class');
 
-        $this->layout_class = $this->title;
+        $this->layout_class = $this->title . 'Layout';
 
         $this->writeFile('View', $name_path);
         $this->writeFile('Component', $name_path);
@@ -67,10 +67,10 @@ class MakeLayoutCommand extends GeneratorCommand
     {
         switch ($type) {
             case "Layout":
-                $path = app_path('Flexible/Layouts/' . $name_path  . '.php');
+                $path = app_path('Flexible/Layouts/' . $name_path  . 'Layout.php');
                 break;
             case "Component":
-                $path = app_path('View/Components/' . $name_path  . '.php');
+                $path = app_path('View/Components/' . $name_path  . 'Component.php');
                 break;
             case "View":
                 $path = resource_path('views/' . str_replace('.', '/', 'components.' . $this->getView())  . '.blade.php');
@@ -133,8 +133,8 @@ class MakeLayoutCommand extends GeneratorCommand
     protected function getParams()
     {
         return [
-            '{{subdirectory}}' => '\\' . $this->subdirectory ?? null,
-            '{{component_class}}' => $this->title,
+            '{{subdirectory}}' =>  $this->subdirectory ?? null,
+            '{{component_class}}' => $this->title . 'Component',
             '{{name}}' => str_replace('.', '-', $this->getView('slug')),
             '{{component_name}}' => $this->getView('slug'),
             '{{title}}' => $this->title,
