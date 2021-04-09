@@ -13,7 +13,7 @@ class MakeLayoutCommand extends GeneratorCommand
      *
      * @var string
      */
-    protected $name = 'make:flex-component';
+    protected $name = 'make:flex';
 
     /**
      * The console command description.
