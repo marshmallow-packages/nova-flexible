@@ -55,9 +55,14 @@ class MakeLayoutCommand extends GeneratorCommand
 
         $this->layout_class = $this->title . 'Layout';
 
-        $this->writeFile('View', $name_path);
-        $this->writeFile('Component', $name_path);
-        $this->writeFile('Layout', $name_path);
+        $lines[] = $this->writeFile('View', $name_path);
+        $lines[] = $this->writeFile('Component', $name_path);
+        $lines[] = $this->writeFile('Layout', $name_path);
+
+        $this->line("<options=bold,reverse;fg=green> FLEXIBLE COMPONENT CREATED </> 🤙\n");
+        foreach($lines as $line) {
+            $this->line($line);
+        }
 
         return 0;
     }
@@ -67,13 +72,16 @@ class MakeLayoutCommand extends GeneratorCommand
     {
         switch ($type) {
             case "Layout":
-                $path = app_path('Flexible/Layouts/' . $name_path  . 'Layout.php');
+                $relative_path = 'Flexible/Layouts/' . $name_path  . 'Layout.php';
+                $path = app_path($relative_path);
                 break;
             case "Component":
-                $path = app_path('View/Components/' . $name_path  . 'Component.php');
+                $relative_path = 'View/Components/' . $name_path  . 'Component.php';
+                $path = app_path($relative_path);
                 break;
             case "View":
-                $path = resource_path('views/' . str_replace('.', '/', 'components.' . $this->getView())  . '.blade.php');
+                $relative_path = 'views/' . str_replace('.', '/', 'components.' . $this->getView())  . '.blade.php';
+                $path = resource_path($relative_path);
                 break;
         }
 
@@ -90,6 +98,12 @@ class MakeLayoutCommand extends GeneratorCommand
             $path,
             $this->parseStubContent($type)
         );
+
+        $relative_path = ($type == 'View' ? 'resources/' : 'app/') .$relative_path;
+        $type_name = Str::upper($type);
+        $line = "<options=bold;fg=green>{$type_name}:</> {$relative_path}";
+
+        return $line;
     }
 
     /**
