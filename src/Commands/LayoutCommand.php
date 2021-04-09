@@ -42,6 +42,10 @@ class LayoutCommand extends Command
     {
         $this->prepareFileStructure();
 
+        $this->newLine();
+        $this->info('🧨🧨 This command is deprecated. Please use `make:flex` instead. This command will be deleted in the next version');
+        $this->newLine();
+
         $this->title = $this->ask('Please provide a name for your layout');
 
         $slug = str_slug($this->title);
