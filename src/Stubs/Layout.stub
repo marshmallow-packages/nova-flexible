@@ -32,7 +32,7 @@ class {{class}} extends MarshmallowLayout
      *
      * @var string
      */
-    protected $image = 'https://marshmallow.dev/cdn/flex/sections-content-sections.svg';
+    protected $image = 'https://marshmallow.dev/cdn/flex/wysiwyg.jpg';
 
     /**
      * Add this layout to these tags.
