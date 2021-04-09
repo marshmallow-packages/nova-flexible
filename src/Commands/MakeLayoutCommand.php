@@ -28,6 +28,7 @@ class MakeLayoutCommand extends GeneratorCommand
      * @var string
      */
     protected $type = 'Flexible Layout';
+    protected $lines;
 
     protected $component_class_name = '';
     protected $title = '';
@@ -55,22 +56,27 @@ class MakeLayoutCommand extends GeneratorCommand
 
         $this->layout_class = $this->title . 'Layout';
 
-        $lines[] = $this->writeFile('View', $name_path);
-        $lines[] = $this->writeFile('Component', $name_path);
-        $lines[] = $this->writeFile('Layout', $name_path);
+        $this->writeFile('View', $name_path);
+        $this->writeFile('Component', $name_path);
+        $this->writeFile('Layout', $name_path);
 
-        $this->line("<options=bold,reverse;fg=green> FLEXIBLE COMPONENT CREATED </> 🤙\n");
-        foreach($lines as $line) {
+        if (empty($this->lines)) {
+            $this->line("<options=bold,reverse;fg=red>FLEXIBLE COMPONENT NOT CREATED </> \n");
+            return 0;
+        }
+
+        $this->line("<options=bold,reverse;fg=green>FLEXIBLE COMPONENT CREATED </> 🤙\n");
+        foreach ($this->lines as $line) {
             $this->line($line);
         }
 
         //Remove if Autodiscovery Enabled
-        $slug_name      = str_replace('.', '-', $this->getView('slug'));
+        $slug_name      = str_replace('.', '-', $this->getView());
         $layout_name    = str_replace('/', '\\', $this->layout_class);
-        $layout_path    = 'App\Flexible\Layouts'.$this->subdirectory.'\\'.$layout_name.'::class';
+        $layout_path    = '\App\Flexible\Layouts' . $this->subdirectory . '\\' . $layout_name . '::class';
 
-        $text = PHP_EOL.'Dont forget to add: '.PHP_EOL;
-        $text .= "'{$slug_name}' => {$layout_path}".PHP_EOL;
+        $text = PHP_EOL . 'Dont forget to add: ' . PHP_EOL;
+        $text .= "'{$slug_name}' => {$layout_path}" . PHP_EOL;
         $text .= 'to config/flexible.php';
 
         $this->line($text);
@@ -102,7 +108,7 @@ class MakeLayoutCommand extends GeneratorCommand
 
         if ($this->files->exists($path) && !$this->option('force')) {
             $this->error($type . ' already exists!');
-            return;
+            return false;
         }
 
         file_put_contents(
@@ -110,11 +116,11 @@ class MakeLayoutCommand extends GeneratorCommand
             $this->parseStubContent($type)
         );
 
-        $relative_path = ($type == 'View' ? 'resources/' : 'app/') .$relative_path;
+        $relative_path = ($type == 'View' ? 'resources/' : 'app/') . $relative_path;
         $type_name = Str::upper($type);
         $line = "<options=bold;fg=green>{$type_name}:</> {$relative_path}";
 
-        return $line;
+        $this->lines[] = $line;
     }
 
     /**
@@ -160,8 +166,8 @@ class MakeLayoutCommand extends GeneratorCommand
         return [
             '{{subdirectory}}' =>  $this->subdirectory ?? null,
             '{{component_class}}' => $this->title . 'Component',
-            '{{name}}' => str_replace('.', '-', $this->getView('slug')),
-            '{{component_name}}' => $this->getView('slug'),
+            '{{name}}' => str_replace('.', '-', $this->getView()),
+            '{{component_name}}' => $this->getView(),
             '{{title}}' => $this->title,
             '{{class}}' => $this->layout_class,
             '{{component_class_path}}' => $this->component_class_path,
