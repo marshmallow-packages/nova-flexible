@@ -3,6 +3,13 @@
 return [
 
     /**
+     * Auto discovery will load all the flexible layouts automaticly.
+     * If you want to manualy add the layouts you can do so by turning
+     * this to false and add your layouts to the layouts part of this config.
+     */
+    'auto-discovery' => true,
+
+    /**
      * Which WYSIWYG editor should we load for you in our default
      * layouts? You can specify your own in your custom layout. Please
      * use `config('pages.wysiwyg')::make('Content');` on your custom layouts.

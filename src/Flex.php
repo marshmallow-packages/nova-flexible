@@ -3,6 +3,10 @@
 namespace Marshmallow\Nova\Flexible;
 
 use Exception;
+use Illuminate\Support\Str;
+use RecursiveIteratorIterator;
+use RecursiveDirectoryIterator;
+use Marshmallow\Nova\Flexible\Layouts\MarshmallowLayout;
 use Marshmallow\Nova\Flexible\Layouts\Defaults\WysiwygLayout;
 
 class Flex
@@ -13,12 +17,15 @@ class Flex
 
     public function getLayouts()
     {
-        if (! empty(config('flexible.layouts'))) {
+        if ($this->autoDiscoveryIsActive()) {
+            return $this->autoDiscoverLayouts();
+        }
+        if (!empty(config('flexible.layouts'))) {
             $layouts_array = [];
             foreach (config('flexible.layouts') as $key => $layout) {
                 if (is_callable($layout)) {
                     $callable_result = $layout();
-                    if (! is_array($callable_result)) {
+                    if (!is_array($callable_result)) {
                         throw new Exception('Your layout callable should return an array');
                     }
                     $layouts_array = array_merge($layouts_array, $callable_result);
@@ -27,7 +34,7 @@ class Flex
                 }
             }
 
-            if (config('flexible.merge_layouts') === true) {
+            if ($this->loadDefaultLayouts()) {
                 return array_merge(
                     $layouts_array,
                     $this->default_layouts
@@ -48,5 +55,54 @@ class Flex
         }
 
         return $html;
+    }
+
+    protected function autoDiscoverLayouts(): array
+    {
+        $layouts_folder = $this->getLayoutsFolder();
+        $it = new RecursiveDirectoryIterator($layouts_folder);
+
+        $layouts = [];
+        foreach (new RecursiveIteratorIterator($it) as $file) {
+            if ($file->getExtension() == 'php') {
+                $layout = $this->resolveFilePathToClass($file);
+                $layouts[$layout->name()] = get_class($layout);
+            }
+        }
+
+        if ($this->loadDefaultLayouts()) {
+            $layouts = array_merge(
+                $layouts,
+                $this->default_layouts
+            );
+        }
+
+        return $layouts;
+    }
+
+    protected function resolveFilePathToClass($file): MarshmallowLayout
+    {
+        $local_namespace = (string) Str::of($file->getPathName())
+            ->remove('.php')
+            ->remove(app_path())
+            ->prepend('\App')
+            ->replace('/', '\\');
+
+        return new $local_namespace;
+    }
+
+    protected function getLayoutsFolder(): string
+    {
+        return app_path('Flexible');
+    }
+
+    protected function autoDiscoveryIsActive(): bool
+    {
+        return (array_key_exists('auto-discovery', config('flexible')) && config('flexible.auto-discovery') === true);
+    }
+
+    protected function loadDefaultLayouts(): bool
+    {
+        return config('flexible.merge_layouts') === true;
     }
 }
