@@ -64,6 +64,17 @@ class MakeLayoutCommand extends GeneratorCommand
             $this->line($line);
         }
 
+        //Remove if Autodiscovery Enabled
+        $slug_name      = str_replace('.', '-', $this->getView('slug'));
+        $layout_name    = str_replace('/', '\\', $this->layout_class);
+        $layout_path    = 'App\Flexible\Layouts'.$this->subdirectory.'\\'.$layout_name.'::class';
+
+        $text = PHP_EOL.'Dont forget to add: '.PHP_EOL;
+        $text .= "'{$slug_name}' => {$layout_path}".PHP_EOL;
+        $text .= 'to config/flexible.php';
+
+        $this->line($text);
+
         return 0;
     }
 
