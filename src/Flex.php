@@ -66,6 +66,9 @@ class Flex
         foreach (new RecursiveIteratorIterator($it) as $file) {
             if ($file->getExtension() == 'php') {
                 $layout = $this->resolveFilePathToClass($file);
+                if ($layout->shouldNotBeAutoLoaded()) {
+                    continue;
+                }
                 $layouts[$layout->name()] = get_class($layout);
             }
         }

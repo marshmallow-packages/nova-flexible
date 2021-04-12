@@ -108,6 +108,15 @@ class Layout implements LayoutInterface, JsonSerializable, ArrayAccess, Arrayabl
     protected $removeCallbackMethod;
 
     /**
+     * The callback to generate the title of the flex items
+     *
+     * @var \Closure
+     */
+    protected $resolveTitleCallback;
+
+    protected $resolvedTitle;
+
+    /**
      * The parent model instance
      *
      * @var \Illuminate\Database\Eloquent\Model
@@ -128,13 +137,15 @@ class Layout implements LayoutInterface, JsonSerializable, ArrayAccess, Arrayabl
      * @param string $key
      * @return void
      */
-    public function __construct($title = null, $name = null, $fields = null, $key = null, $attributes = [], callable $removeCallbackMethod = null)
+    public function __construct($title = null, $name = null, $fields = null, $key = null, $attributes = [], callable $removeCallbackMethod = null, callable $resolveTitleUsing = null)
     {
         $this->title = $title ?? $this->title();
         $this->name = $name ?? $this->name();
         $this->fields = new FieldCollection($this->getFieldsArray($fields));
         $this->key = is_null($key) ? null : $this->getProcessedKey($key);
         $this->removeCallbackMethod = $removeCallbackMethod;
+        $this->resolveTitleUsing = $resolveTitleUsing;
+
         $this->setRawAttributes($this->cleanAttributes($attributes));
     }
 
@@ -249,6 +260,11 @@ class Layout implements LayoutInterface, JsonSerializable, ArrayAccess, Arrayabl
     public function matches($key)
     {
         return ($this->key === $key || $this->_key === $key);
+    }
+
+    public function shouldNotBeAutoLoaded()
+    {
+        return ($this->autoLoad === false);
     }
 
     /**
@@ -392,7 +408,19 @@ class Layout implements LayoutInterface, JsonSerializable, ArrayAccess, Arrayabl
             // since each group uses the same fields by reference. That's
             // why we need to serialize the field's current state.
             'attributes' => $this->fields->jsonSerialize(),
+
+            'title_data' => [
+                'resolved' => $this->getResolvedTitle($this->fields->jsonSerialize()),
+                'field' => $this->titleFromContent,
+            ],
         ];
+    }
+
+    public function getResolvedTitle($fields)
+    {
+        return $this->resolveTitle(
+            collect($fields)->pluck('value')->toArray()
+        );
     }
 
     /**
@@ -669,9 +697,36 @@ class Layout implements LayoutInterface, JsonSerializable, ArrayAccess, Arrayabl
             'description' => $this->description,
             'tags' => $this->tags,
             'image' => $this->image,
-            'title_from_content' => $this->titleFromContent,
+            'title_resolved' => ($this->hasResolverForTitleAttribute()) ? 1 : 0,
+            'title_from_content' => $this->resolvedTitle,
             'fields' => $this->fields->jsonSerialize(),
         ];
+    }
+
+    public function resolveTitleUsing(Closure $callable): self
+    {
+        $this->resolveTitleCallback = $callable;
+        return $this;
+    }
+
+    public function resolveTitle($values)
+    {
+        if (!$this->hasResolverForTitleAttribute()) {
+            $this->resolvedTitle = $this->titleFromContent;
+        } else {
+            if ($this->resolveTitleCallback) {
+                $callback = $this->resolveTitleCallback;
+                $this->resolvedTitle = $callback(...$values);
+            } else {
+                $this->resolvedTitle = $this->resolveTitleAttribute(...$values);
+            }
+            return $this->resolvedTitle;
+        }
+    }
+
+    protected function hasResolverForTitleAttribute()
+    {
+        return ($this->resolveTitleCallback || method_exists($this, 'resolveTitleAttribute'));
     }
 
     /**
