@@ -1,6 +1,6 @@
 <?php
 
-namespace App\View\Components;
+namespace App\View\Components{{subdirectory}};
 
 use Marshmallow\Nova\Flexible\View\Components\Component;
 
@@ -13,7 +13,7 @@ class {{component_class}} extends Component
      */
     public function render()
     {
-        return view('components.{{name}}')->with(array_merge(
+        return view('components.{{component_name}}')->with(array_merge(
             $this->baseLayoutWith(),
             [
                 /**

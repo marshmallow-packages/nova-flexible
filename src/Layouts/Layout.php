@@ -7,6 +7,7 @@ use Exception;
 use ArrayAccess;
 use JsonSerializable;
 use Laravel\Nova\Fields\Field;
+use Laravel\Nova\Fields\Heading;
 use Illuminate\Database\Eloquent\Model;
 use Marshmallow\Nova\Flexible\Flexible;
 use Laravel\Nova\Fields\FieldCollection;
@@ -71,7 +72,7 @@ class Layout implements LayoutInterface, JsonSerializable, ArrayAccess, Arrayabl
      *
      * @var string
      */
-    protected $image = 'https://marshmallow.dev/cdn/flex/sections-content-sections.svg';
+    protected $image = 'https://marshmallow.dev/cdn/flex/wysiwyg.jpg';
 
     /**
      * Add this layout to these tags.
@@ -107,6 +108,15 @@ class Layout implements LayoutInterface, JsonSerializable, ArrayAccess, Arrayabl
     protected $removeCallbackMethod;
 
     /**
+     * The callback to generate the title of the flex items
+     *
+     * @var \Closure
+     */
+    protected $resolveTitleCallback;
+
+    protected $resolvedTitle;
+
+    /**
      * The parent model instance
      *
      * @var \Illuminate\Database\Eloquent\Model
@@ -127,14 +137,32 @@ class Layout implements LayoutInterface, JsonSerializable, ArrayAccess, Arrayabl
      * @param string $key
      * @return void
      */
-    public function __construct($title = null, $name = null, $fields = null, $key = null, $attributes = [], callable $removeCallbackMethod = null)
+    public function __construct($title = null, $name = null, $fields = null, $key = null, $attributes = [], callable $removeCallbackMethod = null, callable $resolveTitleUsing = null)
     {
         $this->title = $title ?? $this->title();
         $this->name = $name ?? $this->name();
-        $this->fields = new FieldCollection($fields ?? $this->fields());
+        $this->fields = new FieldCollection($this->getFieldsArray($fields));
         $this->key = is_null($key) ? null : $this->getProcessedKey($key);
         $this->removeCallbackMethod = $removeCallbackMethod;
+        $this->resolveTitleUsing = $resolveTitleUsing;
+
         $this->setRawAttributes($this->cleanAttributes($attributes));
+    }
+
+    protected function getFieldsArray($fields = null)
+    {
+        if ($fields) {
+            return $fields;
+        }
+
+        $fields = $this->fields();
+        if (!empty($fields)) {
+            return $fields;
+        }
+
+        return [
+            Heading::make(__('This layout has no settings')),
+        ];
     }
 
     /**
@@ -234,6 +262,11 @@ class Layout implements LayoutInterface, JsonSerializable, ArrayAccess, Arrayabl
         return ($this->key === $key || $this->_key === $key);
     }
 
+    public function shouldNotBeAutoLoaded()
+    {
+        return ($this->autoLoad === false);
+    }
+
     /**
      * Resolve and return the result
      *
@@ -299,10 +332,10 @@ class Layout implements LayoutInterface, JsonSerializable, ArrayAccess, Arrayabl
     {
         $field = clone $original;
 
-        $callables = ['displayCallback','resolveCallback','fillCallback','requiredCallback'];
+        $callables = ['displayCallback', 'resolveCallback', 'fillCallback', 'requiredCallback'];
 
         foreach ($callables as $callable) {
-            if (! is_a($field->$callable ?? null, Closure::class)) {
+            if (!is_a($field->$callable ?? null, Closure::class)) {
                 continue;
             }
             $field->$callable = $field->$callable->bindTo($field);
@@ -375,7 +408,19 @@ class Layout implements LayoutInterface, JsonSerializable, ArrayAccess, Arrayabl
             // since each group uses the same fields by reference. That's
             // why we need to serialize the field's current state.
             'attributes' => $this->fields->jsonSerialize(),
+
+            'title_data' => [
+                'resolved' => $this->getResolvedTitle($this->fields->jsonSerialize()),
+                'field' => $this->titleFromContent,
+            ],
         ];
+    }
+
+    public function getResolvedTitle($fields)
+    {
+        return $this->resolveTitle(
+            collect($fields)->pluck('value')->toArray()
+        );
     }
 
     /**
@@ -389,11 +434,11 @@ class Layout implements LayoutInterface, JsonSerializable, ArrayAccess, Arrayabl
         return  $this->fields->map(function ($field) use ($request) {
             return $field->fill($request, $this);
         })
-                ->filter(function ($callback) {
-                    return is_callable($callback);
-                })
-                ->values()
-                ->all();
+            ->filter(function ($callback) {
+                return is_callable($callback);
+            })
+            ->values()
+            ->all();
     }
 
     /**
@@ -409,8 +454,8 @@ class Layout implements LayoutInterface, JsonSerializable, ArrayAccess, Arrayabl
         return  $this->fields->map(function ($field) use ($request, $specificity, $key) {
             return $this->getScopedFieldRules($field, $request, $specificity, $key);
         })
-                ->collapse()
-                ->all();
+            ->collapse()
+            ->all();
     }
 
     /**
@@ -433,8 +478,8 @@ class Layout implements LayoutInterface, JsonSerializable, ArrayAccess, Arrayabl
 
             return [$key => $this->wrapScopedFieldRules($field, $validatorRules)];
         })
-                ->filter()
-                ->all();
+            ->filter()
+            ->all();
     }
 
     /**
@@ -474,7 +519,7 @@ class Layout implements LayoutInterface, JsonSerializable, ArrayAccess, Arrayabl
      */
     protected function wrapScopedFieldRules($field, array $rules)
     {
-        if (! $rules) {
+        if (!$rules) {
             return null;
         }
 
@@ -519,7 +564,7 @@ class Layout implements LayoutInterface, JsonSerializable, ArrayAccess, Arrayabl
      */
     public function offsetExists($offset)
     {
-        return ! is_null($this->getAttribute($offset));
+        return !is_null($this->getAttribute($offset));
     }
 
     /**
@@ -587,7 +632,7 @@ class Layout implements LayoutInterface, JsonSerializable, ArrayAccess, Arrayabl
     protected function cleanAttributes($attributes)
     {
         foreach ($attributes as $key => $value) {
-            if (! is_string($value) || strlen($value)) {
+            if (!is_string($value) || strlen($value)) {
                 continue;
             }
             $attributes[$key] = null;
@@ -652,9 +697,36 @@ class Layout implements LayoutInterface, JsonSerializable, ArrayAccess, Arrayabl
             'description' => $this->description,
             'tags' => $this->tags,
             'image' => $this->image,
-            'title_from_content' => $this->titleFromContent,
+            'title_resolved' => ($this->hasResolverForTitleAttribute()) ? 1 : 0,
+            'title_from_content' => $this->resolvedTitle,
             'fields' => $this->fields->jsonSerialize(),
         ];
+    }
+
+    public function resolveTitleUsing(Closure $callable): self
+    {
+        $this->resolveTitleCallback = $callable;
+        return $this;
+    }
+
+    public function resolveTitle($values)
+    {
+        if (!$this->hasResolverForTitleAttribute()) {
+            $this->resolvedTitle = $this->titleFromContent;
+        } else {
+            if ($this->resolveTitleCallback) {
+                $callback = $this->resolveTitleCallback;
+                $this->resolvedTitle = $callback(...$values);
+            } else {
+                $this->resolvedTitle = $this->resolveTitleAttribute(...$values);
+            }
+            return $this->resolvedTitle;
+        }
+    }
+
+    protected function hasResolverForTitleAttribute()
+    {
+        return ($this->resolveTitleCallback || method_exists($this, 'resolveTitleAttribute'));
     }
 
     /**

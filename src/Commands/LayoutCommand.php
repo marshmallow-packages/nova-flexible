@@ -42,6 +42,10 @@ class LayoutCommand extends Command
     {
         $this->prepareFileStructure();
 
+        $this->newLine();
+        $this->info('🧨🧨 This command is deprecated. Please use `make:flex` instead. This command will be deleted in the next version');
+        $this->newLine();
+
         $this->title = $this->ask('Please provide a name for your layout');
 
         $slug = str_slug($this->title);
@@ -49,12 +53,12 @@ class LayoutCommand extends Command
 
         $name_example = $slug;
         $class_example = (strpos($upper_camel, 'Layout') === false)
-                                ? $upper_camel . 'Layout'
-                                : $upper_camel;
+            ? $upper_camel . 'Layout'
+            : $upper_camel;
 
         $component_example = (strpos($upper_camel, 'Component') === false)
-                                ? $upper_camel . 'Component'
-                                : $upper_camel;
+            ? $upper_camel . 'Component'
+            : $upper_camel;
 
 
         $this->name = $this->ask('Please provide a slug for your layout', $name_example);
@@ -74,17 +78,17 @@ class LayoutCommand extends Command
         }
 
         file_put_contents(
-            app_path('Flexible/Layouts/'. $this->layout_class .'.php'),
+            app_path('Flexible/Layouts/' . $this->layout_class . '.php'),
             $this->parseStubContent('Layout')
         );
 
         file_put_contents(
-            app_path('View/Components/'. $this->component_class_name .'.php'),
+            app_path('View/Components/' . $this->component_class_name . '.php'),
             $this->parseStubContent('Component')
         );
 
         file_put_contents(
-            resource_path('views/components/'. $slug .'.blade.php'),
+            resource_path('views/components/' . $slug . '.blade.php'),
             $this->parseStubContent('View')
         );
 
@@ -105,6 +109,7 @@ class LayoutCommand extends Command
         return [
             '{{component_class}}' => $this->component_class_name,
             '{{name}}' => $this->name,
+            '{{component_name}}' => $this->name,
             '{{title}}' => $this->title,
             '{{class}}' => $this->layout_class,
             '{{component_class_path}}' => $this->component_class_path,
@@ -115,7 +120,7 @@ class LayoutCommand extends Command
 
     protected function getStubContent($stub_name)
     {
-        return file_get_contents(__dir__ . '/../Stubs/'. $stub_name .'.stub');
+        return file_get_contents(__dir__ . '/../Stubs/' . $stub_name . '.stub');
     }
 
     protected function parseStubContent($stub_name)
@@ -141,7 +146,7 @@ class LayoutCommand extends Command
             app_path('Flexible/Layouts'),
         ];
         foreach ($structure as $folder) {
-            if (! file_exists($folder)) {
+            if (!file_exists($folder)) {
                 mkdir($folder);
             }
         }
