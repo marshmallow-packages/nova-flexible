@@ -12,7 +12,7 @@
     "devDependencies": {
         "axios": "^0.21.1",
         "cross-env": "^7.0.3",
-        "laravel-mix": "^6.0.16",
+        "laravel-mix": "^6.0.17",
         "laravel-nova": "^1.11",
         "postcss": "^8.2",
         "resolve-url-loader": "^3.1.2",

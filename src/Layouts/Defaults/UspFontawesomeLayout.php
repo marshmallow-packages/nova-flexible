@@ -30,7 +30,7 @@ class UspFontawesomeLayout extends MarshmallowLayout
 
     protected $description = 'Create USPs with a Fontawesome icon.';
 
-    protected $image = 'https://marshmallow.dev/cdn/flex/font-awesome.jpg';
+    protected $image = 'https://marshmallow.dev/cdn/flex/layout/media-objects.png';
 
     protected $tags = ['USP', 'Marshmallow'];
 
