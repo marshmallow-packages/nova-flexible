@@ -3682,6 +3682,7 @@ klona@^2.0.4:
 laravel-mix@^6.0.17:
   version "6.0.17"
   resolved "https://registry.yarnpkg.com/laravel-mix/-/laravel-mix-6.0.17.tgz#b41703707ea78ea92fffa22b7d622eedf5460e1d"
+
   dependencies:
     "@babel/core" "^7.12.3"
     "@babel/plugin-proposal-object-rest-spread" "^7.12.1"
@@ -4816,9 +4817,9 @@ postcss@7.0.21:
     source-map "^0.6.1"
     supports-color "^6.1.0"
 
-postcss@^8.1, postcss@^8.2.8:
-  version "8.2.9"
-  resolved "https://registry.npmjs.org/postcss/-/postcss-8.2.9.tgz"
+postcss@^8.2, postcss@^8.2.8:
+  version "8.2.10"
+  resolved "https://registry.yarnpkg.com/postcss/-/postcss-8.2.10.tgz#ca7a042aa8aff494b334d0ff3e9e77079f6f702b"
   dependencies:
     colorette "^1.2.2"
     nanoid "^3.1.22"
