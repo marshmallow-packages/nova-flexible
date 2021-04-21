@@ -72,7 +72,7 @@ class Layout implements LayoutInterface, JsonSerializable, ArrayAccess, Arrayabl
      *
      * @var string
      */
-    protected $image = 'https://marshmallow.dev/cdn/flex/wysiwyg.jpg';
+    protected $image = 'https://marshmallow.dev/cdn/flex/layout/containers.png';
 
     /**
      * Add this layout to these tags.
