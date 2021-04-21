@@ -59,19 +59,23 @@ class Flex
 
     protected function autoDiscoverLayouts(): array
     {
-        $layouts_folder = $this->getLayoutsFolder();
-        $it = new RecursiveDirectoryIterator($layouts_folder);
-
         $layouts = [];
-        foreach (new RecursiveIteratorIterator($it) as $file) {
-            if ($file->getExtension() == 'php') {
-                $layout = $this->resolveFilePathToClass($file);
-                if ($layout->shouldNotBeAutoLoaded()) {
-                    continue;
+        $layouts_folder = $this->getLayoutsFolder();
+
+        if (file_exists($layouts_folder)) {
+            $it = new RecursiveDirectoryIterator($layouts_folder);
+
+            foreach (new RecursiveIteratorIterator($it) as $file) {
+                if ($file->getExtension() == 'php') {
+                    $layout = $this->resolveFilePathToClass($file);
+                    if ($layout->shouldNotBeAutoLoaded()) {
+                        continue;
+                    }
+                    $layouts[$layout->name()] = get_class($layout);
                 }
-                $layouts[$layout->name()] = get_class($layout);
             }
         }
+
 
         if ($this->loadDefaultLayouts()) {
             $layouts = array_merge(
