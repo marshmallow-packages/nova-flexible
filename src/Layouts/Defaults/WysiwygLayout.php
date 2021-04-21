@@ -23,7 +23,7 @@ class WysiwygLayout extends MarshmallowLayout
 
     protected $description = 'A What You See Is What You Get editor.';
 
-    protected $image = 'https://marshmallow.dev/cdn/flex/wysiwyg.jpg';
+    protected $image = 'https://marshmallow.dev/cdn/flex/layout/containers.png';
 
     protected $tags = ['Content', 'Marshmallow'];
 
