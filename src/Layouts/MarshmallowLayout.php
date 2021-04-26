@@ -121,19 +121,6 @@ class MarshmallowLayout extends Layout
         return 'target="_blank"';
     }
 
-    protected function getOrDefault(string $column, $default)
-    {
-        $attributes = $this->layout->getAttributes();
-        if ($attributes && array_key_exists($column, $attributes)) {
-            $content = $this->layout->getAttributes()[$column];
-            if ($content) {
-                return $content;
-            }
-        }
-
-        return $default;
-    }
-
     public function onLoad()
     {
         //
