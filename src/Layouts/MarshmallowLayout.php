@@ -11,6 +11,7 @@
  * @license  MIT Licence
  * @link     https://marshmallow.dev
  */
+
 namespace Marshmallow\Nova\Flexible\Layouts;
 
 /**
@@ -36,7 +37,7 @@ class MarshmallowLayout extends Layout
          * have been removed because they where deprecated, we wil
          * return an empty string so no exception will be thrown.
          */
-        if (! method_exists($this, 'getComponentClass')) {
+        if (!method_exists($this, 'getComponentClass')) {
             return '';
         }
 
@@ -54,7 +55,7 @@ class MarshmallowLayout extends Layout
      */
     public function getImage(string $field = 'image')
     {
-        if (! $this->hasImage($field)) {
+        if (!$this->hasImage($field)) {
             return null;
         }
 
@@ -118,6 +119,19 @@ class MarshmallowLayout extends Layout
         }
 
         return 'target="_blank"';
+    }
+
+    protected function getOrDefault(string $column, $default)
+    {
+        $attributes = $this->layout->getAttributes();
+        if ($attributes && array_key_exists($column, $attributes)) {
+            $content = $this->layout->getAttributes()[$column];
+            if ($content) {
+                return $content;
+            }
+        }
+
+        return $default;
     }
 
     public function onLoad()
