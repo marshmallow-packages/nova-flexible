@@ -13,6 +13,7 @@ use Marshmallow\Nova\Flexible\Flexible;
 use Laravel\Nova\Fields\FieldCollection;
 use Illuminate\Contracts\Support\Arrayable;
 use Laravel\Nova\Http\Requests\NovaRequest;
+use Marshmallow\HelperFunctions\Facades\URL;
 use Marshmallow\Nova\Flexible\Http\ScopedRequest;
 use Marshmallow\Nova\Flexible\Concerns\HasFlexible;
 use Marshmallow\Nova\Flexible\Http\FlexibleAttribute;
@@ -155,7 +156,15 @@ class Layout implements LayoutInterface, JsonSerializable, ArrayAccess, Arrayabl
             return $fields;
         }
 
-        $fields = $this->fields();
+        /**
+         * Only load the fields if we are using Nova.
+         * There is no need to do this when we are rendering
+         * fields in the front-end.
+         */
+        if (URL::isNova(request())) {
+            $fields = $this->fields();
+        }
+
         if (!empty($fields)) {
             return $fields;
         }
