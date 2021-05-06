@@ -7,7 +7,7 @@ return [
      * If you want to manualy add the layouts you can do so by turning
      * this to false and add your layouts to the layouts part of this config.
      */
-    'auto-discovery' => true,
+    'auto-discovery' => false,
 
     /**
      * Which WYSIWYG editor should we load for you in our default
