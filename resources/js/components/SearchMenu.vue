@@ -1,6 +1,6 @@
 <template>
     <div class="w-3/5" v-if="layouts">
-        <div v-if="this.limitCounter != 0 && this.allowedToCreate">
+        <div v-if="this.limitCounter != 0 && field.allowedToCreate">
             <div v-if="layouts.length === 1">
                 <button
                     type="button"
