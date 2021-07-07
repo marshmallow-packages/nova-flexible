@@ -1,7 +1,6 @@
 <template>
     <div class="w-3/5" v-if="layouts">
-
-        <div v-if="this.limitCounter != 0">
+        <div v-if="this.limitCounter != 0 && this.allowedToCreate">
             <div v-if="layouts.length === 1">
                 <button
                     type="button"
@@ -15,12 +14,14 @@
             <div v-if="layouts.length > 1">
                 <div style="min-width: 300px;">
                     <div class="flexible-search-menu-multiselect">
-                        <multiselect v-model="selectedLayout" :options="layouts"
-                                     :custom-label="renderLayoutName"
-                                     :placeholder="field.button"
-                                     @input="selectLayout"
-                                     v-bind="attributes"
-                                     track-by="name"
+                        <multiselect
+                            v-model="selectedLayout"
+                            :options="layouts"
+                            :custom-label="renderLayoutName"
+                            :placeholder="field.button"
+                            @input="selectLayout"
+                            v-bind="attributes"
+                            track-by="name"
                         ></multiselect>
                     </div>
                 </div>
@@ -30,36 +31,49 @@
 </template>
 
 <script>
-
-    import Multiselect from 'vue-multiselect'
+    import Multiselect from "vue-multiselect";
 
     export default {
-        components: {Multiselect},
+        components: { Multiselect },
 
-        props: ['layouts', 'field', 'resourceName', 'resourceId', 'resource', 'errors', 'limitCounter'],
+        props: [
+            "layouts",
+            "field",
+            "resourceName",
+            "resourceId",
+            "resource",
+            "errors",
+            "limitCounter",
+            "allowedToCreate",
+            "allowedToDelete",
+            "allowedToChangeOrder",
+        ],
 
         data() {
             return {
                 selectedLayout: null,
-                isLayoutsDropdownOpen: false
+                isLayoutsDropdownOpen: false,
             };
         },
 
         computed: {
             attributes() {
                 return {
-                    selectLabel: this.field.menu.data.selectLabel || __('Press enter to select'),
-                    label: this.field.menu.data.label || 'title',
-                    openDirection: this.field.menu.data.openDirection || 'bottom',
-                }
-            }
+                    selectLabel:
+                        this.field.menu.data.selectLabel ||
+                        __("Press enter to select"),
+                    label: this.field.menu.data.label || "title",
+                    openDirection:
+                        this.field.menu.data.openDirection || "bottom",
+                };
+            },
         },
 
         methods: {
-            selectLayout(value){
+            selectLayout(value) {
                 this.addGroup(value);
             },
-            renderLayoutName(layout){
+            renderLayoutName(layout) {
                 return layout.title;
             },
             /**
@@ -80,11 +94,11 @@
             addGroup(layout) {
                 if (!layout) return;
 
-                this.$emit('addGroup', layout);
+                this.$emit("addGroup", layout);
 
                 this.isLayoutsDropdownOpen = false;
                 this.selectedLayout = null;
             },
-        }
-    }
+        },
+    };
 </script>

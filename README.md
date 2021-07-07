@@ -20,6 +20,7 @@ php artisan vendor:publish --provider="Marshmallow\Nova\Flexible\FieldServicePro
 -   [Customize](#Customize)
     -   [Title on Layout classes](#Customize)
     -   [Title on custom layouts](#Customize)
+    -   ['Config methods'](#ConfigMethods)
 -   [Helpers](#Helpers)
 
 ## Commands
@@ -122,6 +123,26 @@ protected $titleFromContent = 'title';
         });
     }
 )
+```
+
+<a id="ConfigMethods"></a>
+
+## Config Methods
+
+You can call a load config method once you've created your flexible field to change the behaviour of the flexible field. Below you will find some examples.
+
+```php
+$this->getFlex(__('Layout'), 'layout')
+    ->loadConfig([
+        'simpleView' => null,
+        'allowedToCreate' => ['allowed' => true|false],
+        'allowedToDelete' => ['allowed' => true|false],
+        'allowedToChangeOrder' => ['allowed' => true|false],
+        'simpleMenu' => null,
+        'button' => ['label' => 'Button Label'],
+        'fullWidth' => ['fullWidth' => true|false],
+        'limit' => ['limit' => 3],
+    ]),
 ```
 
 ## Helpers
