@@ -73,10 +73,55 @@ class Flexible extends Field
         parent::__construct($name, $attribute, $resolveCallback);
 
         $this->button(__('Add layout'));
+        $this->allowedToCreate(true);
+        $this->allowedToDelete(true);
+        $this->allowedToChangeOrder(true);
 
         $this->menu('flexible-component-selector');
 
         $this->hideFromIndex();
+    }
+
+    public function loadConfig(array $config = [])
+    {
+        $flex = $this;
+        if (!empty($config)) {
+            foreach ($config as $method => $arguments) {
+                if ($arguments) {
+                    $flex = $flex->{$method}(...$arguments);
+                } else {
+                    $flex = $flex->{$method}();
+                }
+            }
+        }
+
+        return $flex;
+    }
+
+    public function simpleView()
+    {
+        $this->collapsed(false);
+        $this->fullWidth(true);
+        $this->withMeta(['simpleLayout' => true]);
+        $this->allowedToCreate(false);
+        $this->allowedToDelete(false);
+        $this->allowedToChangeOrder(false);
+        return $this;
+    }
+
+    public function allowedToCreate($allowed)
+    {
+        return $this->withMeta(['allowedToCreate' => $allowed]);
+    }
+
+    public function allowedToDelete($allowed)
+    {
+        return $this->withMeta(['allowedToDelete' => $allowed]);
+    }
+
+    public function allowedToChangeOrder($allowed)
+    {
+        return $this->withMeta(['allowedToChangeOrder' => $allowed]);
     }
 
     /**
@@ -113,9 +158,9 @@ class Flexible extends Field
      *
      * @return mixed
      */
-    public function fullWidth()
+    public function fullWidth($fullWidth = true)
     {
-        return $this->withMeta(['fullWidth' => true]);
+        return $this->withMeta(['fullWidth' => $fullWidth]);
     }
 
     /**

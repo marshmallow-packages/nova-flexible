@@ -2,7 +2,9 @@
 
 namespace Marshmallow\Nova\Flexible;
 
+use Error;
 use Exception;
+use TypeError;
 use Illuminate\Support\Str;
 use RecursiveIteratorIterator;
 use RecursiveDirectoryIterator;
@@ -67,11 +69,25 @@ class Flex
 
             foreach (new RecursiveIteratorIterator($it) as $file) {
                 if ($file->getExtension() == 'php') {
-                    $layout = $this->resolveFilePathToClass($file);
-                    if ($layout->shouldNotBeAutoLoaded()) {
-                        continue;
+
+                    try {
+                        $layout = $this->resolveFilePathToClass($file);
+                        if ($layout->shouldNotBeAutoLoaded()) {
+                            continue;
+                        }
+                        $layouts[$layout->name()] = get_class($layout);
+                    } catch (TypeError $e) {
+                        /**
+                         * This is not a flexible layout file. We will not
+                         * load this so therefor we dont need to do anything
+                         * in this catched exception.
+                         */
+                    } catch (Error $e) {
+                        /**
+                         * This is probably a trait file. We don't load these
+                         * either.
+                         */
                     }
-                    $layouts[$layout->name()] = get_class($layout);
                 }
             }
         }

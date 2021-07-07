@@ -1,15 +1,23 @@
 <template>
     <div class="z-20 relative" v-if="layouts">
         <div class="relative" v-if="layouts.length > 1">
-            <div v-if="isLayoutsDropdownOpen"
-                 class="absolute rounded-lg shadow-lg max-w-full mb-3 pin-b max-h-search overflow-y-auto border border-40"
+            <div
+                v-if="isLayoutsDropdownOpen"
+                class="absolute rounded-lg shadow-lg max-w-full mb-3 pin-b max-h-search overflow-y-auto border border-40"
             >
                 <div>
                     <ul class="list-reset">
-                        <li v-for="layout in layouts" class="border-b border-40">
-                            <a @click="addGroup(layout)"
-                               class="cursor-pointer flex items-center hover:bg-30 block py-2 px-3 no-underline font-normal bg-20">
-                                <div><p class="text-90">{{ layout.title }}</p></div>
+                        <li
+                            v-for="layout in layouts"
+                            class="border-b border-40"
+                        >
+                            <a
+                                @click="addGroup(layout)"
+                                class="cursor-pointer flex items-center hover:bg-30 block py-2 px-3 no-underline font-normal bg-20"
+                            >
+                                <div>
+                                    <p class="text-90">{{ layout.title }}</p>
+                                </div>
                             </a>
                         </li>
                     </ul>
@@ -21,7 +29,7 @@
             tabindex="0"
             class="btn btn-default btn-primary inline-flex items-center relative"
             @click="toggleLayoutsDropdownOrAddDefault"
-            v-if="this.limitCounter != 0"
+            v-if="this.limitCounter != 0 && this.allowedToCreate"
         >
             <span>{{ field.button }}</span>
         </button>
@@ -29,13 +37,23 @@
 </template>
 
 <script>
-
     export default {
-        props: ['layouts', 'field', 'resourceName', 'resourceId', 'resource', 'errors', 'limitCounter'],
+        props: [
+            "layouts",
+            "field",
+            "resourceName",
+            "resourceId",
+            "resource",
+            "errors",
+            "limitCounter",
+            "allowedToCreate",
+            "allowedToDelete",
+            "allowedToChangeOrder",
+        ],
 
         data() {
             return {
-                isLayoutsDropdownOpen: false
+                isLayoutsDropdownOpen: false,
             };
         },
 
@@ -58,10 +76,10 @@
             addGroup(layout) {
                 if (!layout) return;
 
-                this.$emit('addGroup', layout);
+                this.$emit("addGroup", layout);
 
                 this.isLayoutsDropdownOpen = false;
             },
-        }
-    }
+        },
+    };
 </script>
