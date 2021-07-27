@@ -155,7 +155,6 @@
                 this.groups = {};
 
                 for (var i = 0; i < this.value.length; i++) {
-                    console.log(this.value[i].resolved_title);
                     this.addGroup(
                         this.getLayout(this.value[i].layout),
                         this.value[i].attributes,
