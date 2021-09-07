@@ -13,6 +13,8 @@ use Marshmallow\Nova\Flexible\Layouts\Defaults\WysiwygLayout;
 
 class Flex
 {
+    protected $loaded_layouts;
+
     protected $default_layouts = [
         'wysiwyg' => WysiwygLayout::class,
     ];
@@ -61,6 +63,10 @@ class Flex
 
     protected function autoDiscoverLayouts(): array
     {
+        if ($this->loaded_layouts) {
+            return $this->loaded_layouts;
+        }
+
         $layouts = [];
         $layouts_folder = $this->getLayoutsFolder();
 
@@ -99,6 +105,8 @@ class Flex
                 $this->default_layouts
             );
         }
+
+        $this->loaded_layouts = $layouts;
 
         return $layouts;
     }
