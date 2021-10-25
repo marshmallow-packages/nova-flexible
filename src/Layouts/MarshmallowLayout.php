@@ -59,6 +59,10 @@ class MarshmallowLayout extends Layout
             return null;
         }
 
+        if (config('app.asset_url')) {
+            return asset($this->attributes[$field]);
+        }
+
         return asset('storage/' . $this->attributes[$field]);
     }
 
