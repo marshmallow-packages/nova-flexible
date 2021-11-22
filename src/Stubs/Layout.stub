@@ -39,7 +39,7 @@ class {{class}} extends MarshmallowLayout
      *
      * @var array
      */
-    protected $tags = ['Custom'];
+    protected $tags = [{{tags}}];
 
     /**
      * Get the fields displayed by the layout.
