@@ -49,7 +49,8 @@ class MakeLayoutCommand extends GeneratorCommand
 
         $this->title = Str::afterLast($name_path, '/');
         if (Str::contains($name_path, '/')) {
-            $this->subdirectory = '\\' . Str::before($name_path, '/');
+            $this->subdirectory = '\\' . Str::beforeLast($name_path, '/');
+            $this->subdirectory =  Str::replace('/', '\\', $this->subdirectory);
         }
         $this->component_class_name = $name_path;
         $this->component_class_path = str_replace('/', '\\', '\App\View\Components\\' . $name_path . 'Component::class');
