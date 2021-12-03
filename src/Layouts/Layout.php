@@ -169,9 +169,7 @@ class Layout implements LayoutInterface, JsonSerializable, ArrayAccess, Arrayabl
             return $fields;
         }
 
-        return [
-            Heading::make(__('This layout has no settings')),
-        ];
+        return [];
     }
 
     /**
