@@ -37,6 +37,7 @@ class MakeLayoutCommand extends GeneratorCommand
     protected $subdirectory;
     protected $fields = '';
     protected $use = '';
+    protected $tags = '"Custom"';
 
     /**
      * Execute the console command.
@@ -45,14 +46,29 @@ class MakeLayoutCommand extends GeneratorCommand
      */
     public function handle()
     {
+
         $name_path = Str::ucfirst(str_replace('.', '/', $this->getView('studly')));
 
         $this->title = Str::afterLast($name_path, '/');
         if (Str::contains($name_path, '/')) {
-            $this->subdirectory = '\\' . Str::before($name_path, '/');
+            $this->subdirectory = '\\' . Str::beforeLast($name_path, '/');
+            $this->subdirectory =  Str::replace('/', '\\', $this->subdirectory);
         }
+
         $this->component_class_name = $name_path;
         $this->component_class_path = str_replace('/', '\\', '\App\View\Components\\' . $name_path . 'Component::class');
+
+
+        $tags = explode('\\', $this->subdirectory);
+        foreach ($tags as $tag) {
+            if ($tag == "") {
+                continue;
+            }
+
+            $this->tags .= '"' . $tag . '"';
+        }
+
+        $this->tags = Str::replace('""', '", "', $this->tags);
 
         $this->layout_class = $this->title . 'Layout';
 
@@ -173,6 +189,7 @@ class MakeLayoutCommand extends GeneratorCommand
             '{{component_class_path}}' => $this->component_class_path,
             '{{fields}}' => $this->fields,
             '{{use}}' => $this->use,
+            '{{tags}}' => $this->tags,
         ];
     }
 
