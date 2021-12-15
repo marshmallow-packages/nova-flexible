@@ -1,5 +1,8 @@
 <template>
-    <div class="relative flex bg-white mb-4 pb-1" :id="group.key">
+    <div
+        class="flexible-group-container relative flex bg-white mb-4 pb-1"
+        :id="group.key"
+    >
         <div
             class="z-10 bg-white border-t border-l border-b border-60 h-auto pin-l pin-t rounded-l self-start w-8"
         >
