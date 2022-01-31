@@ -66,7 +66,7 @@ trait HasFlexible
             return new Collection();
         }
 
-        if (! is_array($flexible)) {
+        if (!is_array($flexible)) {
             return new Collection();
         }
 
@@ -134,7 +134,7 @@ trait HasFlexible
         if (is_array($item)) {
             $name = $item['layout'] ?? null;
             $key = $item['key'] ?? null;
-            $attributes = (array) $item['attributes'] ?? [];
+            $attributes = (array_key_exists('attributes', $item) && $item['attributes']) ? $item['attributes'] : [];
         } elseif (is_a($item, \stdClass::class)) {
             $name = $item->layout ?? null;
             $key = $item->key ?? null;
