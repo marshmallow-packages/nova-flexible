@@ -8,9 +8,48 @@ use Marshmallow\Nova\Flexible\Facades\Flex;
 
 trait HasFlexable
 {
+    /**
+     * This is an array of tags of all the flexible items you
+     * wish to INCLUDE in your flexible template selector.
+     */
+    protected array $includeFlexibleTags = [];
+
+    /**
+     * This is an array of tags of all the flexible items you
+     * wish to EXCLUDE in your flexible template selector.
+     */
+    protected array $excludeFlexibleTags = [];
+
+
+    /**
+     * Set the tags you wish to include to
+     * the flexible layout selector.
+     *
+     * @return self
+     */
+    protected function includeFlexibleTags(array $includeFlexibleTags): self
+    {
+        $this->includeFlexibleTags = $includeFlexibleTags;
+        return $this;
+    }
+
+    /**
+     * Set the tags you wish to exclude from
+     * to the flexible layout selector.
+     *
+     * @return self
+     */
+    protected function excludeFlexibleTags(array $excludeFlexibleTags): self
+    {
+        $this->excludeFlexibleTags = $excludeFlexibleTags;
+        return $this;
+    }
+
     protected function getFlex(...$arguments)
     {
         $count = count($arguments);
+        $tags = [];
+
         if (!$count) {
             throw new Exception("Please provide a name");
         }
@@ -31,6 +70,13 @@ trait HasFlexable
             $tags = $arguments[2];
         }
 
+        /**
+         * Merge the tags that are provided with this method call
+         * with the tags that have been provided via the
+         * `includeFlexibleTags` method.
+         */
+        $tags = array_merge($this->includeFlexibleTags, $tags);
+
         $ignore = [];
         if ($this instanceof MarshmallowLayout) {
             $ignore[] = $this->name();
@@ -43,12 +89,16 @@ trait HasFlexable
             }
 
             $layout_instance = new $layout;
-            if (! empty($tags) && ! $layout_instance->hasTag($tags)) {
+            if (!empty($tags) && !$layout_instance->hasTag($tags)) {
+                continue;
+            }
+
+            if ($layout_instance->hasTag($this->excludeFlexibleTags)) {
                 continue;
             }
 
             $flex->addLayout($layout)
-                 ->collapsed();
+                ->collapsed();
         }
 
         return $flex;
