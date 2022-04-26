@@ -1,5 +1,5 @@
 <template>
-    <div class="z-20 relative" v-if="layouts">
+    <div class="z-20" v-if="layouts">
         <div class="relative" v-if="layouts.length > 1">
             <div
                 v-if="isLayoutsDropdownOpen"
@@ -175,10 +175,10 @@
             availableTags() {
                 const available_tags = [];
                 var layouts = this.layouts;
-                layouts.forEach(function(layout, layout_index) {
+                layouts.forEach(function (layout, layout_index) {
                     var tags = layout.tags;
                     if (tags) {
-                        tags.forEach(function(tag, tag_index) {
+                        tags.forEach(function (tag, tag_index) {
                             if (!available_tags.includes(tag)) {
                                 available_tags.push(tag);
                             }
@@ -197,7 +197,7 @@
 
                 if (search.length > 0) {
                     let layouts = this.orginalLayouts;
-                    layouts.forEach(function(layout, layout_index) {
+                    layouts.forEach(function (layout, layout_index) {
                         if (
                             layout.description.toUpperCase().indexOf(search) !==
                                 -1 ||
