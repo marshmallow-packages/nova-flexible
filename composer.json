@@ -22,14 +22,26 @@
         }
     ],
     "require": {
-        "php": "^7.1|^8.0",
-        "marshmallow/nova-tinymce": "^1.0"
+        "php": "^7.3|^8.0",
+        "laravel/nova": "^4.0",
+        "laravel/framework": "^8.0|^9.0"
     },
     "autoload": {
         "psr-4": {
             "Marshmallow\\Nova\\Flexible\\": "src/"
         }
     },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests/"
+        }
+    },
+    "repositories": [
+        {
+            "type": "composer",
+            "url": "https://nova.laravel.com"
+        }
+    ],
     "extra": {
         "laravel": {
             "providers": [
@@ -41,5 +53,11 @@
         "sort-packages": true
     },
     "minimum-stability": "dev",
-    "prefer-stable": true
+    "prefer-stable": true,
+    "require-dev": {
+        "phpunit/phpunit": "^9.5"
+    },
+    "scripts": {
+        "test": "phpunit --colors=always tests"
+    }
 }
