@@ -1,5 +1,5 @@
-Nova.booting((Vue, router, store) => {
-    // Vue.component('index-nova-flexible-content', require('./components/IndexField'))
+Nova.booting((Vue) => {
+    // Vue.component('index-nova-flexible-content', require('./components/IndexField').default)
     Vue.component(
         "detail-nova-flexible-content",
         require("./components/DetailField.vue").default
@@ -30,7 +30,7 @@ Nova.booting((Vue, router, store) => {
     );
     Vue.component(
         "delete-flexible-content-group-modal",
-        require("./components/DeleteGroupModal.vue")
+        require("./components/DeleteGroupModal.vue").default
     );
     Vue.component(
         "icon-arrow-down",
