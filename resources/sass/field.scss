@@ -4,7 +4,8 @@ $multiselect-primary-color-dark: var(--primary-dark);
 $mulitselect-secondary-hover-color: #bacad6;
 $mulitselect-secondary-hover-color-10: #b3b9bf;
 $mulitselect-secondary-hover-color-25: #3c4b5f;
-$multiselect-radius: .5rem;
+$multiselect-radius: 0.5rem;
 $multiselect-placeholder-color: #7c858e;
 
 @import "./multiselect";
+@import "./colors";
