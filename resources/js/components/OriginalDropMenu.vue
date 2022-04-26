@@ -1,19 +1,21 @@
 <template>
-    <div class="z-20 relative" v-if="layouts">
-        <div class="relative" v-if="layouts.length > 1">
+    <div class="relative" v-if="layouts">
+        <div class="z-20" v-if="layouts.length > 1">
             <div
                 v-if="isLayoutsDropdownOpen"
-                class="absolute rounded-lg shadow-lg max-w-full mb-3 pin-b max-h-search overflow-y-auto border border-40"
+                class="z-20 absolute rounded-lg shadow-lg max-w-full top-full mt-3 pin-b max-h-search overflow-y-auto border border-gray-100 dark:border-gray-700"
             >
                 <div>
                     <ul class="list-reset">
                         <li
                             v-for="layout in layouts"
-                            class="border-b border-40"
+                            class="border-b border-gray-100 dark:border-gray-700"
+                            :key="'add-' + layout.name"
                         >
                             <a
+                                :dusk="'add-' + layout.name"
                                 @click="addGroup(layout)"
-                                class="cursor-pointer flex items-center hover:bg-30 block py-2 px-3 no-underline font-normal bg-20"
+                                class="cursor-pointer flex items-center hover:bg-gray-50 dark:hover:bg-gray-900 block py-2 px-3 no-underline font-normal bg-white dark:bg-gray-800"
                             >
                                 <div>
                                     <p class="text-90">{{ layout.title }}</p>
@@ -25,6 +27,7 @@
             </div>
         </div>
         <button
+            dusk="toggle-layouts-dropdown-or-add-default"
             type="button"
             tabindex="0"
             class="btn btn-default btn-primary inline-flex items-center relative"
@@ -49,12 +52,36 @@
             "allowedToCreate",
             "allowedToDelete",
             "allowedToChangeOrder",
+            "limitPerLayoutCounter",
         ],
+
+        emits: ["addGroup"],
 
         data() {
             return {
                 isLayoutsDropdownOpen: false,
             };
+        },
+
+        computed: {
+            filteredLayouts() {
+                return this.layouts.filter((layout) => {
+                    const count = this.limitPerLayoutCounter[layout.name];
+
+                    return (
+                        count === null ||
+                        count > 0 ||
+                        typeof count === "undefined"
+                    );
+                });
+            },
+
+            isBelowLayoutLimits() {
+                return (
+                    (this.limitCounter > 0 || this.limitCounter === null) &&
+                    this.filteredLayouts.length > 0
+                );
+            },
         },
 
         methods: {
@@ -77,9 +104,16 @@
                 if (!layout) return;
 
                 this.$emit("addGroup", layout);
+                Nova.$emit("nova-flexible-content-add-group", layout);
 
                 this.isLayoutsDropdownOpen = false;
             },
         },
     };
 </script>
+
+<style>
+    .top-full {
+        top: 100%;
+    }
+</style>
