@@ -8,7 +8,7 @@
                 <div>
                     <ul class="list-reset">
                         <li
-                            v-for="layout in layouts"
+                            v-for="layout in filteredLayouts"
                             class="border-b border-gray-100 dark:border-gray-700"
                             :key="'add-' + layout.name"
                         >
@@ -26,16 +26,15 @@
                 </div>
             </div>
         </div>
-        <button
+        <default-button
             dusk="toggle-layouts-dropdown-or-add-default"
             type="button"
             tabindex="0"
-            class="btn btn-default btn-primary inline-flex items-center relative"
             @click="toggleLayoutsDropdownOrAddDefault"
-            v-if="this.limitCounter != 0 && field.allowedToCreate"
+            v-if="isBelowLayoutLimits"
         >
             <span>{{ field.button }}</span>
-        </button>
+        </default-button>
     </div>
 </template>
 

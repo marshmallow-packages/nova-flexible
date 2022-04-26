@@ -1,87 +1,92 @@
 <template>
-    <div
-        class="flexible-group-container relative flex bg-white mb-4 pb-1"
-        :id="group.key"
-    >
-        <div
-            class="z-10 bg-white border-t border-l border-b border-60 h-auto pin-l pin-t rounded-l self-start w-8"
-        >
-            <button
-                type="button"
-                class="group-control btn border-r border-40 w-8 h-8 block"
-                :title="__('Expand')"
-                @click.prevent="expand"
-                v-if="collapsed"
-            >
-                <icon
-                    class="align-top"
-                    type="plus-square"
-                    width="16"
-                    height="16"
-                    view-box="0 0 24 24"
-                />
-            </button>
-            <div v-if="!collapsed">
-                <button
-                    type="button"
-                    class="group-control btn border-r border-40 w-8 h-8 block"
-                    :title="__('Collapse')"
-                    @click.prevent="collapse"
+    <div class="relative mb-4 pb-1" :id="group.key">
+        <div class="w-full shrink">
+            <div :class="titleStyle" v-if="group.title">
+                <div
+                    class="h-8 leading-normal h-full flex items-center box-content"
+                    :class="{
+                        'border-b border-gray-200 dark:border-gray-700 ': !collapsed,
+                    }"
                 >
-                    <icon
-                        class="align-top"
-                        type="minus-square"
-                        width="16"
-                        height="16"
-                        view-box="0 0 24 24"
-                    />
-                </button>
-                <div v-if="!readonly">
                     <button
-                        v-if="field.allowedToChangeOrder"
+                        dusk="expand-group"
                         type="button"
-                        class="group-control btn border-t border-r border-40 w-8 h-8 block"
-                        :title="__('Move up')"
-                        @click.prevent="moveUp"
+                        class="shrink-0 group-control btn border-r border-gray-200 dark:border-gray-700 w-8 h-8 block"
+                        :title="__('Expand')"
+                        @click.prevent="expand"
+                        v-if="collapsed"
                     >
                         <icon
-                            type="arrow-up"
-                            view-box="0 0 8 4.8"
-                            width="10"
-                            height="10"
-                        />
-                    </button>
-                    <button
-                        v-if="field.allowedToChangeOrder"
-                        type="button"
-                        class="group-control btn border-t border-r border-40 w-8 h-8 block"
-                        :title="__('Move down')"
-                        @click.prevent="moveDown"
-                    >
-                        <icon
-                            type="arrow-down"
-                            view-box="0 0 8 4.8"
-                            width="10"
-                            height="10"
-                        />
-                    </button>
-                    <button
-                        type="button"
-                        class="group-control btn border-t border-r border-40 w-8 h-8 block"
-                        :title="__('Delete')"
-                        v-if="
-                            !field.deletion_not_allowed && field.allowedToDelete
-                        "
-                        @click.prevent="confirmRemove"
-                    >
-                        <icon
-                            type="delete"
-                            view-box="0 0 20 20"
+                            type="plus"
+                            class="align-top"
                             width="16"
                             height="16"
                         />
                     </button>
-                    <portal to="modals">
+                    <button
+                        dusk="collapse-group"
+                        type="button"
+                        class="group-control btn border-r border-gray-200 dark:border-gray-700 w-8 h-8 block"
+                        :title="__('Collapse')"
+                        @click.prevent="collapse"
+                        v-else
+                    >
+                        <icon
+                            type="minus"
+                            class="align-top"
+                            width="16"
+                            height="16"
+                        />
+                    </button>
+
+                    <p class="text-80 grow px-4">
+                        <span class="mr-3 font-semibold">#{{ index + 1 }}</span>
+                        <span v-if="group.title_from_content">
+                            <span class="mr-3 font-semibold">{{
+                                group.title_from_content
+                            }}</span>
+                        </span>
+                        {{ group.title }}
+                    </p>
+
+                    <div class="flex" v-if="!readonly">
+                        <button
+                            dusk="move-up-group"
+                            type="button"
+                            class="group-control btn border-l border-gray-200 dark:border-gray-700 w-8 h-8 block"
+                            :title="__('Move up')"
+                            @click.prevent="moveUp"
+                        >
+                            <icon
+                                type="arrow-up"
+                                class="align-top"
+                                width="16"
+                                height="16"
+                            />
+                        </button>
+                        <button
+                            dusk="move-down-group"
+                            type="button"
+                            class="group-control btn border-l border-gray-200 dark:border-gray-700 w-8 h-8 block"
+                            :title="__('Move down')"
+                            @click.prevent="moveDown"
+                        >
+                            <icon
+                                type="arrow-down"
+                                class="align-top"
+                                width="16"
+                                height="16"
+                            />
+                        </button>
+                        <button
+                            dusk="delete-group"
+                            type="button"
+                            class="group-control btn border-l border-gray-200 dark:border-gray-700 w-8 h-8 block"
+                            :title="__('Delete')"
+                            @click.prevent="confirmRemove"
+                        >
+                            <icon type="trash" width="16" height="16" />
+                        </button>
                         <delete-flexible-content-group-modal
                             v-if="removeMessage"
                             @confirm="remove"
@@ -90,65 +95,6 @@
                             :yes="field.confirmRemoveYes"
                             :no="field.confirmRemoveNo"
                         />
-                    </portal>
-                </div>
-            </div>
-        </div>
-        <div class="-mb-1 flex flex-col min-h-full w-full">
-            <div :class="titleStyle" v-if="group.title">
-                <div
-                    class="leading-normal pl-2"
-                    :class="{ 'border-b border-40': !collapsed }"
-                >
-                    <div class="flex">
-                        <div class="w-3/4">
-                            <p class="single-row text-80 mt-1">
-                                <span class="mr-4 font-semibold"
-                                    >#{{ index + 1 }}</span
-                                >
-                                <span v-if="group.title_from_content">
-                                    <span class="mr-4 font-semibold">{{
-                                        group.title_from_content
-                                    }}</span>
-                                </span>
-                                {{ group.title }}
-                            </p>
-                        </div>
-                        <div
-                            class="w-1/4 text-right"
-                            v-if="
-                                !readonly &&
-                                    collapsed &&
-                                    field.allowedToChangeOrder
-                            "
-                        >
-                            <button
-                                type="button"
-                                class="group-control btn border-l border-40 w-8 h-8"
-                                title="Move up"
-                                @click.prevent="moveUp"
-                            >
-                                <icon
-                                    type="arrow-up"
-                                    view-box="0 0 8 4.8"
-                                    width="10"
-                                    height="10"
-                                />
-                            </button>
-                            <button
-                                type="button"
-                                class="group-control btn border-l border-40 w-8 h-8 mr-1"
-                                title="Move down"
-                                @click.prevent="moveDown"
-                            >
-                                <icon
-                                    type="arrow-down"
-                                    view-box="0 0 8 4.8"
-                                    width="10"
-                                    height="10"
-                                />
-                            </button>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -160,9 +106,9 @@
                     :resource-name="resourceName"
                     :resource-id="resourceId"
                     :resource="resource"
-                    :show-help-text="resourceName"
                     :field="item"
                     :errors="errors"
+                    :show-help-text="item.helpText != null"
                     :class="{
                         'remove-bottom-border':
                             index == group.fields.length - 1,
@@ -174,12 +120,14 @@
 </template>
 
 <script>
-    import { BehavesAsPanel } from "laravel-nova";
+    import BehavesAsPanel from "../../../vendor/laravel/nova/resources/js/mixins/BehavesAsPanel.js";
 
     export default {
         mixins: [BehavesAsPanel],
 
         props: ["errors", "group", "index", "field"],
+
+        emits: ["move-up", "move-down", "remove"],
 
         data() {
             return {
@@ -195,21 +143,24 @@
                 let classes = [
                     "border-t",
                     "border-r",
-                    "border-60",
-                    "rounded-tr-lg",
+                    "border-l",
+                    "border-gray-200",
+                    "dark:border-gray-700",
+                    "rounded-t-lg",
                 ];
                 if (this.collapsed) {
-                    classes.push("border-b rounded-br-lg");
+                    classes.push("border-b rounded-b-lg");
                 }
                 return classes;
             },
             containerStyle() {
                 let classes = [
-                    "flex-grow",
+                    "grow",
                     "border-b",
                     "border-r",
                     "border-l",
-                    "border-60",
+                    "border-gray-200",
+                    "dark:border-gray-700",
                     "rounded-b-lg",
                 ];
                 if (!this.group.title) {
@@ -277,12 +228,8 @@
     .group-control:focus {
         outline: none;
     }
-    .group-control path {
-        fill: #b7cad6;
-        transition: fill 200ms ease-out;
-    }
-    .group-control:hover path {
-        fill: var(--primary);
+    .group-control:hover {
+        color: rgb(var(--colors-primary-400));
     }
     .confirm-message {
         position: absolute;
@@ -309,11 +256,38 @@
         /*color: #B7CAD6;*/
     }
 
-    .single-row {
-        height: 19px;
-        overflow: hidden;
+    .rounded-l {
+        border-top-left-radius: 0.25rem; /* 4px */
+        border-bottom-left-radius: 0.25rem; /* 4px */
     }
-    .leading-normal {
-        min-height: 32px;
+
+    .rounded-t-lg {
+        border-top-right-radius: 0.5rem; /* 8px */
+        border-top-left-radius: 0.5rem; /* 8px */
+    }
+
+    .rounded-b-lg {
+        border-bottom-left-radius: 0.5rem; /* 8px */
+        border-bottom-right-radius: 0.5rem; /* 8px */
+    }
+
+    .box-content {
+        box-sizing: content-box;
+    }
+
+    .grow {
+        flex-grow: 1;
+    }
+
+    .grow-0 {
+        flex-grow: 0;
+    }
+
+    .shrink {
+        flex-shrink: 1;
+    }
+
+    .shrink-0 {
+        flex-shrink: 0;
     }
 </style>
