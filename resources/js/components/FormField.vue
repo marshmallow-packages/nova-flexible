@@ -1,14 +1,17 @@
 <template>
     <component
-        :is="field.fullWidth ? 'full-width-field' : 'default-field'"
+        :dusk="field.attribute"
+        :is="field.fullWidth ? 'FullWidthField' : 'default-field'"
         :field="field"
         :errors="errors"
         full-width-content
+        :show-help-text="showHelpText"
     >
-        <template slot="field">
+        <template #field>
             <div v-if="order.length > 0">
                 <form-nova-flexible-content-group
                     v-for="(group, index) in orderedGroups"
+                    :dusk="field.attribute + '-' + index"
                     :key="group.key"
                     :field="field"
                     :group="group"
@@ -28,6 +31,7 @@
                 :is="field.menu.component"
                 :field="field"
                 :limit-counter="limitCounter"
+                :limit-per-layout-counter="limitPerLayoutCounter"
                 :errors="errors"
                 :resource-name="resourceName"
                 :resource-id="resourceId"
@@ -60,6 +64,35 @@
                     return groups;
                 }, []);
             },
+
+            limitCounter() {
+                if (
+                    this.field.limit === null ||
+                    typeof this.field.limit == "undefined"
+                ) {
+                    return null;
+                }
+
+                return this.field.limit - Object.keys(this.groups).length;
+            },
+
+            limitPerLayoutCounter() {
+                return this.layouts.reduce((layoutCounts, layout) => {
+                    if (layout.limit === null) {
+                        layoutCounts[layout.name] = null;
+
+                        return layoutCounts;
+                    }
+
+                    let count = Object.values(this.groups).filter(
+                        (group) => group.name === layout.name
+                    ).length;
+
+                    layoutCounts[layout.name] = layout.limit - count;
+
+                    return layoutCounts;
+                }, {});
+            },
         },
 
         data() {
@@ -67,7 +100,6 @@
                 order: [],
                 groups: {},
                 files: {},
-                limitCounter: this.field.limit,
             };
         },
 
@@ -78,6 +110,7 @@
             setInitialValue() {
                 this.value = this.field.value || [];
                 this.files = {};
+
                 this.populateGroups();
             },
 
@@ -196,10 +229,6 @@
 
                 this.groups[group.key] = group;
                 this.order.push(group.key);
-
-                if (this.limitCounter > 0) {
-                    this.limitCounter--;
-                }
             },
 
             /**
@@ -234,10 +263,6 @@
 
                 this.order.splice(index, 1);
                 delete this.groups[key];
-
-                if (this.limitCounter >= 0) {
-                    this.limitCounter++;
-                }
             },
         },
     };
