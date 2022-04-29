@@ -173,6 +173,16 @@ class Layout implements LayoutInterface, JsonSerializable, ArrayAccess, Arrayabl
     }
 
     /**
+     * Get the parent model instance
+     *
+     * @return Model $model
+     */
+    public function getModel()
+    {
+        return $this->model;
+    }
+
+    /**
      * Set the parent model instance
      *
      * @param Model $model
