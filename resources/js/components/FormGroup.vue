@@ -5,7 +5,8 @@
                 <div
                     class="h-8 leading-normal h-full flex items-center box-content"
                     :class="{
-                        'border-b border-gray-200 dark:border-gray-700 ': !collapsed,
+                        'border-b border-gray-200 dark:border-gray-700 ':
+                            !collapsed,
                     }"
                 >
                     <button

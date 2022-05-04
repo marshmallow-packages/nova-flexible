@@ -2,7 +2,7 @@
     <div :class="componentStyle" :dusk="'detail-' + attribute + '-' + index">
         <div :class="titleStyle" v-if="group.title">
             <span
-                class="block float-left border-r border-gray-100 dark:border-gray-700  pr-4 mr-4"
+                class="block float-left border-r border-gray-100 dark:border-gray-700 pr-4 mr-4"
                 ><!--
              --><span class="text-60 text-xs">#</span
                 ><!--
@@ -28,7 +28,11 @@
 </template>
 
 <script>
+    import { HandlesValidationErrors } from "laravel-nova";
+
     export default {
+        mixins: [HandlesValidationErrors],
+
         props: [
             "attribute",
             "group",
