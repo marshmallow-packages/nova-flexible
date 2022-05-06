@@ -76,6 +76,7 @@ class Flexible extends Field
         $this->allowedToCreate(true);
         $this->allowedToDelete(true);
         $this->allowedToChangeOrder(true);
+        $this->fullWidth(true);
 
         $this->menu('flexible-component-selector');
 

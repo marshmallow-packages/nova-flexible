@@ -1,68 +1,61 @@
 <template>
-    <modal @modal-close="handleClose">
+    <Modal :show="true">
         <form
-            @submit.prevent="handleConfirm"
-            slot-scope="props"
-            class="bg-white rounded-lg shadow-lg overflow-hidden"
-            style="width: 460px"
+            @submit.prevent="$emit('confirm')"
+            class="mx-auto bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden"
         >
             <slot>
-                <div class="p-8">
-                    <heading :level="2" class="mb-6">{{ __('Delete Group') }}</heading>
-                    <p class="text-80 leading-normal" v-if="message">
+                <ModalHeader v-text="__('Delete Group')" />
+                <ModalContent>
+                    <p class="leading-normal" v-if="message">
                         {{ message }}
                     </p>
-                    <p class="text-80 leading-normal" v-else>
-                        {{ __('Are you sure you want to delete this group?') }}
+                    <p class="leading-normal" v-else>
+                        {{ __("Are you sure you want to delete this group?") }}
                     </p>
-                </div>
+                </ModalContent>
             </slot>
 
-            <div class="bg-30 px-6 py-3 flex">
+            <ModalFooter>
                 <div class="ml-auto">
-                    <button
+                    <link-button
                         type="button"
                         data-testid="cancel-button"
                         dusk="cancel-delete-button"
-                        @click.prevent="handleClose"
-                        class="btn text-80 font-normal h-9 px-3 mr-3 btn-link"
+                        @click.prevent="this.$emit('close')"
+                        class="mr-3"
                     >
                         {{ no }}
-                    </button>
-                    <button
-                        id="confirm-delete-button"
+                    </link-button>
+
+                    <danger-button
                         ref="confirmButton"
-                        data-testid="confirm-button"
+                        dusk="confirm-delete-button"
+                        :processing="working"
+                        :disabled="working"
                         type="submit"
-                        class="btn btn-default btn-danger"
                     >
                         {{ yes }}
-                    </button>
+                    </danger-button>
                 </div>
-            </div>
+            </ModalFooter>
         </form>
-    </modal>
+    </Modal>
 </template>
 
 <script>
-export default {
-    props: ['message', 'yes', 'no'],
+    export default {
+        props: ["message", "yes", "no"],
 
-    methods: {
-        handleClose() {
-            this.$emit('close')
+        emits: ["close", "confirm"],
+
+        /**
+         * Mount the component.
+         */
+        mounted() {
+            this.$nextTick(() => {
+                // this.$refs.confirmButton.button.focus()
+            });
         },
-
-        handleConfirm() {
-            this.$emit('confirm')
-        },
-    },
-
-    /**
-     * Mount the component.
-     */
-    mounted() {
-        this.$refs.confirmButton.focus()
-    },
-}
+    };
 </script>

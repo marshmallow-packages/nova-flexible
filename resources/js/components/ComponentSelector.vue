@@ -1,5 +1,5 @@
 <template>
-    <div class="z-20 relative" v-if="layouts">
+    <div class="z-20" v-if="layouts">
         <div class="relative" v-if="layouts.length > 1">
             <div
                 v-if="isLayoutsDropdownOpen"
@@ -27,6 +27,7 @@
                                     </li>
                                     <li
                                         v-for="tag in availableTags"
+                                        :key="tag"
                                         class="leading-tight mb-4 ml-8 text-sm"
                                     >
                                         <a
@@ -40,7 +41,7 @@
                                 </ul>
                             </div>
                             <div
-                                class="components-container w-4/5 bg-gray-500 h-100-p p-3"
+                                class="components-container w-4/5 bg-gray-500 h-full p-3"
                             >
                                 <div class="flex p-3">
                                     <div class="w-4/5">
@@ -175,10 +176,10 @@
             availableTags() {
                 const available_tags = [];
                 var layouts = this.layouts;
-                layouts.forEach(function(layout, layout_index) {
+                layouts.forEach(function (layout, layout_index) {
                     var tags = layout.tags;
                     if (tags) {
-                        tags.forEach(function(tag, tag_index) {
+                        tags.forEach(function (tag, tag_index) {
                             if (!available_tags.includes(tag)) {
                                 available_tags.push(tag);
                             }
@@ -197,7 +198,7 @@
 
                 if (search.length > 0) {
                     let layouts = this.orginalLayouts;
-                    layouts.forEach(function(layout, layout_index) {
+                    layouts.forEach(function (layout, layout_index) {
                         if (
                             layout.description.toUpperCase().indexOf(search) !==
                                 -1 ||
@@ -296,7 +297,7 @@
         bottom: 0;
         left: 0;
         right: 0;
-        z-index: 1;
+        z-index: 10;
     }
     #layout-selector {
         position: fixed;
@@ -305,7 +306,7 @@
         bottom: 20px;
         right: 20px;
         background: #edf2f7;
-        z-index: 2;
+        z-index: 12;
     }
     #layout-selector .menu-container {
     }

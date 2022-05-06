@@ -1,14 +1,17 @@
 <template>
     <component
-        :is="field.fullWidth ? 'full-width-field' : 'default-field'"
+        :dusk="field.attribute"
+        :is="field.fullWidth ? 'FullWidthField' : 'DefaultField'"
         :field="field"
         :errors="errors"
-        full-width-content
+        :fullWidthContent="true"
+        :show-help-text="showHelpText"
     >
-        <template slot="field">
+        <template #field>
             <div v-if="order.length > 0">
                 <form-nova-flexible-content-group
                     v-for="(group, index) in orderedGroups"
+                    :dusk="field.attribute + '-' + index"
                     :key="group.key"
                     :field="field"
                     :group="group"
@@ -23,32 +26,39 @@
                 />
             </div>
 
-            <component
+            <button
+                class="inline-flex items-center flex-shrink-0 px-4 text-sm font-bold text-white rounded shadow focus:outline-none focus:ring bg-primary-500 hover:bg-primary-400 active:bg-primary-600 dark:text-gray-800 h-9"
+                @click.prevent="toggleLayoutsDropdownOrAddDefault"
+                v-if="this.limitCounter != 0 && field.allowedToCreate"
+                v-text="field.button"
+            ></button>
+
+            <SelectorModal
+                class="max-w-3xl nova-flexible-modal"
+                v-if="modalOpen"
+                @confirm="confirmModal($event)"
+                @close="closeModal"
                 :layouts="layouts"
                 :is="field.menu.component"
-                :field="field"
-                :limit-counter="limitCounter"
-                :errors="errors"
-                :resource-name="resourceName"
-                :resource-id="resourceId"
-                :resource="resource"
-                @addGroup="addGroup($event)"
+                :limit-per-layout-counter="limitPerLayoutCounter"
             />
         </template>
     </component>
 </template>
 
 <script>
+    import "./../../css/modal.css";
     import FullWidthField from "./FullWidthField";
     import { FormField, HandlesValidationErrors } from "laravel-nova";
     import Group from "../group";
+    import SelectorModal from "./SelectorModal.vue";
 
     export default {
         mixins: [FormField, HandlesValidationErrors],
 
         props: ["resourceName", "resourceId", "resource", "field"],
 
-        components: { FullWidthField },
+        components: { FullWidthField, SelectorModal },
 
         computed: {
             layouts() {
@@ -60,16 +70,43 @@
                     return groups;
                 }, []);
             },
+
+            limitCounter() {
+                if (
+                    this.field.limit === null ||
+                    typeof this.field.limit == "undefined"
+                ) {
+                    return null;
+                }
+
+                return this.field.limit - Object.keys(this.groups).length;
+            },
+
+            limitPerLayoutCounter() {
+                return this.layouts.reduce((layoutCounts, layout) => {
+                    if (layout.limit === null) {
+                        layoutCounts[layout.name] = null;
+
+                        return layoutCounts;
+                    }
+
+                    let count = Object.values(this.groups).filter(
+                        (group) => group.name === layout.name
+                    ).length;
+
+                    layoutCounts[layout.name] = layout.limit - count;
+
+                    return layoutCounts;
+                }, {});
+            },
         },
 
-        data() {
-            return {
-                order: [],
-                groups: {},
-                files: {},
-                limitCounter: this.field.limit,
-            };
-        },
+        data: () => ({
+            order: [],
+            groups: {},
+            files: {},
+            modalOpen: false,
+        }),
 
         methods: {
             /*
@@ -78,7 +115,30 @@
             setInitialValue() {
                 this.value = this.field.value || [];
                 this.files = {};
+
                 this.populateGroups();
+            },
+
+            /**
+             * Display or hide the layouts choice dropdown if there are multiple layouts
+             * or directly add the only available layout.
+             */
+            toggleLayoutsDropdownOrAddDefault(event) {
+                if (this.layouts.length === 1) {
+                    return this.addGroup(this.layouts[0]);
+                }
+
+                this.modalOpen = true;
+            },
+
+            confirmModal(event) {
+                let layout = this.getLayout(event.name);
+                this.modalOpen = false;
+                this.addGroup(layout);
+            },
+
+            closeModal(event) {
+                this.modalOpen = false;
             },
 
             /**
@@ -196,10 +256,6 @@
 
                 this.groups[group.key] = group;
                 this.order.push(group.key);
-
-                if (this.limitCounter > 0) {
-                    this.limitCounter--;
-                }
             },
 
             /**
@@ -234,11 +290,85 @@
 
                 this.order.splice(index, 1);
                 delete this.groups[key];
-
-                if (this.limitCounter >= 0) {
-                    this.limitCounter++;
-                }
             },
         },
     };
 </script>
+
+<style>
+    .nova-flexible-modal .inner i {
+        font-size: 3rem;
+    }
+
+    .close-icon {
+        display: none;
+        position: absolute;
+        top: 0;
+        right: 0;
+
+        opacity: 0.75;
+        cursor: pointer;
+
+        transition: all 0.2s ease-in-out;
+
+        transform: translate(50%, -50%);
+    }
+
+    .close-icon:hover {
+        opacity: 1;
+    }
+
+    .close-icon i {
+        font-size: 1.5rem !important;
+    }
+
+    .nova-flexible-inner {
+        height: 90%;
+        overflow: scroll;
+    }
+
+    .h-90p {
+        height: 90%;
+    }
+
+    .nova-flexible-close {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        right: 1.5rem;
+        font-size: 1.5rem;
+        color: #3c4655;
+    }
+
+    .icon-name {
+        display: block;
+        font-size: 12px;
+        margin-top: 0.5em;
+        background: #fafafa;
+        padding: 0.2em;
+    }
+
+    .border-red {
+        border-color: #ff123b;
+    }
+
+    .mm-icon-box {
+        outline: 1px solid #e0e0e0;
+        outline-offset: -0.5rem;
+    }
+
+    .mm-icon-box:hover {
+        outline: 1px solid #ff123b;
+        color: #ff123b;
+    }
+
+    .border-gray {
+        border-color: #e0e0e0;
+    }
+
+    @media (max-width: 900px) {
+        .h-90p {
+            height: 80%;
+        }
+    }
+</style>

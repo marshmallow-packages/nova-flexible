@@ -1,45 +1,62 @@
 <template>
-    <field-wrapper>
+    <FieldWrapper :stacked="field.stacked" v-if="field.visible" class="w-full">
         <div class="py-6 px-8 w-full">
             <div class="mb-6" v-if="fieldLabel">
-                <form-label
-                    :for="field.attribute"
-                    :class="{
-                        'mb-2': field.helpText && showHelpText,
-                    }"
+                <FormLabel
+                    :label-for="labelFor || field.attribute"
+                    :class="{ 'mb-2': showHelpText && field.helpText }"
                 >
                     {{ fieldLabel }}
-                </form-label>
+                    <span v-if="field.required" class="text-red-500 text-sm">
+                        {{ __("*") }}
+                    </span>
+                </FormLabel>
 
-                <help-text :show-help-text="showHelpText">
-                    {{ field.helpText }}
-                </help-text>
+                <HelpText
+                    class="help-text mt-2"
+                    v-if="showHelpText"
+                    v-html="field.helpText"
+                />
             </div>
 
-            <slot name="field" />
+            <slot name="field" class="w-full" />
+
+            <HelpText
+                class="mt-2 help-text-error"
+                v-if="showErrors && hasError"
+            >
+                {{ firstError }}
+            </HelpText>
         </div>
-    </field-wrapper>
+    </FieldWrapper>
 </template>
 
 <script>
+    import { mapProps } from "laravel-nova";
+    import { HandlesValidationErrors, Errors } from "laravel-nova";
+
     export default {
+        mixins: [HandlesValidationErrors],
+
         props: {
             field: { type: Object, required: true },
             fieldName: { type: String },
-            showHelpText: { type: Boolean, default: true },
+            showErrors: { type: Boolean, default: true },
+            labelFor: { default: null },
+            fullWidthContent: { type: Boolean, default: true },
+            ...mapProps(["showHelpText"]),
         },
-
         computed: {
             fieldLabel() {
-                // If the field name is purposefully empty, hide the label altogether
+                // If the field name is purposefully an empty string, then let's show it as such
                 if (this.fieldName === "") {
-                    return false;
+                    return "";
                 }
 
                 return (
                     this.fieldName ||
-                    this.field.singularLabel ||
-                    this.field.name
+                    this.field.name ||
+                    this.field.singularLabel
                 );
             },
         },
