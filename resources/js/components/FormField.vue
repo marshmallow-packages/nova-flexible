@@ -1,7 +1,7 @@
 <template>
     <component
         :dusk="field.attribute"
-        :is="field.fullWidth ? 'FullWidthField' : 'default-field'"
+        :is="field.fullWidth ? 'FullWidthField' : 'DefaultField'"
         :field="field"
         :errors="errors"
         full-width-content
@@ -26,6 +26,30 @@
                 />
             </div>
 
+            <button
+                class="flex-shrink-0 shadow rounded focus:outline-none focus:ring bg-primary-500 hover:bg-primary-400 active:bg-primary-600 text-white dark:text-gray-800 inline-flex items-center font-bold px-4 h-9 text-sm flex-shrink-0"
+                @click.prevent="openModal"
+                v-if="this.limitCounter != 0 && field.allowedToCreate"
+                v-text="field.button"
+            ></button>
+
+            <SelectorModal
+                class="nova-flexible-modal max-w-3xl"
+                v-if="modalOpen"
+                :field="field"
+                @confirm="confirmModal"
+                @close="closeModal"
+                :layouts="layouts"
+                :is="field.menu.component"
+                :limit-counter="limitCounter"
+                :limit-per-layout-counter="limitPerLayoutCounter"
+                :errors="errors"
+                :resource-name="resourceName"
+                :resource-id="resourceId"
+                :resource="resource"
+                @addGroup="addGroup($event)"
+            />
+
             <component
                 :layouts="layouts"
                 :is="field.menu.component"
@@ -46,13 +70,14 @@
     import FullWidthField from "./FullWidthField";
     import { FormField, HandlesValidationErrors } from "laravel-nova";
     import Group from "../group";
+    import SelectorModal from "./SelectorModal.vue";
 
     export default {
         mixins: [FormField, HandlesValidationErrors],
 
         props: ["resourceName", "resourceId", "resource", "field"],
 
-        components: { FullWidthField },
+        components: { FullWidthField, SelectorModal },
 
         computed: {
             layouts() {
@@ -95,13 +120,12 @@
             },
         },
 
-        data() {
-            return {
-                order: [],
-                groups: {},
-                files: {},
-            };
-        },
+        data: () => ({
+            order: [],
+            groups: {},
+            files: {},
+            modalOpen: false,
+        }),
 
         methods: {
             /*
@@ -112,6 +136,16 @@
                 this.files = {};
 
                 this.populateGroups();
+            },
+
+            openModal() {
+                this.modalOpen = true;
+            },
+            confirmModal() {
+                this.modalOpen = false;
+            },
+            closeModal() {
+                this.modalOpen = false;
             },
 
             /**
@@ -267,3 +301,105 @@
         },
     };
 </script>
+
+<style>
+    .nova-flexible-modal .inner i {
+        font-size: 3rem;
+    }
+
+    .display-icon i {
+        font-size: 4rem;
+    }
+
+    .display-icon:hover .close-icon {
+        display: block;
+    }
+
+    .close-icon {
+        display: none;
+        position: absolute;
+        top: 0;
+        right: 0;
+
+        opacity: 0.75;
+        cursor: pointer;
+
+        transition: all 0.2s ease-in-out;
+
+        transform: translate(50%, -50%);
+    }
+
+    .close-icon:hover {
+        opacity: 1;
+    }
+
+    .close-icon i {
+        font-size: 1.5rem !important;
+    }
+
+    .svg-inline--fa.fa-w-20 {
+        width: 2.5em;
+    }
+
+    .svg-inline--fa.fa-w-18 {
+        width: 2.25em;
+    }
+
+    .svg-inline--fa.fa-w-16 {
+        width: 2em;
+    }
+
+    .svg-inline--fa.fa-w-12 {
+        width: 1.5em;
+    }
+
+    .nova-flexible-inner {
+        height: 90%;
+        overflow: scroll;
+    }
+
+    .h-90p {
+        height: 90%;
+    }
+
+    .nova-flexible-close {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        right: 1.5rem;
+        font-size: 1.5rem;
+        color: #3c4655;
+    }
+
+    .icon-name {
+        display: block;
+        font-size: 12px;
+        margin-top: 0.5em;
+        background: #fafafa;
+        padding: 0.2em;
+    }
+
+    .border-red {
+        border-color: #ff123b;
+    }
+
+    .mm-icon-box {
+        outline: 1px solid #e0e0e0;
+        outline-offset: -0.5rem;
+    }
+
+    .mm-icon-box:hover {
+        outline: 1px solid #ff123b;
+        color: #ff123b;
+    }
+
+    .border-gray {
+        border-color: #e0e0e0;
+    }
+
+    @media (max-width: 900px) {
+        .h-90p {
+            height: 80%;
+        }
+    }
+</style>
