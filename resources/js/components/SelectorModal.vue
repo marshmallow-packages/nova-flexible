@@ -1,8 +1,6 @@
 <template>
     <Modal
         :show="true"
-        @confirm="handleConfirm"
-        @close="handleClose"
         class="max-w-2xl flex flex-col h-full relative nova-flexible-modal bg-white border bg-white dark:bg-gray-800 rounded-lg shadow-lg border-gray overflow-hidden"
     >
         <ModalHeader class="px-6 py-6 border-b relative border-gray">
@@ -106,20 +104,12 @@
 </template>
 
 <script>
-    import { FormField, HandlesValidationErrors } from "laravel-nova";
-
     export default {
         name: "SelectorModal",
-        mixins: [FormField, HandlesValidationErrors],
+        emits: ["confirm", "close"],
 
         props: [
             "layouts",
-            "field",
-            "resourceName",
-            "resourceId",
-            "resource",
-            "errors",
-            "limitCounter",
             "allowedToCreate",
             "allowedToDelete",
             "allowedToChangeOrder",
@@ -127,13 +117,10 @@
 
         data() {
             return {
-                isLayoutsDropdownOpen: false,
-                orginalLayouts: this.layouts,
                 visibleLayouts: this.layouts,
                 isLoading: false,
                 modalOpen: false,
                 tags: {},
-                value: "",
                 filter: {
                     type: "",
                     search: "",
@@ -143,15 +130,11 @@
 
         mounted() {
             this.isLoading = false;
-        },
-
-        async beforeMount() {
-            this.isLoading = true;
-            await this.loadTags();
+            this.loadTags();
         },
 
         methods: {
-            async loadTags() {
+            loadTags() {
                 const available_tags = [];
                 var layouts = this.layouts;
                 layouts.forEach(function (layout, layout_index) {
@@ -168,7 +151,7 @@
                 this.tags = available_tags;
             },
 
-            async getLayouts() {
+            getLayouts() {
                 this.isLoading = true;
 
                 let layouts = [];
@@ -232,15 +215,10 @@
             },
 
             handleConfirm(layout) {
-                console.log(layout);
                 if (!layout) return;
 
-                this.clearFilter();
-
-                this.$emit("addGroup", layout);
-
-                this.isLayoutsDropdownOpen = false;
                 this.$emit("confirm", layout);
+                this.clearFilter();
             },
 
             clearFilter() {
@@ -257,27 +235,6 @@
             toggleModal() {
                 this.modalOpen = !this.modalOpen;
                 this.clearFilter();
-            },
-
-            /*
-             * Set the initial, internal value for the field.
-             */
-            setInitialValue() {
-                this.value = this.field.value;
-            },
-
-            /**
-             * Fill the given FormData object with the field's internal value.
-             */
-            fill(formData) {
-                formData.append(this.field.attribute, this.value);
-            },
-
-            /**
-             * Update the field's internal value.
-             */
-            handleChange(value) {
-                this.value = value;
             },
         },
 

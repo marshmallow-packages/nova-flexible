@@ -4,7 +4,7 @@
         :is="field.fullWidth ? 'FullWidthField' : 'DefaultField'"
         :field="field"
         :errors="errors"
-        full-width-content
+        :fullWidthContent="true"
         :show-help-text="showHelpText"
     >
         <template #field>
@@ -28,7 +28,7 @@
 
             <button
                 class="flex-shrink-0 shadow rounded focus:outline-none focus:ring bg-primary-500 hover:bg-primary-400 active:bg-primary-600 text-white dark:text-gray-800 inline-flex items-center font-bold px-4 h-9 text-sm flex-shrink-0"
-                @click.prevent="openModal"
+                @click.prevent="toggleLayoutsDropdownOrAddDefault"
                 v-if="this.limitCounter != 0 && field.allowedToCreate"
                 v-text="field.button"
             ></button>
@@ -36,31 +36,11 @@
             <SelectorModal
                 class="nova-flexible-modal max-w-3xl"
                 v-if="modalOpen"
-                :field="field"
-                @confirm="confirmModal"
+                @confirm="confirmModal($event)"
                 @close="closeModal"
                 :layouts="layouts"
                 :is="field.menu.component"
-                :limit-counter="limitCounter"
                 :limit-per-layout-counter="limitPerLayoutCounter"
-                :errors="errors"
-                :resource-name="resourceName"
-                :resource-id="resourceId"
-                :resource="resource"
-                @addGroup="addGroup($event)"
-            />
-
-            <component
-                :layouts="layouts"
-                :is="field.menu.component"
-                :field="field"
-                :limit-counter="limitCounter"
-                :limit-per-layout-counter="limitPerLayoutCounter"
-                :errors="errors"
-                :resource-name="resourceName"
-                :resource-id="resourceId"
-                :resource="resource"
-                @addGroup="addGroup($event)"
             />
         </template>
     </component>
@@ -138,13 +118,25 @@
                 this.populateGroups();
             },
 
-            openModal() {
+            /**
+             * Display or hide the layouts choice dropdown if there are multiple layouts
+             * or directly add the only available layout.
+             */
+            toggleLayoutsDropdownOrAddDefault(event) {
+                if (this.layouts.length === 1) {
+                    return this.addGroup(this.layouts[0]);
+                }
+
                 this.modalOpen = true;
             },
-            confirmModal() {
+
+            confirmModal(event) {
+                let layout = this.getLayout(event.name);
                 this.modalOpen = false;
+                this.addGroup(layout);
             },
-            closeModal() {
+
+            closeModal(event) {
                 this.modalOpen = false;
             },
 
@@ -307,14 +299,6 @@
         font-size: 3rem;
     }
 
-    .display-icon i {
-        font-size: 4rem;
-    }
-
-    .display-icon:hover .close-icon {
-        display: block;
-    }
-
     .close-icon {
         display: none;
         position: absolute;
@@ -335,22 +319,6 @@
 
     .close-icon i {
         font-size: 1.5rem !important;
-    }
-
-    .svg-inline--fa.fa-w-20 {
-        width: 2.5em;
-    }
-
-    .svg-inline--fa.fa-w-18 {
-        width: 2.25em;
-    }
-
-    .svg-inline--fa.fa-w-16 {
-        width: 2em;
-    }
-
-    .svg-inline--fa.fa-w-12 {
-        width: 1.5em;
     }
 
     .nova-flexible-inner {

@@ -76,6 +76,7 @@ class Flexible extends Field
         $this->allowedToCreate(true);
         $this->allowedToDelete(true);
         $this->allowedToChangeOrder(true);
+        $this->fullWidth(true);
 
         $this->menu('flexible-component-selector');
 
@@ -459,6 +460,8 @@ class Flexible extends Field
     protected function extractValue(NovaRequest $request, $attribute)
     {
         $value = $request[$attribute];
+
+        ray($value, $attribute);
 
         if (!$value) {
             return null;

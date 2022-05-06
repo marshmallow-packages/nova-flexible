@@ -259,7 +259,6 @@
              * Append the given layout to flexible content's list
              */
             addGroup(layout) {
-                console.log(layout);
                 if (!layout) return;
 
                 this.$emit("addGroup", layout);
