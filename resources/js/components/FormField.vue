@@ -27,14 +27,14 @@
             </div>
 
             <button
-                class="flex-shrink-0 shadow rounded focus:outline-none focus:ring bg-primary-500 hover:bg-primary-400 active:bg-primary-600 text-white dark:text-gray-800 inline-flex items-center font-bold px-4 h-9 text-sm flex-shrink-0"
+                class="inline-flex items-center flex-shrink-0 px-4 text-sm font-bold text-white rounded shadow focus:outline-none focus:ring bg-primary-500 hover:bg-primary-400 active:bg-primary-600 dark:text-gray-800 h-9"
                 @click.prevent="toggleLayoutsDropdownOrAddDefault"
                 v-if="this.limitCounter != 0 && field.allowedToCreate"
                 v-text="field.button"
             ></button>
 
             <SelectorModal
-                class="nova-flexible-modal max-w-3xl"
+                class="max-w-3xl nova-flexible-modal"
                 v-if="modalOpen"
                 @confirm="confirmModal($event)"
                 @close="closeModal"
@@ -47,6 +47,7 @@
 </template>
 
 <script>
+    import "./../../css/modal.css";
     import FullWidthField from "./FullWidthField";
     import { FormField, HandlesValidationErrors } from "laravel-nova";
     import Group from "../group";

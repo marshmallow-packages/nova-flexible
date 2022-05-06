@@ -461,8 +461,6 @@ class Flexible extends Field
     {
         $value = $request[$attribute];
 
-        ray($value, $attribute);
-
         if (!$value) {
             return null;
         }

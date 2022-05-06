@@ -20,3 +20,4 @@ mix.setPublicPath("dist")
     });
 
 mix.sass("resources/sass/field.scss", "css");
+mix.css("resources/css/modal.css", "css/modal.css");

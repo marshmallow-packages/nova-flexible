@@ -1,9 +1,9 @@
 <template>
     <Modal
         :show="true"
-        class="max-w-2xl flex flex-col h-full relative nova-flexible-modal bg-white border bg-white dark:bg-gray-800 rounded-lg shadow-lg border-gray overflow-hidden"
+        class="relative flex flex-col h-full max-w-2xl overflow-hidden bg-white border rounded-lg shadow-lg nova-flexible-modal dark:bg-gray-800 border-gray"
     >
-        <ModalHeader class="px-6 py-6 border-b relative border-gray">
+        <ModalHeader class="relative px-6 py-6 border-b border-gray">
             {{ __("Select Layout") }}
 
             <a
@@ -15,8 +15,8 @@
             </a>
         </ModalHeader>
 
-        <div class="rounded-lg flex-1 relative h-90p bg-white">
-            <div class="flex px-2 py-4 flex-wrap border-b border-gray">
+        <div class="relative flex-1 bg-white rounded-lg h-90p">
+            <div class="flex flex-wrap px-2 py-4 border-b border-gray">
                 <div class="w-1/2 px-4">
                     <SelectControl
                         class="w-full"
@@ -47,7 +47,7 @@
             </div>
             <div class="px-4 py-4 nova-flexible-inner">
                 <div
-                    class="py-6 text-center text-md font-semibold"
+                    class="py-6 font-semibold text-center text-md"
                     v-if="isLoading"
                 >
                     {{ __("Loading") }}...
@@ -60,7 +60,7 @@
                     <div
                         v-for="(layout, index) in visibleLayouts"
                         :key="index"
-                        class="mm-grid mm-grid-cols-12 mm-w-full mm-border mm-border-gray-200 mm-bg-white group group-hover:border-primary-500 hover:border-primary-500 shadow-md mm-cursor-pointer"
+                        class="shadow-md mm-grid mm-grid-cols-12 mm-w-full mm-border mm-border-gray-200 mm-bg-white group group-hover:border-primary-500 hover:border-primary-500 mm-cursor-pointer"
                         @click="handleConfirm(layout)"
                     >
                         <div class="mm-col-span-4">
@@ -73,11 +73,11 @@
                             </div>
                         </div>
                         <div
-                            class="mm-self-center mm-col-span-8 p-4 ml-4 md:mm-col-span-8"
+                            class="p-4 ml-4 mm-self-center mm-col-span-8 md:mm-col-span-8"
                         >
                             <div class="mm-leading-tight">
                                 <p
-                                    class="mm-text-md text-primary-500 font-semibold"
+                                    class="font-semibold mm-text-md text-primary-500"
                                     v-html="layout.title"
                                 ></p>
                                 <p
@@ -88,7 +88,7 @@
                                     <span
                                         v-for="tag in layout.tags"
                                         :key="tag"
-                                        class="inline-block mm-text-sm mr-2"
+                                        class="inline-block mr-2 mm-text-sm"
                                         :data-tag="tag"
                                     >
                                         #{{ tag }}
@@ -254,5 +254,85 @@
         },
     };
 </script>
-
+<style>
+    .mm-col-span-4 {
+        grid-column: span 4 / span 4;
+    }
+    .mm-col-span-8 {
+        grid-column: span 8 / span 8;
+    }
+    .mm-mt-2 {
+        margin-top: 0.5rem;
+    }
+    .mm-flex {
+        display: flex;
+    }
+    .mm-grid {
+        display: grid;
+    }
+    .mm-h-full {
+        height: 100%;
+    }
+    .mm-w-full {
+        width: 100%;
+    }
+    .mm-flex-1 {
+        flex: 1 1 0%;
+    }
+    .mm-flex-grow {
+        flex-grow: 1;
+    }
+    .mm-cursor-pointer {
+        cursor: pointer;
+    }
+    .mm-grid-cols-12 {
+        grid-template-columns: repeat(12, minmax(0, 1fr));
+    }
+    .mm-flex-col {
+        flex-direction: column;
+    }
+    .mm-items-stretch {
+        align-items: stretch;
+    }
+    .mm-gap-y-4 {
+        row-gap: 1rem;
+    }
+    .mm-self-center {
+        align-self: center;
+    }
+    .mm-justify-self-stretch {
+        justify-self: stretch;
+    }
+    .mm-border {
+        border-width: 1px;
+    }
+    .mm-border-gray-200 {
+        --tw-border-opacity: 1;
+        border-color: rgb(229 231 235 / var(--tw-border-opacity));
+    }
+    .mm-bg-white {
+        --tw-bg-opacity: 1;
+        background-color: rgb(255 255 255 / var(--tw-bg-opacity));
+    }
+    .mm-object-cover {
+        -o-object-fit: cover;
+        object-fit: cover;
+    }
+    .mm-object-center {
+        -o-object-position: center;
+        object-position: center;
+    }
+    .mm-text-sm {
+        font-size: 0.875rem;
+        line-height: 1.25rem;
+    }
+    .mm-leading-tight {
+        line-height: 1.25;
+    }
+    @media (min-width: 768px) {
+        .md\:mm-col-span-8 {
+            grid-column: span 8 / span 8;
+        }
+    }
+</style>
 <style scoped></style>
