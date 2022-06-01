@@ -14,7 +14,7 @@
         "@vue/compiler-sfc": "^3.2.22",
         "@vueform/multiselect": "^2.3.3",
         "autoprefixer": "^10.4.7",
-        "laravel-mix": "^6.0.41",
+        "laravel-mix": "^6.0.44",
         "laravel-nova": "^1.0",
         "postcss": "^8.4.13",
         "resolve-url-loader": "^3.1.2",
