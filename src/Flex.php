@@ -8,6 +8,7 @@ use TypeError;
 use Illuminate\Support\Str;
 use RecursiveIteratorIterator;
 use RecursiveDirectoryIterator;
+use Illuminate\Support\Facades\Cache;
 use Marshmallow\Nova\Flexible\Layouts\MarshmallowLayout;
 use Marshmallow\Nova\Flexible\Layouts\Defaults\WysiwygLayout;
 
@@ -135,5 +136,22 @@ class Flex
     protected function loadDefaultLayouts(): bool
     {
         return config('flexible.merge_layouts') === true;
+    }
+
+    public function flushLayoutsCache()
+    {
+        Cache::forget(static::getCacheKey());
+    }
+
+    public static function getCacheKey(): string
+    {
+        return "marshmallow.flexible-layouts-cache";
+    }
+
+    public function getLayoutsFromCache()
+    {
+        return Cache::rememberForever(static::getCacheKey(), function () {
+            return self::getLayouts();
+        });
     }
 }

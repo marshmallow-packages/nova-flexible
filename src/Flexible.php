@@ -61,6 +61,18 @@ class Flexible extends Field
     public static $model;
 
     /**
+     * This is an array of tags of all the flexible items you
+     * wish to INCLUDE in your flexible template selector.
+     */
+    protected array $includeTags = [];
+
+    /**
+     * This is an array of tags of all the flexible items you
+     * wish to EXCLUDE in your flexible template selector.
+     */
+    protected array $excludeTags = [];
+
+    /**
      * Create a fresh flexible field instance
      *
      * @param  string  $name
@@ -77,6 +89,8 @@ class Flexible extends Field
         $this->allowedToDelete(true);
         $this->allowedToChangeOrder(true);
         $this->fullWidth(true);
+        $this->includeTags([]);
+        $this->excludeTags([]);
 
         $this->menu('flexible-component-selector');
 
@@ -107,6 +121,8 @@ class Flexible extends Field
         $this->allowedToCreate(false);
         $this->allowedToDelete(false);
         $this->allowedToChangeOrder(false);
+        $this->includeTags([]);
+        $this->excludeTags([]);
         return $this;
     }
 
@@ -162,6 +178,30 @@ class Flexible extends Field
     public function fullWidth($fullWidth = true)
     {
         return $this->withMeta(['fullWidth' => $fullWidth]);
+    }
+
+    /**
+     * Set the tags you wish to include to
+     * the flexible layout selector.
+     *
+     * @return self
+     */
+    public function includeTags(array $tags): self
+    {
+        $this->includeTags = $tags;
+        return $this->withMeta(['includeTags' => $tags]);
+    }
+
+    /**
+     * Set the tags you wish to exclude from
+     * to the flexible layout selector.
+     *
+     * @return self
+     */
+    public function excludeTags(array $tags): self
+    {
+        $this->excludeTags = $tags;
+        return $this->withMeta(['excludeTags' => $tags]);
     }
 
     /**
@@ -301,7 +341,7 @@ class Flexible extends Field
             $this->withMeta(['layouts' => $this->layouts]);
         }
 
-        $this->layouts->push($layout);
+        $this->addToLayouts($layout);
     }
 
     /**
@@ -316,11 +356,26 @@ class Flexible extends Field
         $attribute = $attribute ?? $this->attribute;
 
         $this->registerOriginModel($resource);
-
+        $this->handleDefaultPreset();
         $this->buildGroups($resource, $attribute);
+
         $this->value = $this->resolveGroups($this->groups);
     }
 
+    public function addToLayouts($layout)
+    {
+        $included_tags = $this->includeTags;
+        $excluded_tags = $this->excludeTags;
+
+        if (!empty($included_tags) && !$layout->hasTag($included_tags)) {
+            return false;
+        }
+        if (!empty($excluded_tags) && $layout->hasTag($excluded_tags)) {
+            return false;
+        }
+
+        $this->layouts->push($layout);
+    }
     /**
      * Resolve the field's value for display on index and detail views.
      *
@@ -348,11 +403,21 @@ class Flexible extends Field
      */
     public function isShownOnDetail(NovaRequest $request, $resource): bool
     {
+        $this->handleDefaultPreset();
         $this->layouts = $this->layouts->each(function ($layout) use ($request, $resource) {
             $layout->filterForDetail($request, $resource);
         });
 
         return parent::isShownOnDetail($request, $resource);
+    }
+
+    protected function handleDefaultPreset()
+    {
+        if (!$this->layouts && config('flexible.fill_empty_field')) {
+            $classname = config('flexible.default_preset');
+            $preset = resolve($classname, []);
+            $preset->handle($this);
+        }
     }
 
     /**

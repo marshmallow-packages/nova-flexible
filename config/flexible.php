@@ -24,6 +24,9 @@ return [
         // 'test' => \App\Flexible\Layouts\TestLayout::class
     ],
 
+    'fill_empty_field' => true,
+    'default_preset' => \Marshmallow\Nova\Flexible\Presets\DefaultPreset::class,
+
     /**
      * If this is set to true, our default layouts will be loaded and
      * your custom layouts as specified in the array above will be merge
