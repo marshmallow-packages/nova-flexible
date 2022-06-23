@@ -47,6 +47,7 @@ trait HasFlexable
 
     protected function getFlex(...$arguments)
     {
+
         $count = count($arguments);
         $tags = [];
 
@@ -82,7 +83,7 @@ trait HasFlexable
             $ignore[] = $this->name();
         }
 
-        $flex = Flexible::make($name, $column);
+        $flex = Flexible::make($name, $column)->hideFromIndex();
         foreach (Flex::getLayouts() as $layout_slug => $layout) {
             if (in_array($layout_slug, $ignore)) {
                 continue;

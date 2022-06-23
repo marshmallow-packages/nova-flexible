@@ -4,7 +4,9 @@ namespace Marshmallow\Nova\Flexible;
 
 use Laravel\Nova\Nova;
 use Laravel\Nova\Events\ServingNova;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\ServiceProvider;
+use Marshmallow\Nova\Flexible\Concerns\HasFlexible;
 use Marshmallow\Nova\Flexible\Commands\LayoutCommand;
 use Marshmallow\Nova\Flexible\Commands\MakeLayoutCommand;
 use Marshmallow\Nova\Flexible\Http\Middleware\InterceptFlexibleAttributes;
@@ -28,6 +30,8 @@ class FieldServiceProvider extends ServiceProvider
         $this->publishes([
             __DIR__ . '/../config/flexible.php' => config_path('flexible.php'),
         ]);
+
+        Cache::forget("marshmallow.flexible-layouts-cache");
     }
 
     /**

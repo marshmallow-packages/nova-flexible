@@ -3,6 +3,8 @@
 namespace Marshmallow\Nova\Flexible\Value;
 
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Cache;
+use Marshmallow\Nova\Flexible\Layouts\Collection as LayoutsCollection;
 
 class Resolver implements ResolverInterface
 {
@@ -40,7 +42,7 @@ class Resolver implements ResolverInterface
         return collect($value)->map(function ($item) use ($layouts) {
             $layout = $layouts->find($item->layout);
 
-            if (! $layout) {
+            if (!$layout) {
                 return null;
             }
 
@@ -66,7 +68,7 @@ class Resolver implements ResolverInterface
         }
 
         // Fail silently in case data is invalid
-        if (! is_array($value)) {
+        if (!is_array($value)) {
             return [];
         }
 
