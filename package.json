@@ -14,7 +14,7 @@
         "@vue/babel-plugin-jsx": "^1.1.1",
         "@vue/compiler-sfc": "^3.2.22",
         "@vueform/multiselect": "^2.3.3",
-        "autoprefixer": "^10.4.7",
+        "autoprefixer": "^10.4.12",
         "laravel-mix": "^6.0.41",
         "laravel-nova": "^1.0",
         "postcss": "^8.4.13",
