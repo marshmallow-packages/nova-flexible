@@ -103,6 +103,13 @@ export default class Group {
             this.fields[i].attribute =
                 this.key + "__" + this.fields[i].attribute;
             this.fields[i].validationKey = this.fields[i].attribute;
+
+            if (this.fields[i].dependsOn) {
+                Object.keys(this.fields[i].dependsOn).forEach(key => {
+                    this.fields[i].dependsOn[`${this.key}__${key}`] = this.fields[i].dependsOn[key];
+                    delete this.fields[i].dependsOn[key];
+                });
+            }
         }
     }
 }

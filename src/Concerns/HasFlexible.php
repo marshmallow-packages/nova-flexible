@@ -35,7 +35,7 @@ trait HasFlexible
      */
     public function cast($value, $layoutMapping = [])
     {
-        if (app()->getProvider(NovaServiceProvider::class)) {
+        if (app()->getProvider(NovaServiceProvider::class) && !app()->runningInConsole()) {
             return $value;
         }
 
@@ -138,14 +138,18 @@ trait HasFlexible
         } elseif (is_a($item, \stdClass::class)) {
             $name = $item->layout ?? null;
             $key = $item->key ?? null;
-            $attributes = (array) $item->attributes ?? [];
+            $attributes = (array) ($item->attributes ?? []);
         } elseif (is_a($item, Layout::class)) {
             $name = $item->name();
             $key = $item->key();
             $attributes = $item->getAttributes();
         }
 
-        return $this->createMappedLayout($name, $key, $attributes, $layoutMapping, $with);
+        if (is_null($name)) {
+            return;
+        }
+
+        return $this->createMappedLayout($name, $key, $attributes, $layoutMapping);
     }
 
     /**

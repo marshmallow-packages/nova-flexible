@@ -1,19 +1,19 @@
 <template>
     <FieldWrapper :stacked="field.stacked" v-if="field.visible" class="w-full">
-        <div class="py-6 px-8 w-full">
+        <div class="w-full px-8 py-6">
             <div class="mb-6" v-if="fieldLabel">
                 <FormLabel
                     :label-for="labelFor || field.attribute"
                     :class="{ 'mb-2': showHelpText && field.helpText }"
                 >
                     {{ fieldLabel }}
-                    <span v-if="field.required" class="text-red-500 text-sm">
+                    <span v-if="field.required" class="text-sm text-red-500">
                         {{ __("*") }}
                     </span>
                 </FormLabel>
 
                 <HelpText
-                    class="help-text mt-2"
+                    class="mt-2 help-text"
                     v-if="showHelpText"
                     v-html="field.helpText"
                 />
@@ -60,5 +60,6 @@
                 );
             },
         },
-    };
+    },
+};
 </script>

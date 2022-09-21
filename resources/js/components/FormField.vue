@@ -1,24 +1,24 @@
 <template>
     <component
-        :dusk="field.attribute"
-        :is="field.fullWidth ? 'FullWidthField' : 'DefaultField'"
-        :field="field"
+        :dusk="currentField.attribute"
+        :is="currentField.fullWidth ? 'FullWidthField' : 'DefaultField'"
+        :field="currentField"
         :errors="errors"
-        :fullWidthContent="true"
         :show-help-text="showHelpText"
+        full-width-content
+        :fullWidthContent="true"
     >
         <template #field>
             <div v-if="order.length > 0">
                 <form-nova-flexible-content-group
                     v-for="(group, index) in orderedGroups"
-                    :dusk="field.attribute + '-' + index"
+                    :dusk="currentField.attribute + '-' + index"
                     :key="group.key"
-                    :field="field"
+                    :field="currentField"
                     :group="group"
                     :index="index"
                     :resource-name="resourceName"
                     :resource-id="resourceId"
-                    :resource="resource"
                     :errors="errors"
                     @move-up="moveUp(group.key)"
                     @move-down="moveDown(group.key)"
@@ -29,8 +29,8 @@
             <button
                 class="inline-flex items-center flex-shrink-0 px-4 text-sm font-bold text-white rounded shadow focus:outline-none focus:ring bg-primary-500 hover:bg-primary-400 active:bg-primary-600 dark:text-gray-800 h-9"
                 @click.prevent="toggleLayoutsDropdownOrAddDefault"
-                v-if="this.limitCounter != 0 && field.allowedToCreate"
-                v-text="field.button"
+                v-if="this.limitCounter != 0 && currentField.allowedToCreate"
+                v-text="currentField.button"
             ></button>
 
             <SelectorModal
@@ -39,8 +39,14 @@
                 @confirm="confirmModal($event)"
                 @close="closeModal"
                 :layouts="layouts"
-                :is="field.menu.component"
                 :limit-per-layout-counter="limitPerLayoutCounter"
+                :is="currentField.menu.component"
+                :field="currentField"
+                :limit-counter="limitCounter"
+                :errors="errors"
+                :resource-name="resourceName"
+                :resource-id="resourceId"
+                @addGroup="addGroup($event)"
             />
         </template>
     </component>
@@ -48,13 +54,13 @@
 
 <script>
     import "./../../css/modal.css";
-    import FullWidthField from "./FullWidthField";
-    import { FormField, HandlesValidationErrors } from "laravel-nova";
-    import Group from "../group";
+    import FullWidthField from './FullWidthField';
+    import { DependentFormField, HandlesValidationErrors } from 'laravel-nova';
+    import Group from '../group';
     import SelectorModal from "./SelectorModal.vue";
 
     export default {
-        mixins: [FormField, HandlesValidationErrors],
+        mixins: [DependentFormField, HandlesValidationErrors],
 
         props: ["resourceName", "resourceId", "resource", "field"],
 
@@ -62,7 +68,7 @@
 
         computed: {
             layouts() {
-                return this.field.layouts || false;
+                return this.currentField.layouts || false;
             },
             orderedGroups() {
                 return this.order.reduce((groups, key) => {
@@ -70,16 +76,15 @@
                     return groups;
                 }, []);
             },
-
             limitCounter() {
                 if (
-                    this.field.limit === null ||
-                    typeof this.field.limit == "undefined"
+                    this.currentField.limit === null ||
+                    typeof this.currentField.limit == "undefined"
                 ) {
                     return null;
                 }
 
-                return this.field.limit - Object.keys(this.groups).length;
+                return this.currentField.limit - Object.keys(this.groups).length;
             },
 
             limitPerLayoutCounter() {
@@ -110,10 +115,10 @@
 
         methods: {
             /*
-             * Set the initial, internal value for the field.
+             * Set the initial, internal value for the currentField.
              */
             setInitialValue() {
-                this.value = this.field.value || [];
+                this.value = this.currentField.value || [];
                 this.files = {};
 
                 this.populateGroups();
@@ -142,7 +147,7 @@
             },
 
             /**
-             * Fill the given FormData object with the field's internal value.
+             * Fill the given FormData object with the currentField's internal value.
              */
             fill(formData) {
                 let key, group;
@@ -165,9 +170,9 @@
                     this.files = { ...this.files, ...group.files };
                 }
 
-                this.appendFieldAttribute(formData, this.field.attribute);
+                this.appendFieldAttribute(formData, this.currentField.attribute);
                 formData.append(
-                    this.field.attribute,
+                    this.currentField.attribute,
                     this.value.length ? JSON.stringify(this.value) : ""
                 );
 
@@ -178,7 +183,7 @@
             },
 
             /**
-             * Register given field attribute into the parsable flexible fields register
+             * Register given currentField attribute into the parsable flexible fields register
              */
             appendFieldAttribute(formData, attribute) {
                 let registered = [];
@@ -198,7 +203,7 @@
             },
 
             /**
-             * Update the field's internal value.
+             * Update the currentField's internal value.
              */
             handleChange(value) {
                 this.value = value || [];
@@ -208,7 +213,7 @@
             },
 
             /**
-             * Set the displayed layouts from the field's current value
+             * Set the displayed layouts from the currentField's current value
              */
             populateGroups() {
                 this.order.splice(0, this.order.length);
@@ -219,7 +224,7 @@
                         this.getLayout(this.value[i].layout),
                         this.value[i].attributes,
                         this.value[i].key,
-                        this.field.collapsed,
+                        this.currentField.collapsed,
                         this.value[i].title_data
                     );
                 }
@@ -241,13 +246,12 @@
 
                 collapsed = collapsed || false;
 
-                let fields =
-                        attributes || JSON.parse(JSON.stringify(layout.fields)),
+                let fields = attributes || JSON.parse(JSON.stringify(layout.fields)),
                     group = new Group(
                         layout.name,
                         layout.title,
                         fields,
-                        this.field,
+                        this.currentField,
                         key,
                         collapsed,
                         layout,

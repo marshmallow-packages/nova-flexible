@@ -116,7 +116,7 @@ class FlexibleAttribute
      */
     public function isFlexibleFile($value = null)
     {
-        if (! is_null($value) && ! is_string($value)) {
+        if (!is_null($value) && !is_string($value)) {
             return false;
         } elseif (is_null($value)) {
             return $this->upload;
@@ -143,7 +143,7 @@ class FlexibleAttribute
      */
     public function isAggregate()
     {
-        return ! is_null($this->key);
+        return !is_null($this->key);
     }
 
     /**
@@ -182,7 +182,7 @@ class FlexibleAttribute
      */
     public static function formatGroupPrefix($group)
     {
-        if (! $group) {
+        if (!$group) {
             return;
         }
 
@@ -198,15 +198,17 @@ class FlexibleAttribute
      */
     public function setDataIn(&$attributes, $value)
     {
-        if (! $this->isAggregate()) {
+        $value = is_string($value) && $value === '' ? null : $value;
+
+        if (!$this->isAggregate()) {
             $attributes[$this->name] = $value;
 
             return $attributes;
         }
 
-        if (! isset($attributes[$this->name])) {
+        if (!isset($attributes[$this->name])) {
             $attributes[$this->name] = [];
-        } elseif (! is_array($attributes[$this->name])) {
+        } elseif (!is_array($attributes[$this->name])) {
             $attributes[$this->name] = [$attributes[$this->name]];
         }
 
@@ -227,7 +229,7 @@ class FlexibleAttribute
      */
     public function unsetDataIn(&$attributes)
     {
-        if (! $this->isAggregate() || ! is_array($attributes[$this->name])) {
+        if (!$this->isAggregate() || !is_array($attributes[$this->name])) {
             unset($attributes[$this->name]);
 
             return $attributes;
@@ -277,7 +279,7 @@ class FlexibleAttribute
      */
     protected function setGroup($group = null)
     {
-        if (! $group) {
+        if (!$group) {
             return;
         }
 
@@ -298,7 +300,7 @@ class FlexibleAttribute
     {
         preg_match('/^.+?(\[.*\])?$/', $this->original, $arrayMatches);
 
-        if (! isset($arrayMatches[1])) {
+        if (!isset($arrayMatches[1])) {
             return;
         }
 

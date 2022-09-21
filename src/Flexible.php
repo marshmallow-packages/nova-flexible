@@ -8,6 +8,7 @@ use Laravel\Nova\Fields\Field;
 use Illuminate\Support\Collection;
 use Illuminate\Database\Eloquent\Model;
 use SebastianBergmann\Template\Template;
+use Laravel\Nova\Fields\SupportsDependentFields;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Marshmallow\Nova\Flexible\Layouts\Layout;
 use Marshmallow\Nova\Flexible\Value\Resolver;
@@ -18,6 +19,8 @@ use Marshmallow\Nova\Flexible\Layouts\Collection as LayoutsCollection;
 
 class Flexible extends Field
 {
+    use SupportsDependentFields;
+
     /**
      * The field's component.
      *
@@ -205,6 +208,17 @@ class Flexible extends Field
     }
 
     /**
+     * Make the flexible content take up the full width
+     * of the form. Labels will sit above
+     *
+     * @return mixed
+     */
+    public function stacked()
+    {
+        return $this->fullWidth();
+    }
+
+    /**
      *  Prevent the 'Add Layout' button from appearing more than once
      *
      * @return $this
@@ -232,15 +246,17 @@ class Flexible extends Field
     /**
      * Set the field's resolver
      *
-     * @param string $classname
+     * @param mixed $resolver
      * @return $this
      */
-    public function resolver($classname)
+    public function resolver($resolver)
     {
-        $resolver = new $classname();
+        if (is_string($resolver) && is_a($resolver, ResolverInterface::class, true)) {
+            $resolver = new $resolver();
+        }
 
         if (!($resolver instanceof ResolverInterface)) {
-            throw new Exception('Resolver Class "' . get_class($resolver) . '" does not implement ResolverInterface.');
+            throw new \Exception('Resolver Class "' . get_class($resolver) . '" does not implement ResolverInterface.');
         }
 
         $this->resolver = $resolver;
@@ -290,7 +306,7 @@ class Flexible extends Field
         }
 
         if (!($layout instanceof LayoutInterface)) {
-            throw new Exception('Layout Class "' . get_class($layout) . '" does not implement LayoutInterface.');
+            throw new \Exception('Layout Class "' . get_class($layout) . '" does not implement LayoutInterface.');
         }
 
         $this->registerLayout($layout);
@@ -301,13 +317,17 @@ class Flexible extends Field
     /**
      * Apply a field configuration preset
      *
-     * @param string $classname
+     * @param string|Preset $class
      * @param array $params
      * @return $this
      */
-    public function preset($classname, $params = [])
+    public function preset($class, $params = [])
     {
-        $preset = resolve($classname, $params);
+        if (is_string($class)) {
+            $preset = resolve($class, $params);
+        } else if ($class instanceof Preset) {
+            $preset = $class;
+        }
 
         $preset->handle($this);
 
@@ -464,6 +484,7 @@ class Flexible extends Field
     protected function syncAndFillGroups(NovaRequest $request, $requestAttribute)
     {
         if (!($raw = $this->extractValue($request, $requestAttribute))) {
+            $this->fireRemoveCallbacks(collect());
             $this->groups = collect();
 
             return [];
@@ -486,7 +507,7 @@ class Flexible extends Field
             $callbacks = array_merge($callbacks, $group->fill($scope));
 
             return $group;
-        });
+        })->filter();
 
         $this->fireRemoveCallbacks($new_groups);
 

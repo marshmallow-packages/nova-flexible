@@ -1,9 +1,9 @@
 <template>
-    <div class="relative mb-4 pb-1" :id="group.key">
+    <div class="relative pb-1 mb-4" :id="group.key">
         <div class="w-full shrink">
             <div :class="titleStyle" v-if="group.title">
                 <div
-                    class="h-8 leading-normal h-full flex items-center box-content"
+                    class="box-content flex items-center h-8 h-full leading-normal"
                     :class="{
                         'border-b border-gray-200 dark:border-gray-700 ':
                             !collapsed,
@@ -12,7 +12,7 @@
                     <button
                         dusk="expand-group"
                         type="button"
-                        class="shrink-0 group-control btn border-r border-gray-200 dark:border-gray-700 w-8 h-8 block"
+                        class="block w-8 h-8 border-r border-gray-200 shrink-0 group-control btn dark:border-gray-700"
                         :title="__('Expand')"
                         @click.prevent="expand"
                         v-if="collapsed"
@@ -27,7 +27,7 @@
                     <button
                         dusk="collapse-group"
                         type="button"
-                        class="group-control btn border-r border-gray-200 dark:border-gray-700 w-8 h-8 block"
+                        class="block w-8 h-8 border-r border-gray-200 group-control btn dark:border-gray-700"
                         :title="__('Collapse')"
                         @click.prevent="collapse"
                         v-else
@@ -40,7 +40,7 @@
                         />
                     </button>
 
-                    <p class="text-80 grow px-4">
+                    <p class="px-4 text-80 grow">
                         <span class="mr-3 font-semibold">#{{ index + 1 }}</span>
                         <span v-if="group.title_from_content">
                             <span class="mr-3 font-semibold">{{
@@ -54,7 +54,7 @@
                         <button
                             dusk="move-up-group"
                             type="button"
-                            class="group-control btn border-l border-gray-200 dark:border-gray-700 w-8 h-8 block"
+                            class="block w-8 h-8 border-l border-gray-200 group-control btn dark:border-gray-700"
                             :title="__('Move up')"
                             @click.prevent="moveUp"
                         >
@@ -68,7 +68,7 @@
                         <button
                             dusk="move-down-group"
                             type="button"
-                            class="group-control btn border-l border-gray-200 dark:border-gray-700 w-8 h-8 block"
+                            class="block w-8 h-8 border-l border-gray-200 group-control btn dark:border-gray-700"
                             :title="__('Move down')"
                             @click.prevent="moveDown"
                         >
@@ -82,7 +82,7 @@
                         <button
                             dusk="delete-group"
                             type="button"
-                            class="group-control btn border-l border-gray-200 dark:border-gray-700 w-8 h-8 block"
+                            class="block w-8 h-8 border-l border-gray-200 group-control btn dark:border-gray-700"
                             :title="__('Delete')"
                             @click.prevent="confirmRemove"
                         >
@@ -121,7 +121,7 @@
 </template>
 
 <script>
-    import BehavesAsPanel from "../../../vendor/laravel/nova/resources/js/mixins/BehavesAsPanel.js";
+import BehavesAsPanel from 'nova-mixins/BehavesAsPanel';
 
     export default {
         mixins: [BehavesAsPanel],

@@ -24,7 +24,7 @@ class :classname implements ResolverInterface
      *
      * @param  mixed  $model
      * @param  string $attribute
-     * @param  Illuminate\Support\Collection $groups
+     * @param  \Illuminate\Support\Collection $groups
      * @return string
      */
     public function set($model, $attribute, $groups)
