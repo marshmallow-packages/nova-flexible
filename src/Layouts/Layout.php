@@ -118,6 +118,12 @@ class Layout implements LayoutInterface, JsonSerializable, ArrayAccess, Arrayabl
     protected $resolvedTitle;
 
     /**
+     * The maximum amount of this layout type that can be added
+     * Can be set in custom layouts
+     */
+    protected $limit;
+
+    /**
      * The parent model instance
      *
      * @var \Illuminate\Database\Eloquent\Model
@@ -136,6 +142,9 @@ class Layout implements LayoutInterface, JsonSerializable, ArrayAccess, Arrayabl
      * @param string $name
      * @param array $fields
      * @param string $key
+     * @param array $attributes
+     * @param callable|null $removeCallbackMethod
+     * @param int|null $limit
      * @return void
      */
     public function __construct($title = null, $name = null, $fields = null, $key = null, $attributes = [], callable $removeCallbackMethod = null, callable $resolveTitleUsing = null)
@@ -335,8 +344,14 @@ class Layout implements LayoutInterface, JsonSerializable, ArrayAccess, Arrayabl
             $this->name,
             $fields,
             $key,
-            $attributes
+            $attributes,
+            $this->removeCallbackMethod,
+            $this->limit
         );
+        if (!is_null($this->model)) {
+            $clone->setModel($this->model);
+        }
+        return $clone;
     }
 
     /**
@@ -579,7 +594,8 @@ class Layout implements LayoutInterface, JsonSerializable, ArrayAccess, Arrayabl
      * @param  mixed  $offset
      * @return bool
      */
-    public function offsetExists(mixed $offset): bool
+    #[\ReturnTypeWillChange]
+    public function offsetExists($offset)
     {
         return !is_null($this->getAttribute($offset));
     }
@@ -590,7 +606,8 @@ class Layout implements LayoutInterface, JsonSerializable, ArrayAccess, Arrayabl
      * @param  mixed  $offset
      * @return mixed
      */
-    public function offsetGet(mixed $offset): mixed
+    #[\ReturnTypeWillChange]
+    public function offsetGet($offset)
     {
         return $this->getAttribute($offset);
     }
@@ -602,7 +619,8 @@ class Layout implements LayoutInterface, JsonSerializable, ArrayAccess, Arrayabl
      * @param  mixed  $value
      * @return void
      */
-    public function offsetSet(mixed $offset, mixed $value): void
+    #[\ReturnTypeWillChange]
+    public function offsetSet($offset, $value)
     {
         $this->setAttribute($offset, $value);
     }
@@ -613,7 +631,8 @@ class Layout implements LayoutInterface, JsonSerializable, ArrayAccess, Arrayabl
      * @param  mixed  $offset
      * @return void
      */
-    public function offsetUnset(mixed $offset): void
+    #[\ReturnTypeWillChange]
+    public function offsetUnset($offset)
     {
         unset($this->attributes[$offset]);
     }
@@ -703,7 +722,8 @@ class Layout implements LayoutInterface, JsonSerializable, ArrayAccess, Arrayabl
      *
      * @return mixed
      */
-    public function jsonSerialize(): mixed
+    #[\ReturnTypeWillChange]
+    public function jsonSerialize()
     {
         // Calling an empty "resolve" first in order to empty all fields
         $this->resolve(true);
@@ -717,6 +737,7 @@ class Layout implements LayoutInterface, JsonSerializable, ArrayAccess, Arrayabl
             'title_resolved' => ($this->hasResolverForTitleAttribute()) ? 1 : 0,
             'title_from_content' => $this->resolvedTitle,
             'fields' => $this->fields->jsonSerialize(),
+            'limit' => $this->limit,
         ];
     }
 

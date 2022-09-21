@@ -22,6 +22,9 @@ class FlexibleCast implements CastsAttributes
      */
     protected $model;
 
+    /**
+     * @return \Marshmallow\NovaFlexibleContent\Layouts\Collection|array<\Marshmallow\NovaFlexibleContent\Layouts\Layout>
+     */
     public function get($model, string $key, $value, array $attributes)
     {
         $this->model = $model;

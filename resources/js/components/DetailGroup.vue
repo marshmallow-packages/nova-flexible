@@ -2,9 +2,9 @@
     <div :class="componentStyle" :dusk="'detail-' + attribute + '-' + index">
         <div :class="titleStyle" v-if="group.title">
             <span
-                class="block float-left border-r border-gray-100 dark:border-gray-700 pr-4 mr-4"
+                class="block float-left pr-4 mr-4 border-r border-gray-100 dark:border-gray-700"
                 ><!--
-             --><span class="text-60 text-xs">#</span
+             --><span class="text-xs text-60">#</span
                 ><!--
              --><span class="text-80">{{ index + 1 }}</span>
             </span>

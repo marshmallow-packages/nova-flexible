@@ -9,6 +9,7 @@ use Illuminate\Support\Collection;
 use Marshmallow\Nova\Flexible\Flexible;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Spatie\MediaLibrary\InteractsWithMedia;
+use Marshmallow\Nova\Flexible\Layouts\Layout;
 use Ebess\AdvancedNovaMediaLibrary\Fields\Media;
 use Marshmallow\Nova\Flexible\Http\ScopedRequest;
 use Marshmallow\Nova\Flexible\FileAdder\FileAdder;
@@ -19,7 +20,6 @@ use Spatie\MediaLibrary\MediaCollections\Exceptions\InvalidUrl;
 
 trait HasMediaLibrary
 {
-
     use InteractsWithMedia;
 
     /**
@@ -95,7 +95,6 @@ trait HasMediaLibrary
             ->usingName(pathinfo($filename, PATHINFO_FILENAME))
             ->usingFileName($filename);
     }
-
     /**
      * Get media collection by its collectionName.
      *

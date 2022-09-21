@@ -2,7 +2,7 @@
     <Modal :show="true">
         <form
             @submit.prevent="$emit('confirm')"
-            class="mx-auto bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden"
+            class="mx-auto overflow-hidden bg-white rounded-lg shadow-lg dark:bg-gray-800"
         >
             <slot>
                 <ModalHeader v-text="__('Delete Group')" />
