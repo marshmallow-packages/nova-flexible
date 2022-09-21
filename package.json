@@ -7,7 +7,8 @@
         "watch-poll": "mix watch -- --watch-options-poll=1000",
         "hot": "mix watch --hot",
         "prod": "npm run production",
-        "production": "mix --production"
+        "production": "mix --production",
+        "nova:install": "npm --prefix='../../vendor/laravel/nova' ci"
     },
     "devDependencies": {
         "@vue/babel-plugin-jsx": "^1.1.1",
@@ -29,8 +30,6 @@
     },
     "dependencies": {
         "@inertiajs/inertia": "^0.11.0",
-        "@inertiajs/inertia-vue3": "^0.6.0",
-        "production": "mix --production",
-        "nova:install": "npm --prefix='../../vendor/laravel/nova' ci"
-    },
+        "@inertiajs/inertia-vue3": "^0.6.0"
+    }
 }
