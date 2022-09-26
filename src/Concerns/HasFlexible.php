@@ -149,7 +149,7 @@ trait HasFlexible
             return;
         }
 
-        return $this->createMappedLayout($name, $key, $attributes, $layoutMapping);
+        return $this->createMappedLayout($name, $key, $attributes, $layoutMapping, $with);
     }
 
     /**
