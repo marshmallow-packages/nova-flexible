@@ -6,13 +6,28 @@
         <ModalHeader class="relative px-6 py-6 border-b border-gray">
             {{ __("Select Layout") }}
 
-            <a
-                href="#"
-                class="nova-flexible-close"
+            <button
                 @click.prevent="handleClose"
+                type="button"
+                class="text-gray-400 bg-white rounded-md nova-flexible-close hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
             >
-                <i class="fa fa-times"></i>
-            </a>
+                <span class="sr-only">Close</span>
+                <svg
+                    class="w-6 h-6"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke-width="1.5"
+                    stroke="currentColor"
+                    aria-hidden="true"
+                >
+                    <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M6 18L18 6M6 6l12 12"
+                    />
+                </svg>
+            </button>
         </ModalHeader>
 
         <div class="relative flex-1 bg-white rounded-lg h-90p">
@@ -63,7 +78,7 @@
                         class="shadow-md mm-grid mm-grid-cols-12 mm-w-full mm-border mm-border-gray-200 mm-bg-white group group-hover:border-primary-500 hover:border-primary-500 mm-cursor-pointer"
                         @click="handleConfirm(layout)"
                     >
-                        <div class="mm-col-span-4">
+                        <div class="mm-col-span-4" v-if="layout.image">
                             <div class="h-full">
                                 <img
                                     class="mm-object-cover mm-object-center mm-h-full"
