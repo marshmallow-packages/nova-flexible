@@ -8,7 +8,6 @@ use Marshmallow\Nova\Flexible\Layouts\Layout;
 use Marshmallow\Nova\Flexible\Layouts\Collection;
 use Marshmallow\Nova\Flexible\Value\FlexibleCast;
 use Illuminate\Support\Collection as BaseCollection;
-use Marshmallow\Nova\Flexible\Layouts\MarshmallowLayout;
 
 trait HasFlexible
 {
@@ -165,7 +164,7 @@ trait HasFlexible
     {
         $classname = array_key_exists($name, $layoutMapping)
             ? $layoutMapping[$name]
-            : MarshmallowLayout::class;
+            : config('flexible.default_layout_class');
 
         $layout = new $classname($name, $name, [], $key, $attributes);
 
@@ -177,6 +176,22 @@ trait HasFlexible
         $layout->setModel($model);
         $layout->setWith($with);
 
+        $attributes = $layout->getAttributes();
+        foreach ($attributes as $key => $attribute) {
+            if (!is_array($attribute) || !filled($attribute)) {
+                continue;
+            }
+
+            $attributes[$key] = $this->toFlexible($attribute, $layoutMapping, $with)
+                ->map(function ($sub_layout) {
+                    // Set the attribute on the layout for backwards compatibility
+                    $sub_attributes = $sub_layout->getAttributes();
+                    $sub_layout->attributes = json_decode(json_encode($sub_attributes));
+                    return $sub_layout;
+                });
+        }
+
+        $layout->setRawAttributes($attributes);
         return $layout;
     }
 }
