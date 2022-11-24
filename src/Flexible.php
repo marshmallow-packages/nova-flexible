@@ -10,7 +10,6 @@ use Illuminate\Database\Eloquent\Model;
 use SebastianBergmann\Template\Template;
 use Laravel\Nova\Fields\SupportsDependentFields;
 use Laravel\Nova\Http\Requests\NovaRequest;
-use Marshmallow\Nova\Flexible\Layouts\Layout;
 use Marshmallow\Nova\Flexible\Value\Resolver;
 use Marshmallow\Nova\Flexible\Http\ScopedRequest;
 use Marshmallow\Nova\Flexible\Layouts\LayoutInterface;
@@ -274,15 +273,17 @@ class Flexible extends Field
     {
         $count = count($arguments);
 
+        $layoutClass = config('flexible.default_layout_class');
+
         if ($count === 3) {
-            $this->registerLayout(new Layout($arguments[0], $arguments[1], $arguments[2]));
+            $this->registerLayout(new $layoutClass($arguments[0], $arguments[1], $arguments[2]));
 
             return $this;
         }
 
         if ($count === 4) {
             $callback = $arguments[3];
-            $layout = $callback(new Layout($arguments[0], $arguments[1], $arguments[2]));
+            $layout = $callback(new $layoutClass($arguments[0], $arguments[1], $arguments[2]));
 
             $this->registerLayout($layout);
 
@@ -290,7 +291,7 @@ class Flexible extends Field
         }
 
         if ($count === 6) {
-            $this->registerLayout(new Layout($arguments[0], $arguments[1], $arguments[2], $arguments[3], $arguments[4], $arguments[5]));
+            $this->registerLayout(new $layoutClass($arguments[0], $arguments[1], $arguments[2], $arguments[3], $arguments[4], $arguments[5]));
 
             return $this;
         }
