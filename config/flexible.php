@@ -30,12 +30,15 @@ return [
     /**
      * The default layout that will be used when creating a new flexible
      * field. This layout will be added to the flexible field when it's
-     * created. If you want to add a Spatie media fields, set this to
-     * '\Marshmallow\Nova\Flexible\Layouts\MarshmallowMediaLayout::class'
+     * created.
+     *
+     **/
+    'default_layout_class' => \Marshmallow\Nova\Flexible\Layouts\MarshmallowLayout::class,
+
+    /**
+     * If you want to add a Spatie media fields, set this to true
      */
-    'default_layout_class' => \Marshmallow\Nova\Flexible\Layouts\MarshmallowMediaLayout::class,
-    // 'default_layout_class' => \Marshmallow\Nova\Flexible\Layouts\Layout::class,
-    // 'default_layout_class' => \Marshmallow\Nova\Flexible\Layouts\MarshmallowLayout::class,
+    'has_media_library' => false,
 
     /**
      * If this is set to true, our default layouts will be loaded and
