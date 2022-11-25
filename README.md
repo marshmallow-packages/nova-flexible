@@ -11,6 +11,9 @@ composer require marshmallow/nova-flexible
 php artisan vendor:publish --provider="Marshmallow\Nova\Flexible\FieldServiceProvider"
 ```
 
+To use the MarshmallowMediaLayout, this packages requires 'spatie/laravel-medialibrary', see the insturctions for installation on the [spatie website](https://spatie.be/docs/laravel-medialibrary/v10/installation-setup)
+For Nova use 'marshmallow/advanced-nova-media-library' and follow the instructions on the [github page](https://github.com/marshmallow-packages/advanced-nova-media-library)
+
 ## Table of Contents
 
 -   [Prepare](#Prepare)

@@ -1,18 +1,5 @@
 <?php
 
-/**
- * Layout
- *
- * PHP version 7.4
- *
- * @category Layouts
- * @package  Marshmallow\Pages
- * @author   Stef van Esch <stef@marshmallow.dev>
- * @license  MIT Licence
- * @link     https://marshmallow.dev
- */
-
-namespace Marshmallow\Nova\Flexible\Layouts;
 
 /**
  * Collection of functions available to all layouts
@@ -23,7 +10,10 @@ namespace Marshmallow\Nova\Flexible\Layouts;
  * @license  MIT Licence
  * @link     https://marshmallow.dev
  */
-class MarshmallowLayout extends Layout
+
+namespace Marshmallow\Nova\Flexible\Layouts;
+
+class MarshmallowLayout extends DynamicLayout
 {
     /**
      * Render the view component for this layout.

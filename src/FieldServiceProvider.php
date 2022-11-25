@@ -6,10 +6,11 @@ use Laravel\Nova\Nova;
 use Laravel\Nova\Events\ServingNova;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\ServiceProvider;
-use Marshmallow\Nova\Flexible\Concerns\HasFlexible;
 use Marshmallow\Nova\Flexible\Commands\LayoutCommand;
 use Marshmallow\Nova\Flexible\Commands\MakeLayoutCommand;
 use Marshmallow\Nova\Flexible\Http\Middleware\InterceptFlexibleAttributes;
+use Marshmallow\Nova\Flexible\Layouts\MarshmallowLayout;
+use Marshmallow\Nova\Flexible\Layouts\MarshmallowMediaLayout;
 
 class FieldServiceProvider extends ServiceProvider
 {
@@ -45,6 +46,14 @@ class FieldServiceProvider extends ServiceProvider
             __DIR__ . '/../config/flexible.php',
             'flexible'
         );
+
+        if (config('flexible.has_media_library')) {
+            $className = \Marshmallow\Nova\Flexible\Layouts\MarshmallowMediaLayout::class;
+        } else {
+            $className = \Marshmallow\Nova\Flexible\Layouts\Layout::class;
+        }
+
+        class_alias($className, '\Marshmallow\Nova\Flexible\Layouts\DynamicLayout');
 
         if (!$this->app->runningInConsole()) {
             return;
