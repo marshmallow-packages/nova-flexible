@@ -53,7 +53,7 @@ class FieldServiceProvider extends ServiceProvider
             $className = \Marshmallow\Nova\Flexible\Layouts\Layout::class;
         }
 
-        class_alias($className, '\Marshmallow\Nova\Flexible\Layouts\DynamicLayout');
+        class_alias($className, '\Marshmallow\Nova\Flexible\Layouts\MarshmallowDynamicLayout');
 
         if (!$this->app->runningInConsole()) {
             return;

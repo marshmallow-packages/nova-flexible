@@ -13,7 +13,7 @@
 
 namespace Marshmallow\Nova\Flexible\Layouts;
 
-class MarshmallowLayout extends DynamicLayout
+class MarshmallowLayout extends MarshmallowDynamicLayout
 {
     /**
      * Render the view component for this layout.
