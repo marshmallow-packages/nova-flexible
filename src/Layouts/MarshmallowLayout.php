@@ -13,6 +13,14 @@
 
 namespace Marshmallow\Nova\Flexible\Layouts;
 
+if (config('flexible.has_media_library')) {
+    $className = \Marshmallow\Nova\Flexible\Layouts\MarshmallowMediaLayout::class;
+} else {
+    $className = \Marshmallow\Nova\Flexible\Layouts\Layout::class;
+}
+
+class_alias($className, '\Marshmallow\Nova\Flexible\Layouts\MarshmallowDynamicLayout');
+
 class MarshmallowLayout extends MarshmallowDynamicLayout
 {
     /**
