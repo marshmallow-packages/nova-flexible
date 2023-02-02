@@ -12,7 +12,7 @@
     },
     "devDependencies": {
         "@vue/babel-plugin-jsx": "^1.1.1",
-        "@vue/compiler-sfc": "^3.2.22",
+        "@vue/compiler-sfc": "^3.2.47",
         "@vueform/multiselect": "^2.3.3",
         "autoprefixer": "^10.4.7",
         "laravel-mix": "^6.0.41",
