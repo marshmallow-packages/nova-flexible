@@ -6,6 +6,8 @@ use Closure;
 use Exception;
 use ArrayAccess;
 use JsonSerializable;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Str;
 use Laravel\Nova\Fields\Field;
 use Laravel\Nova\Fields\Heading;
 use Illuminate\Database\Eloquent\Model;
@@ -845,5 +847,23 @@ class Layout implements LayoutInterface, JsonSerializable, ArrayAccess, Arrayabl
     public function toArray()
     {
         return $this->attributesToArray();
+    }
+
+
+    /**
+     * Fill the model with an array of attributes.
+     *
+     * @param  array  $attributes
+     * @return $this
+     */
+    public function forceFill(array $attributes)
+    {
+        foreach ($attributes as $key => $value) {
+            $attribute = Str::replace('->', '.', $key);
+
+            Arr::set($this->attributes, $attribute, $value);
+        }
+
+        return $this;
     }
 }
