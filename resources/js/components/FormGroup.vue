@@ -121,7 +121,7 @@
 </template>
 
 <script>
-import BehavesAsPanel from 'nova-mixins/BehavesAsPanel';
+    import BehavesAsPanel from "nova-mixins/BehavesAsPanel";
 
     export default {
         mixins: [BehavesAsPanel],
@@ -220,6 +220,11 @@ import BehavesAsPanel from 'nova-mixins/BehavesAsPanel';
              */
             collapse() {
                 this.collapsed = true;
+            },
+        },
+        watch: {
+            index(index) {
+                Nova.$emit("flexible-content-order-changed", index);
             },
         },
     };
