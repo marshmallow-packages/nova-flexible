@@ -29,7 +29,9 @@ class DefaultPreset extends Preset
 
         if ($this->isIndexRequest) return;
 
-        $layouts = Flex::getLayoutsFromCache();
+        $layouts = Flex::getLayoutsFromCache(
+            get_class($request->model())
+        );
         $this->layouts = collect($layouts);
     }
 
