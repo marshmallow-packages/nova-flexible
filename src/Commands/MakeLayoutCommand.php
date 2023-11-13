@@ -39,6 +39,8 @@ class MakeLayoutCommand extends GeneratorCommand
     protected $use = '';
     protected $tags = '"Custom"';
 
+    protected $livewire_component = true;
+
     /**
      * Execute the console command.
      *
@@ -46,8 +48,8 @@ class MakeLayoutCommand extends GeneratorCommand
      */
     public function handle()
     {
-
         $name_path = Str::ucfirst(str_replace('.', '/', $this->getView('studly')));
+        $this->livewire_component = $this->option('livewire');
 
         $this->title = Str::afterLast($name_path, '/');
         if (Str::contains($name_path, '/')) {
@@ -57,14 +59,16 @@ class MakeLayoutCommand extends GeneratorCommand
 
         $this->component_class_name = $name_path;
         $this->component_class_path = str_replace('/', '\\', '\App\View\Components\\' . $name_path . 'Component::class');
-
+        $this->component_class_path = str_replace('/', '\\', '\App\Http\Livewire\\' . $name_path . '::class');
 
         $tags = explode('\\', $this->subdirectory);
-        foreach ($tags as $tag) {
-            if ($tag == "") {
-                continue;
-            }
+        $tags = array_filter($tags);
 
+        if ($this->livewire_component) {
+            $tags[] = 'Livewire';
+        }
+
+        foreach ($tags as $tag) {
             $this->tags .= '"' . $tag . '"';
         }
 
@@ -73,7 +77,12 @@ class MakeLayoutCommand extends GeneratorCommand
         $this->layout_class = $this->title . 'Layout';
 
         $this->writeFile('View', $name_path);
-        $this->writeFile('Component', $name_path);
+
+        if ($this->livewire_component) {
+            $this->writeFile('LivewireComponent', $name_path);
+        } else {
+            $this->writeFile('Component', $name_path);
+        }
         $this->writeFile('Layout', $name_path);
 
         if (empty($this->lines)) {
@@ -86,16 +95,21 @@ class MakeLayoutCommand extends GeneratorCommand
             $this->line($line);
         }
 
-        //Remove if Autodiscovery Enabled
-        $slug_name      = str_replace('.', '-', $this->getView());
-        $layout_name    = str_replace('/', '\\', $this->layout_class);
-        $layout_path    = '\App\Flexible\Layouts' . $this->subdirectory . '\\' . $layout_name . '::class';
+        if (!config('flexible.auto-discovery') || true) {
+            $slug_name      = str_replace('.', '-', $this->getView());
+            $layout_name    = str_replace('/', '\\', $this->layout_class);
+            $layout_path    = '\App\Flexible\Layouts' . $this->subdirectory . '\\' . $layout_name . '::class';
 
-        $text = PHP_EOL . 'Dont forget to add: ' . PHP_EOL;
-        $text .= "'{$slug_name}' => {$layout_path}" . PHP_EOL;
-        $text .= 'to config/flexible.php';
+            $text = PHP_EOL . 'Dont forget to add: ' . PHP_EOL;
+            $text .= "'{$slug_name}' => {$layout_path}" . PHP_EOL;
+            $text .= 'to config/flexible.php';
+            $this->line($text);
+        }
 
-        $this->line($text);
+        if ($this->livewire_component) {
+            $this->newLine();
+            $this->line("<options=bold,reverse;fg=magenta>Please note: Flexible Livewire Components are still in beta. Please add any issue to the package github page. 🤙 </>");
+        }
 
         return 0;
     }
@@ -112,8 +126,15 @@ class MakeLayoutCommand extends GeneratorCommand
                 $relative_path = 'View/Components/' . $name_path  . 'Component.php';
                 $path = app_path($relative_path);
                 break;
+            case "LivewireComponent":
+                $relative_path = 'Http/Livewire/' . $name_path  . '.php';
+                $path = app_path($relative_path);
+                break;
             case "View":
-                $relative_path = 'views/' . str_replace('.', '/', 'components.' . $this->getView())  . '.blade.php';
+                $relative_path = $this->livewire_component
+                    ? 'views/' . str_replace('.', '/', 'livewire.' . $this->getView())  . '.blade.php'
+                    : 'views/' . str_replace('.', '/', 'components.' . $this->getView())  . '.blade.php';
+
                 $path = resource_path($relative_path);
                 break;
         }
@@ -179,9 +200,13 @@ class MakeLayoutCommand extends GeneratorCommand
 
     protected function getParams()
     {
+        $component_class = $this->livewire_component
+            ? $this->title
+            : $this->title . 'Component';
+
         return [
             '{{subdirectory}}' =>  $this->subdirectory ?? null,
-            '{{component_class}}' => $this->title . 'Component',
+            '{{component_class}}' => $component_class,
             '{{name}}' => str_replace('.', '-', $this->getView()),
             '{{component_name}}' => $this->getView(),
             '{{title}}' => $this->title,
@@ -202,6 +227,14 @@ class MakeLayoutCommand extends GeneratorCommand
     {
         return [
             ['force', null, InputOption::VALUE_NONE, 'Create the class even if the component already exists'],
+            ['livewire', null, InputOption::VALUE_NONE, 'Handle this as a livewire component'],
         ];
     }
+
+    // protected function getArguments()
+    // {
+    //     return [
+    //         ['name', InputArgument::REQUIRED, 'The name of the class'],
+    //     ];
+    // }
 }
