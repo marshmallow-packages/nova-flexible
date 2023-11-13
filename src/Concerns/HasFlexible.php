@@ -2,15 +2,42 @@
 
 namespace Marshmallow\Nova\Flexible\Concerns;
 
+use Illuminate\Support\Facades\Cache;
 use Laravel\Nova\NovaServiceProvider;
+use Illuminate\Database\Eloquent\Model;
 use Marshmallow\Nova\Flexible\Facades\Flex;
 use Marshmallow\Nova\Flexible\Layouts\Layout;
 use Marshmallow\Nova\Flexible\Layouts\Collection;
 use Marshmallow\Nova\Flexible\Value\FlexibleCast;
+use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Support\Collection as BaseCollection;
+use Marshmallow\Nova\Flexible\Layouts\DependedLayout;
 
 trait HasFlexible
 {
+    protected static function bootHasFlexible()
+    {
+        static::created(function (Model $model) {
+            $model->clearCachedFlexibleData();
+        });
+
+        static::updated(function (Model $model) {
+            $model->clearCachedFlexibleData();
+        });
+
+        static::deleted(function (Model $model) {
+            $model->clearCachedFlexibleData();
+        });
+    }
+
+    public function clearCachedFlexibleData()
+    {
+        $cache_tag = self::getCacheTagForDependedLayoutSelect();
+        if ($cache_tag) {
+            Cache::tags($cache_tag)->flush();
+        }
+    }
+
     /**
      * Parse a Flexible Content attribute
      *
@@ -69,9 +96,26 @@ trait HasFlexible
             return new Collection();
         }
 
-        return new Collection(
+        $flexible_layouts = new Collection(
             array_filter($this->getMappedFlexibleLayouts($flexible, $layoutMapping, $with))
         );
+
+        /** Add the cloned / mirrowed depended layouts */
+        $flexible_layouts->each(function ($layout, $layout_array_key) use (&$flexible_layouts) {
+            if ($layout instanceof DependedLayout) {
+                [$page_id, $column, $layout_key] = explode('___', $layout->layout);
+                $model_class = get_class($this);
+                $depended_page = $model_class::find($page_id);
+                $depended_page_layouts = $depended_page->flex($column);
+                $depended_page_layouts->each(function ($layout) use ($layout_key, $layout_array_key, &$flexible_layouts) {
+                    if ($layout->key == $layout_key) {
+                        $flexible_layouts[$layout_array_key] = $layout;
+                    }
+                });
+            }
+        });
+
+        return $flexible_layouts;
     }
 
     /**
@@ -193,5 +237,111 @@ trait HasFlexible
 
         $layout->setRawAttributes($attributes);
         return $layout;
+    }
+
+    public static function getOptionsQueryBuilderForDependedLayoutSelect(): Builder
+    {
+        return self::query();
+    }
+
+    public static function getCacheTagForDependedLayoutSelect(): ?string
+    {
+        return 'depended-select-options';
+    }
+
+    public static function getCacheTtlForDependedLayoutSelect(): int
+    {
+        return 60 * 60 * 24;
+    }
+
+    public static function getCacheKeyForDependedLayoutSelect(): string
+    {
+        return 'options-for-depended-layout-select';
+    }
+
+    public static function getDependedLayoutSelectColumns(): array
+    {
+        return [
+            'layout',
+        ];
+    }
+
+    public function getDependedLayoutGroup(): string
+    {
+        if ($this->name) {
+            return $this->name;
+        }
+        $unknown_name = (new \ReflectionClass($this))->getShortName();
+        return  "{$unknown_name}: #{$this->id}";
+    }
+
+    public static function getDependedLayoutLabel($layout): string
+    {
+        if (isset($layout->attributes->title)) {
+            return $layout->attributes->title;
+        }
+
+        if (isset($layout->attributes->name)) {
+            return $layout->attributes->name;
+        }
+
+        if (isset($layout->attributes->title)) {
+            return $layout->attributes->title;
+        }
+
+        return __('Unknown');
+    }
+
+    public static function getLayoutsToIgnoreFromDependendLayout(): array
+    {
+        return [
+            //
+        ];
+    }
+
+    public static function getOptionsForDependedLayoutSelect(): array
+    {
+        $callable = function () {
+            $options = [];
+            $columns = self::getDependedLayoutSelectColumns();
+            $ignore_layouts = array_merge(self::getLayoutsToIgnoreFromDependendLayout(), [
+                'depended-layout'
+            ]);
+
+            self::getOptionsQueryBuilderForDependedLayoutSelect()
+                ->get()
+                ->each(function ($model) use (&$options, $columns, $ignore_layouts) {
+                    foreach ($columns as $column) {
+                        $layouts = json_decode($model->{$column});
+                        foreach ($layouts as $key => $layout) {
+                            try {
+                                if (in_array($layout->layout, $ignore_layouts)) {
+                                    continue;
+                                }
+
+                                $key = "{$model->id}___{$column}___{$layout->key}";
+
+                                $label = self::getDependedLayoutLabel($layout);
+                                $group = $model->getDependedLayoutGroup($layout);
+                                $options[$key] = ['label' => $label, 'group' => $group];
+                            } catch (ErrorException $e) {
+                                //
+                            }
+                        }
+                    }
+                });
+
+            return $options;
+        };
+
+        $cache_tag = self::getCacheTagForDependedLayoutSelect();
+        $cache_ttl = self::getCacheTtlForDependedLayoutSelect();
+        $cache_key = self::getCacheKeyForDependedLayoutSelect();
+
+        if ($cache_tag) {
+            return Cache::tags($cache_tag)->remember($cache_key, $cache_ttl, $callable);
+        }
+
+        return $callable();
     }
 }
