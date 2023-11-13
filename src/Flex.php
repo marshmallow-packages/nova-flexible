@@ -11,6 +11,7 @@ use RecursiveDirectoryIterator;
 use Illuminate\Support\Facades\Cache;
 use Marshmallow\Nova\Flexible\Layouts\MarshmallowLayout;
 use Marshmallow\Nova\Flexible\Layouts\Defaults\WysiwygLayout;
+use Marshmallow\Nova\Flexible\Layouts\DependedLayout;
 
 class Flex
 {
@@ -18,6 +19,7 @@ class Flex
 
     protected $default_layouts = [
         'wysiwyg' => WysiwygLayout::class,
+        'depended-layout' => DependedLayout::class,
     ];
 
     public function getLayouts()
