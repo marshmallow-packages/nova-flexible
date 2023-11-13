@@ -13,6 +13,8 @@
 
 namespace Marshmallow\Nova\Flexible\Layouts;
 
+use Livewire\Livewire;
+
 if (config('flexible.has_media_library')) {
     $className = \Marshmallow\Nova\Flexible\Layouts\MarshmallowMediaLayout::class;
 } else {
@@ -40,8 +42,15 @@ class MarshmallowLayout extends MarshmallowDynamicLayout
         }
 
         $component_class_name = $this->getComponentClass();
+        $layout = (new $component_class_name($this));
 
-        return (new $component_class_name($this))->render();
+        if (class_exists(\Livewire\Component::class)) {
+            if ($layout instanceof \Livewire\Component) {
+                return Livewire::mount($layout->getComponentName(), ['layout' => $this])->html();
+            }
+        }
+
+        return $layout->render();
     }
 
     /**

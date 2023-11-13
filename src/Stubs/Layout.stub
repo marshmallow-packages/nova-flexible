@@ -2,6 +2,7 @@
 
 namespace App\Flexible\Layouts{{subdirectory}};
 
+use Laravel\Nova\Fields\Text;
 use Marshmallow\Nova\Flexible\Layouts\MarshmallowLayout;
 
 class {{class}} extends MarshmallowLayout
@@ -50,6 +51,7 @@ class {{class}} extends MarshmallowLayout
     {
         return [
             // Define the layout's fields.
+            // Text::make(__('Title'), 'title'),
         ];
     }
 
