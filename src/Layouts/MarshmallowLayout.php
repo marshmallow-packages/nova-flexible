@@ -46,7 +46,8 @@ class MarshmallowLayout extends MarshmallowDynamicLayout
 
         if (class_exists(\Livewire\Component::class)) {
             if ($layout instanceof \Livewire\Component) {
-                return Livewire::mount($layout->getComponentName(), ['layout' => $this])->html();
+                $livewire_component = Livewire::mount($layout->getComponentName(), ['layout' => $this]);
+                return is_string($livewire_component) ? $livewire_component : $livewire_component->html();
             }
         }
 
