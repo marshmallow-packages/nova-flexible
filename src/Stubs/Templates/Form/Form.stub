@@ -1,0 +1,80 @@
+<?php
+
+namespace App\Http\Livewire{{subdirectory}};
+
+use Livewire\Component;
+use Illuminate\Support\Arr;
+use Marshmallow\Nova\Flexible\Layouts\Layout;
+use App\Jobs{{subdirectory}}\{{component_class}}\SendMailToAdmin;
+use App\Jobs{{subdirectory}}\{{component_class}}\SendMailToCustomer;
+
+class {{component_class}} extends Component
+{
+    /** Form state */
+    public $state;
+
+    /** Flexible layout data */
+    public $layout;
+
+    /** Is the form submitted or not? */
+    public $submitted = false;
+
+    /** Form validation rules */
+    protected $rules = [
+        'state.first_name' => 'required',
+        'state.last_name' => 'required',
+        'state.email' => 'required|email',
+        'state.phone_number' => 'required',
+        'state.comment' => 'required',
+    ];
+
+    public function mount(Layout $layout)
+    {
+        $this->layout = $layout->toArray();
+
+        if (config('app.env') == 'local') {
+            $this->state = [
+                'first_name' => 'John',
+                'last_name' => 'Doe',
+                'email' => 'john@doe.com',
+                'phone_number' => '0628998954',
+                'comment' => 'Testing',
+            ];
+        }
+    }
+
+    public function submit()
+    {
+        $this->validate();
+
+        /** Save data in database */
+        $contact = \App\Models\ContactMessage::create([
+            'first_name' => Arr::get($this->state, 'first_name'),
+            'last_name' => Arr::get($this->state, 'last_name'),
+            'email' => Arr::get($this->state, 'email'),
+            'phone_number' => Arr::get($this->state, 'phone_number'),
+            'comment' => Arr::get($this->state, 'comment'),
+        ]);
+
+        /** Dispatch a job to send the contact message to the customer */
+        SendMailToCustomer::dispatch($contact);
+
+        /** Dispatch a job to send the message to the website admin */
+        SendMailToAdmin::dispatch($contact);
+
+        $this->submitted = true;
+    }
+
+    public function render()
+    {
+        return view(
+            "livewire.{$this->getComponentName()}"
+        );
+    }
+
+    /** This method is used by the flexible package, please keep this method. */
+    public function getComponentName()
+    {
+        return '{{component_name}}';
+    }
+}

@@ -215,6 +215,7 @@ class MakeLayoutCommand extends GeneratorCommand
     protected function parseTemplateStubContent($stub_file)
     {
         $stub_content = file_get_contents($stub_file);
+        // dd($this->getParams());
         return strtr($stub_content, $this->getParams());
     }
 
@@ -244,7 +245,7 @@ class MakeLayoutCommand extends GeneratorCommand
         return $this;
     }
 
-    public function newsletter(): bool
+    protected function newsletter(): bool
     {
         $component_class_name = $this->component_class_name;
         $view_path = Str::of($this->getView())->replace('.', '/')->__toString();
@@ -260,6 +261,62 @@ class MakeLayoutCommand extends GeneratorCommand
             stub: 'Newsletter/newsletter.blade.stub'
         );
 
+        return $this->generateTemplate();
+    }
+
+    protected function form(): bool
+    {
+        $component_class_name = $this->component_class_name;
+        $view_path = Str::of($this->getView())->replace('.', '/')->__toString();
+        $blade_file = class_exists('Marshmallow\Components\ComponentsServiceProvider')
+            ? 'form-mm-components'
+            : 'form';
+
+        $this->addTemplateFile(
+            target: "/app/Flexible/Layouts/{$component_class_name}Layout.php",
+            stub: 'Form/FormLayout.stub'
+        )->addTemplateFile(
+            target: "/app/Http/Livewire/{$component_class_name}.php",
+            stub: 'Form/Form.stub'
+        )->addTemplateFile(
+            target: "/resources/views/livewire/{$view_path}.blade.php",
+            stub: "Form/{$blade_file}.blade.stub"
+        )->addTemplateFile(
+            target: "/resources/views/emails/{$view_path}/admin.blade.php",
+            stub: 'Form/mail-to-admin.blade.stub'
+        )->addTemplateFile(
+            target: "/resources/views/emails/{$view_path}/customer.blade.php",
+            stub: 'Form/mail-to-customer.blade.stub'
+        )->addTemplateFile(
+            target: "/app/Mail/{$component_class_name}/MailToAdmin.php",
+            stub: 'Form/MailToAdmin.stub'
+        )->addTemplateFile(
+            target: "/app/Mail/{$component_class_name}/MailToCustomer.php",
+            stub: 'Form/MailToCustomer.stub'
+        )->addTemplateFile(
+            target: "/app/Jobs/{$component_class_name}/SendMailToAdmin.php",
+            stub: 'Form/SendFormMailToAdmin.stub'
+        )->addTemplateFile(
+            target: "/app/Jobs/{$component_class_name}/SendMailToCustomer.php",
+            stub: 'Form/SendFormMailToCustomer.stub'
+        );
+
+
+        // [] form.blade.stub
+        // [] Form.stub
+        // [] FormLayout.stub
+        // [] mail-to-admin.blade.stub
+        // [] mail-to-customer.blade.stub
+        // [] MailToAdmin.stub
+        // [] MailToCustomer.stub
+        // [] SendFormMailToAdmin.stub
+        // [] SendFormMailToCustomer.stub
+
+        return $this->generateTemplate();
+    }
+
+    protected function generateTemplate(): bool
+    {
         $exists_errors = '';
         $files = collect($this->template_files)->each(function ($stub, $target) use (&$exists_errors) {
             $path = base_path($target);

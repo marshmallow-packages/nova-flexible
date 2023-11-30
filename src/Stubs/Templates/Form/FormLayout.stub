@@ -27,7 +27,7 @@ class {{class}} extends MarshmallowLayout
      *
      * @var string
      */
-    protected $description = 'This element will add a newsletter subscription box to your page.';
+    protected $description = 'This element will add a form to your page.';
 
     /**
      * Image use in the layout selector
@@ -52,9 +52,9 @@ class {{class}} extends MarshmallowLayout
     {
         return [
             Text::make(__('Title'), 'title'),
-            TinyMCE::make(__('Description'), 'description'),
-            TinyMCE::make(__('Thank you message'), 'thank_you_message'),
-            Text::make(__('Button text'), 'button_text'),
+            Text::make(__('Description'), 'description'),
+            Text::make(__('Button CTA'), 'button_text'),
+            Text::make(__('Thank you message'), 'thank_you_message'),
         ];
     }
 

@@ -1,0 +1,9 @@
+@component('mail::message')
+# Hi {{ Arr::get($form_submission, 'first_name') }} {{ Arr::get($form_submission, 'last_name') }},
+
+Thank you for filling in the contact form. We will get back to you as soon as possible.
+<br>
+
+Kind regards,<br>
+Your Company
+@endcomponent
