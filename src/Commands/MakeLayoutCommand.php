@@ -28,7 +28,7 @@ class MakeLayoutCommand extends GeneratorCommand
      * @var string
      */
     protected $type = 'Flexible Layout';
-    protected $lines;
+    protected $lines = [];
 
     protected $component_class_name = '';
     protected $title = '';
@@ -38,6 +38,7 @@ class MakeLayoutCommand extends GeneratorCommand
     protected $fields = '';
     protected $use = '';
     protected $tags = '"Custom"';
+    protected $template_files = [];
 
     protected $livewire_component = true;
 
@@ -49,7 +50,7 @@ class MakeLayoutCommand extends GeneratorCommand
     public function handle()
     {
         $name_path = Str::ucfirst(str_replace('.', '/', $this->getView('studly')));
-        $this->livewire_component = $this->option('livewire');
+        $this->livewire_component = $this->option('livewire') || $this->option('template');
 
         $this->title = Str::afterLast($name_path, '/');
         if (Str::contains($name_path, '/')) {
@@ -77,6 +78,17 @@ class MakeLayoutCommand extends GeneratorCommand
         $this->tags = Str::replace('""', '", "', $this->tags);
 
         $this->layout_class = $this->title . 'Layout';
+
+        if ($template = $this->option('template')) {
+            $created = $this->{$template}();
+            if ($created) {
+                $this->line("<options=bold,reverse;fg=green>FLEXIBLE COMPONENT CREATED </> 🤙\n");
+                foreach ($this->lines as $line) {
+                    $this->line($line);
+                }
+            }
+            return;
+        }
 
         $this->writeFile('View', $name_path);
 
@@ -200,6 +212,12 @@ class MakeLayoutCommand extends GeneratorCommand
         return strtr($content, $this->getParams());
     }
 
+    protected function parseTemplateStubContent($stub_file)
+    {
+        $stub_content = file_get_contents($stub_file);
+        return strtr($stub_content, $this->getParams());
+    }
+
     protected function getParams()
     {
         $component_class = $this->livewire_component
@@ -220,6 +238,60 @@ class MakeLayoutCommand extends GeneratorCommand
         ];
     }
 
+    protected function addTemplateFile(string $target, string $stub)
+    {
+        $this->template_files[$target] = __dir__ . "/../Stubs/Templates/{$stub}";
+        return $this;
+    }
+
+    public function newsletter(): bool
+    {
+        $component_class_name = $this->component_class_name;
+        $view_path = Str::of($this->getView())->replace('.', '/')->__toString();
+
+        $this->addTemplateFile(
+            target: "/app/Flexible/Layouts/{$component_class_name}Layout.php",
+            stub: 'Newsletter/NewsletterLayout.stub'
+        )->addTemplateFile(
+            target: "/app/Http/Livewire/{$component_class_name}.php",
+            stub: 'Newsletter/Newsletter.stub'
+        )->addTemplateFile(
+            target: "/resources/views/livewire/{$view_path}.blade.php",
+            stub: 'Newsletter/newsletter.blade.stub'
+        );
+
+        $exists_errors = '';
+        $files = collect($this->template_files)->each(function ($stub, $target) use (&$exists_errors) {
+            $path = base_path($target);
+            if ($this->files->exists($path) && !$this->option('force')) {
+                $exists_errors .= "{$target} already exists" . PHP_EOL;
+            }
+
+            if (!$this->files->isDirectory(dirname($path))) {
+                $this->files->makeDirectory(dirname($path), 0777, true, true);
+            }
+        });
+
+        if ($exists_errors) {
+            $this->error($exists_errors);
+            return false;
+        }
+
+        $files->each(function ($stub, $target) {
+            $this->lines[] = "Created {$target}.";
+            file_put_contents(
+                base_path($target),
+                $this->parseTemplateStubContent($stub)
+            );
+        });
+
+        $line = "<options=bold;fg=green>Newsletter templates is created!</>";
+
+        $this->lines[] = $line;
+
+        return true;
+    }
+
     /**
      * Get the console command options.
      *
@@ -230,13 +302,7 @@ class MakeLayoutCommand extends GeneratorCommand
         return [
             ['force', null, InputOption::VALUE_NONE, 'Create the class even if the component already exists'],
             ['livewire', null, InputOption::VALUE_NONE, 'Handle this as a livewire component'],
+            ['template', null, InputOption::VALUE_REQUIRED, 'Create component from a template'],
         ];
     }
-
-    // protected function getArguments()
-    // {
-    //     return [
-    //         ['name', InputArgument::REQUIRED, 'The name of the class'],
-    //     ];
-    // }
 }
