@@ -1,0 +1,70 @@
+<?php
+
+namespace App\Flexible\Layouts{{subdirectory}};
+
+use Laravel\Nova\Fields\Text;
+use Marshmallow\Nova\Flexible\Layouts\MarshmallowLayout;
+
+class {{class}} extends MarshmallowLayout
+{
+    /**
+     * The layout's unique identifier
+     *
+     * @var string
+     */
+    protected $name = '{{name}}';
+
+    /**
+     * The displayed title
+     *
+     * @var string
+     */
+    protected $title = '{{title}}';
+
+    /**
+     * Description as shown in the layout selector.
+     *
+     * @var string
+     */
+    protected $description = 'This element will add a newsletter subscription box to your page.';
+
+    /**
+     * Image use in the layout selector
+     *
+     * @var string
+     */
+    protected $image = 'https://marshmallow.dev/cdn/flex/layout/containers.png';
+
+    /**
+     * Add this layout to these tags.
+     *
+     * @var array
+     */
+    protected $tags = [{{tags}}];
+
+    /**
+     * Get the fields displayed by the layout.
+     *
+     * @return array
+     */
+    public function fields()
+    {
+        return [
+            Text::make(__('Title'), 'title'),
+            Text::make(__('Description'), 'description'),
+            Text::make(__('Thank you message'), 'thank_you_message'),
+            Text::make(__('Button text'), 'button_text'),
+        ];
+    }
+
+    /**
+     * Get the Component class that handles the views
+     * for this layout
+     *
+     * @return string Class of the compontent class
+     */
+    protected function getComponentClass()
+    {
+        return {{component_class_path}};
+    }
+}

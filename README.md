@@ -36,6 +36,12 @@ To create a new layout you can run the command below.
 php artisan make:flex Element\\Counter --livewire
 ```
 
+### Create templates
+
+```bash
+php artisan make:flex Forms\\Newsletter --template=newsletter
+```
+
 ## Prepare
 
 ### Nova Resource

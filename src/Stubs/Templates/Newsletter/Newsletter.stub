@@ -1,0 +1,50 @@
+<?php
+
+namespace App\Http\Livewire{{subdirectory}};
+
+use Livewire\Component;
+use Illuminate\Support\Arr;
+use Marshmallow\Nova\Flexible\Layouts\Layout;
+
+class {{component_class}} extends Component
+{
+    public $layout;
+    public $submitted = false;
+
+    protected $rules = [
+        'layout.email' => 'required',
+    ];
+
+    public function mount(Layout $layout)
+    {
+        $this->layout = $layout->toArray();
+    }
+
+    public function submit()
+    {
+        $this->validate();
+
+        // Save the email to the database
+        // NewsletterSubscription::firstOrCreate([
+        //     'email' => $this->layout['email'],
+        // ]);
+
+        //EXAMPLE: Dispatch to mailchimp
+        // MailchimpSubscription::dispatch($this->layout['email']);
+
+        $this->submitted = true;
+    }
+
+    public function render()
+    {
+        return view(
+            "livewire.{$this->getComponentName()}"
+        );
+    }
+
+    /** This method is used by the flexible package, please keep this method. */
+    public function getComponentName()
+    {
+        return '{{component_name}}';
+    }
+}
