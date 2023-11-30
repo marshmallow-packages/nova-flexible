@@ -1,0 +1,95 @@
+<div class="relative px-4 py-12 mx-auto max-w-7xl sm:px-6 lg:px-8 gap-x-4">
+    @if ($submitted)
+        <div class="max-w-2xl mx-auto text-3xl font-bold tracking-tight text-gray-900">
+            <p class="inline sm:block lg:inline xl:block">
+                {!! Arr::get($layout, 'thank_you_message', __('Thank you for filling in the contact form.')) !!}
+            </p>
+        </div>
+    @else
+        <form wire:submit.prevent='submit' class="max-w-2xl mx-auto">
+            <div class="space-y-12 ">
+                <div class="max-w-xl text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl lg:col-span-7">
+                    <h2 class="sm:block xl:block">
+                        {{ Arr::get($layout, 'title', __('We keep in touch.')) }}
+                    </h2>
+                    <p class="sm:block xl:block">
+                        {!! Arr::get($layout, 'description', __('Fill in the form below')) !!}
+                    </p>
+                </div>
+                <div class="grid grid-cols-1 mt-10 gap-x-6 gap-y-8 sm:grid-cols-6">
+                    <div class="sm:col-span-3">
+                        <label for="first-name" class="block text-sm font-medium leading-6 text-gray-900">
+                            First name
+                        </label>
+                        <div class="mt-2">
+                            <input wire:model='state.first_name' type="text" name="first-name" id="first-name"
+                                autocomplete="given-name"
+                                class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm sm:leading-6">
+                            @error('state.first_name')
+                                <span class="text-xs text-red-500">{{ $message }}</span>
+                            @enderror
+                        </div>
+                    </div>
+
+                    <div class="sm:col-span-3">
+                        <label for="last-name" class="block text-sm font-medium leading-6 text-gray-900">Last
+                            name</label>
+                        <div class="mt-2">
+                            <input wire:model='state.last_name' type="text" name="last-name" id="last-name"
+                                autocomplete="family-name"
+                                class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm sm:leading-6">
+                            @error('state.last_name')
+                                <span class="text-xs text-red-500">{{ $message }}</span>
+                            @enderror
+                        </div>
+                    </div>
+
+                    <div class="sm:col-span-3">
+                        <label for="email" class="block text-sm font-medium leading-6 text-gray-900">Email
+                            address</label>
+                        <div class="mt-2">
+                            <input wire:model='state.email' id="email" name="email" type="email"
+                                autocomplete="email"
+                                class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm sm:leading-6">
+                            @error('state.email')
+                                <span class="text-xs text-red-500">{{ $message }}</span>
+                            @enderror
+                        </div>
+                    </div>
+
+                    <div class="sm:col-span-3">
+                        <label for="phone_number" class="block text-sm font-medium leading-6 text-gray-900">
+                            Phone number
+                        </label>
+                        <div class="mt-2">
+                            <input wire:model='state.phone_number' id="phone_number" name="phone_number" type="tel"
+                                autocomplete="phone_number"
+                                class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm sm:leading-6">
+                            @error('state.phone_number')
+                                <span class="text-xs text-red-500">{{ $message }}</span>
+                            @enderror
+                        </div>
+                    </div>
+
+                    <div class="col-span-full">
+                        <label for="comment" class="block text-sm font-medium leading-6 text-gray-900">Comment</label>
+                        <div class="mt-2">
+                            <textarea wire:model='state.comment' id="comment" name="comment" rows="4"
+                                class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm sm:leading-6"></textarea>
+                            @error('state.comment')
+                                <span class="text-xs text-red-500">{{ $message }}</span>
+                            @enderror
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex items-center justify-end mt-6 gap-x-6">
+                <button type="submit"
+                    class="px-3 py-2 text-sm font-semibold text-white bg-blue-600 rounded-md shadow-sm hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600">
+                    {{ Arr::get($layout, 'button_text', __('Send')) }}
+                </button>
+            </div>
+        </form>
+    @endif
+</div>

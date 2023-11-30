@@ -40,6 +40,7 @@ php artisan make:flex Element\\Counter --livewire
 
 ```bash
 php artisan make:flex Forms\\Newsletter --template=newsletter
+php artisan make:flex Forms\\Contact --template=form
 ```
 
 ## Prepare

@@ -1,0 +1,18 @@
+@component('mail::message')
+# Hi Admin,
+
+You've got a new email from the contact form from <strong>{{ Arr::get($form_submission, 'first_name') }} {{ $form_submission['last_name'] }}.</strong>
+<br>
+<p>Comment:</p>
+@component('mail::panel')
+{{ Arr::get($form_submission, 'comment') }}
+@endcomponent
+
+You can reach out to {{ Arr::get($form_submission, 'first_name') }} via <a href="mailto:{{ Arr::get($form_submission, 'first_name') }}">{{ Arr::get($form_submission, 'first_name') }}</a>@if(Arr::get($form_submission, 'phone_number')) or via
+<a href="tel:{{ Arr::get($form_submission, 'phone_number') }}">{{ Arr::get($form_submission, 'phone_number') }}</a>.
+@endif
+
+
+Kind regards,<br>
+Your Company
+@endcomponent
