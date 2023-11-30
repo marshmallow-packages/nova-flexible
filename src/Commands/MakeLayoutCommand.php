@@ -278,6 +278,7 @@ class MakeLayoutCommand extends GeneratorCommand
         }
 
         $files->each(function ($stub, $target) {
+            $this->lines[] = "Created {$target}.";
             file_put_contents(
                 base_path($target),
                 $this->parseTemplateStubContent($stub)
