@@ -58,8 +58,10 @@ class MakeLayoutCommand extends GeneratorCommand
         }
 
         $this->component_class_name = $name_path;
-        $this->component_class_path = str_replace('/', '\\', '\App\View\Components\\' . $name_path . 'Component::class');
-        $this->component_class_path = str_replace('/', '\\', '\App\Http\Livewire\\' . $name_path . '::class');
+
+        $this->component_class_path = $this->livewire_component
+            ? str_replace('/', '\\', '\App\Http\Livewire\\' . $name_path . '::class')
+            : str_replace('/', '\\', '\App\View\Components\\' . $name_path . 'Component::class');
 
         $tags = explode('\\', $this->subdirectory);
         $tags = array_filter($tags);
