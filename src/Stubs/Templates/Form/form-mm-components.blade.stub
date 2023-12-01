@@ -34,7 +34,7 @@
                     </div>
 
                     <div class="col-span-full">
-                        <x-mm-textarea :defer="true" name="state.comment" id="state.comment" placeholder="Wat kunnen we voor je doen?"/>
+                        <x-mm-textarea class="text-gray-900" :defer="true" name="state.comment" id="state.comment" placeholder="Wat kunnen we voor je doen?"/>
                     </div>
                 </div>
             </div>
