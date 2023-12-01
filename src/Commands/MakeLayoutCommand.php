@@ -335,7 +335,10 @@ class MakeLayoutCommand extends GeneratorCommand
         }
 
         $files->each(function ($stub, $target) {
-            $this->lines[] = "Created {$target}.";
+            if (Str::startsWith($target, '/')) {
+                $target = Str::substr($target, 1);
+            }
+            $this->lines[] = "Created {$target}";
             file_put_contents(
                 base_path($target),
                 $this->parseTemplateStubContent($stub)
