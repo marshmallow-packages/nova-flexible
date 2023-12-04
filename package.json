@@ -17,7 +17,7 @@
         "autoprefixer": "^10.4.16",
         "laravel-mix": "^6.0.49",
         "laravel-nova": "^1.12.3",
-        "postcss": "^8.4.31",
+        "postcss": "^8.4.32",
         "tailwindcss": "^3.3.5",
         "@inertiajs/inertia": "^0.11.1",
         "form-backend-validation": "^2.4.0",
