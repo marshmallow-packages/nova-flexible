@@ -54,7 +54,7 @@ class DependedLayout extends MarshmallowLayout
 
         return [
             Select::make(__('Depended Layout'), 'layout')->options(
-                $resource_model::getOptionsForDependedLayoutSelect(),
+                $resource_model::getOptionsForDependedLayoutSelect($resource_model),
             )->displayUsingLabels()->searchable(),
         ];
     }

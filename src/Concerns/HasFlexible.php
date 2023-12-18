@@ -299,11 +299,11 @@ trait HasFlexible
         ];
     }
 
-    public static function getOptionsForDependedLayoutSelect(): array
+    public static function getOptionsForDependedLayoutSelect(Model $model): array
     {
-        $callable = function () {
+        $callable = function () use ($model) {
             $options = [];
-            $columns = self::getDependedLayoutSelectColumns();
+            $columns = $model::getDependedLayoutSelectColumns();
             $ignore_layouts = array_merge(self::getLayoutsToIgnoreFromDependendLayout(), [
                 'depended-layout'
             ]);
@@ -313,6 +313,9 @@ trait HasFlexible
                 ->each(function ($model) use (&$options, $columns, $ignore_layouts) {
                     foreach ($columns as $column) {
                         $layouts = json_decode($model->{$column});
+                        if (!is_array($layouts)) {
+                            continue;
+                        }
                         foreach ($layouts as $key => $layout) {
                             try {
                                 if (in_array($layout->layout, $ignore_layouts)) {
