@@ -104,9 +104,12 @@ trait HasFlexible
         $flexible_layouts->each(function ($layout, $layout_array_key) use (&$flexible_layouts) {
             if ($layout instanceof DependedLayout || $layout->title() == 'depended-layout') {
                 [$model_id, $column, $layout_key] = explode('___', $layout->layout);
-                $model_class = get_class($this);
+                $model_class = $this instanceof Model ? get_class($this) : $this->model;
                 $depended_page = $model_class::find($model_id);
-                $depended_page_layouts = $depended_page->flex($column);
+                $depended_page_layouts = $depended_page->{$column} instanceof Collection
+                    ? $depended_page->{$column}
+                    : $depended_page->flex($column);
+
                 $depended_page_layouts->each(function ($layout) use ($layout_key, $layout_array_key, &$flexible_layouts) {
                     if ($layout->key == $layout_key) {
                         $flexible_layouts[$layout_array_key] = $layout;
