@@ -1,0 +1,38 @@
+<?php
+
+namespace App\Jobs{{subdirectory}}\{{component_class}};
+
+use Illuminate\Bus\Queueable;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Queue\SerializesModels;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Foundation\Bus\Dispatchable;
+use Illuminate\Contracts\Queue\ShouldBeUnique;
+use App\Mail{{subdirectory}}\{{component_class}}\MailToCustomer;
+
+class SendMailToCustomer implements ShouldQueue
+{
+    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+
+    /**
+     * Create a new job instance.
+     */
+    public function __construct(protected Model $form_submission)
+    {
+        //
+    }
+
+    /**
+     * Execute the job.
+     */
+    public function handle(): void
+    {
+        Mail::to(
+            $this->form_submission->email
+        )->send(
+            new MailToCustomer($this->form_submission)
+        );
+    }
+}

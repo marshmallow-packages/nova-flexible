@@ -11,6 +11,7 @@ use RecursiveDirectoryIterator;
 use Illuminate\Support\Facades\Cache;
 use Marshmallow\Nova\Flexible\Layouts\MarshmallowLayout;
 use Marshmallow\Nova\Flexible\Layouts\Defaults\WysiwygLayout;
+use Marshmallow\Nova\Flexible\Layouts\DependedLayout;
 
 class Flex
 {
@@ -20,10 +21,21 @@ class Flex
         'wysiwyg' => WysiwygLayout::class,
     ];
 
-    public function getLayouts()
+    protected function getDefaultLayouts(string $model = null)
+    {
+        $layout = $this->default_layouts;
+        if ($model && class_exists($model)) {
+            if (method_exists($model, 'activateDependendFlexible') && $model::activateDependendFlexible()) {
+                $layout['depended-layout'] = DependedLayout::class;
+            }
+        }
+        return $layout;
+    }
+
+    public function getLayouts(string $model = null)
     {
         if ($this->autoDiscoveryIsActive()) {
-            return $this->autoDiscoverLayouts();
+            return $this->autoDiscoverLayouts($model);
         }
         if (!empty(config('flexible.layouts'))) {
             $layouts_array = [];
@@ -42,14 +54,14 @@ class Flex
             if ($this->loadDefaultLayouts()) {
                 return array_merge(
                     $layouts_array,
-                    $this->default_layouts
+                    $this->getDefaultLayouts($model)
                 );
             }
 
             return $layouts_array;
         }
 
-        return $this->default_layouts;
+        return $this->getDefaultLayouts($model);
     }
 
     public function render($page)
@@ -62,7 +74,7 @@ class Flex
         return $html;
     }
 
-    protected function autoDiscoverLayouts(): array
+    protected function autoDiscoverLayouts(string $model = null): array
     {
         if ($this->loaded_layouts) {
             return $this->loaded_layouts;
@@ -103,7 +115,7 @@ class Flex
         if ($this->loadDefaultLayouts()) {
             $layouts = array_merge(
                 $layouts,
-                $this->default_layouts
+                $this->getDefaultLayouts($model)
             );
         }
 
@@ -148,10 +160,10 @@ class Flex
         return "marshmallow.flexible-layouts-cache";
     }
 
-    public function getLayoutsFromCache()
+    public function getLayoutsFromCache(string $model = null)
     {
-        return Cache::rememberForever(static::getCacheKey(), function () {
-            return self::getLayouts();
+        return Cache::rememberForever(static::getCacheKey(), function () use ($model) {
+            return self::getLayouts($model);
         });
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Flexible\Layouts{{subdirectory}};
 
 use Laravel\Nova\Fields\Text;
+use Marshmallow\Nova\TinyMCE\TinyMCE;
 use Marshmallow\Nova\Flexible\Layouts\MarshmallowLayout;
 
 class {{class}} extends MarshmallowLayout
@@ -26,7 +27,7 @@ class {{class}} extends MarshmallowLayout
      *
      * @var string
      */
-    protected $description = 'No description available';
+    protected $description = 'This element will add a newsletter subscription box to your page.';
 
     /**
      * Image use in the layout selector
@@ -50,8 +51,10 @@ class {{class}} extends MarshmallowLayout
     public function fields()
     {
         return [
-            // Define the layout's fields.
-            // Text::make(__('Title'), 'title'),
+            Text::make(__('Title'), 'title'),
+            TinyMCE::make(__('Description'), 'description'),
+            TinyMCE::make(__('Thank you message'), 'thank_you_message'),
+            Text::make(__('Button text'), 'button_text'),
         ];
     }
 

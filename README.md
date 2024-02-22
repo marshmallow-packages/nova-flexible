@@ -33,7 +33,14 @@ For Nova use 'marshmallow/advanced-nova-media-library' and follow the instructio
 To create a new layout you can run the command below.
 
 ```bash
-php artisan make:flex
+php artisan make:flex Element\\Counter --livewire
+```
+
+### Create templates
+
+```bash
+php artisan make:flex Forms\\Newsletter --template=newsletter
+php artisan make:flex Forms\\Contact --template=form
 ```
 
 ## Prepare
