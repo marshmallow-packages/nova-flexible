@@ -866,4 +866,15 @@ class Layout implements LayoutInterface, JsonSerializable, ArrayAccess, Arrayabl
 
         return $this;
     }
+
+    /**
+     * Prepare the object for serialization.
+     *
+     * @return array
+     */
+    public function __sleep()
+    {
+        $layoutVars = array_keys(get_object_vars($this));
+        return $layoutVars;
+    }
 }
