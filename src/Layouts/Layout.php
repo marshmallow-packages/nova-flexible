@@ -868,6 +868,16 @@ class Layout implements LayoutInterface, JsonSerializable, ArrayAccess, Arrayabl
     }
 
     /**
+     * Determine if accessing missing attributes is disabled.
+     *
+     * @return bool
+     */
+    public static function preventsAccessingMissingAttributes()
+    {
+        return false;
+    }
+
+    /**
      * Prepare the object for serialization.
      *
      * @return array
