@@ -6,6 +6,7 @@ use Laravel\Nova\Nova;
 use Illuminate\Support\Str;
 use Spatie\MediaLibrary\HasMedia;
 use Illuminate\Support\Collection;
+use Illuminate\Database\Eloquent\Model;
 use Marshmallow\Nova\Flexible\Flexible;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Spatie\MediaLibrary\InteractsWithMedia;
@@ -27,7 +28,7 @@ trait HasMediaLibrary
      *
      * @return \Spatie\MediaLibrary\HasMedia
      */
-    protected function getMediaModel(): HasMedia
+    protected function getUnderlyingMediaModel(): HasMedia
     {
         $model = Flexible::getOriginModel() ?? $this->model;
 
@@ -51,8 +52,10 @@ trait HasMediaLibrary
      */
     public function addMedia($file): \Spatie\MediaLibrary\MediaCollections\FileAdder
     {
+        ray($file, $this->getUnderlyingMediaModel(), $this->getSuffix());
+
         return app(FileAdderFactory::class)
-            ->create($this->getMediaModel(), $file, $this->getSuffix())
+            ->create($this->getUnderlyingMediaModel(), $file, $this->getSuffix())
             ->preservingOriginal();
     }
 
@@ -91,7 +94,7 @@ trait HasMediaLibrary
         }
 
         return app(FileAdderFactory::class)
-            ->create($this->getMediaModel(), $temporaryFile, $this->getSuffix())
+            ->create($this->getUnderlyingMediaModel(), $temporaryFile, $this->getSuffix())
             ->usingName(pathinfo($filename, PATHINFO_FILENAME))
             ->usingFileName($filename);
     }
@@ -106,7 +109,7 @@ trait HasMediaLibrary
     public function getMedia(string $collectionName = 'default', $filters = []): Collection
     {
         return app(MediaRepository::class)
-            ->getCollection($this->getMediaModel(), $collectionName . $this->getSuffix(), $filters);
+            ->getCollection($this->getUnderlyingMediaModel(), $collectionName . $this->getSuffix(), $filters);
     }
 
     /**
@@ -129,7 +132,7 @@ trait HasMediaLibrary
     {
         $this->fields->each(function ($field) use ($attributes) {
             if (is_a($field, Media::class)) {
-                $field->resolveForDisplay($this->getMediaModel(), $field->attribute . $this->getSuffix());
+                $field->resolveForDisplay($this->getUnderlyingMediaModel(), $field->attribute . $this->getSuffix());
             } else {
                 $field->resolveForDisplay($attributes);
             }
