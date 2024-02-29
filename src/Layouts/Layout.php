@@ -144,6 +144,8 @@ class Layout implements LayoutInterface, JsonSerializable, ArrayAccess, Arrayabl
      */
     protected $exists = false;
 
+    protected $autoLoad = true;
+
     /**
      * Define that Layout is a model, when in fact it is not.
      *

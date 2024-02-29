@@ -16,6 +16,8 @@ class DefaultPreset extends Preset
      */
     protected $layouts;
 
+    protected $request;
+
     protected $isIndexRequest;
     /**
      * Create a new preset instance
