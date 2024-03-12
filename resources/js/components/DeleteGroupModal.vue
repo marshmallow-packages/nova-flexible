@@ -28,15 +28,15 @@
                         {{ no }}
                     </link-button>
 
-                    <Button
-                        type="submit"
+                    <danger-button
                         ref="confirmButton"
                         dusk="confirm-delete-button"
-                        :loading="working"
+                        :processing="working"
                         :disabled="working"
-                        state="danger"
-                        :label="yes"
-                    />
+                        type="submit"
+                    >
+                        {{ yes }}
+                    </danger-button>
                 </div>
             </ModalFooter>
         </form>
@@ -44,13 +44,7 @@
 </template>
 
 <script>
-    import { Button } from "laravel-nova-ui";
-
     export default {
-        components: {
-            Button,
-        },
-
         props: ["message", "yes", "no"],
 
         emits: ["close", "confirm"],
