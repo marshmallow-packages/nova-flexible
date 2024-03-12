@@ -3,10 +3,8 @@
         <div :class="titleStyle" v-if="group.title">
             <span
                 class="block float-left pr-4 mr-4 border-r border-gray-100 dark:border-gray-700"
-                ><!--
-             --><span class="text-xs text-60">#</span
-                ><!--
-             --><span class="text-80">{{ index + 1 }}</span>
+                ><span class="text-xs text-60">#</span
+                ><span class="text-80">{{ index + 1 }}</span>
             </span>
             <span class="font-bold">{{ group.title }}</span>
         </div>
@@ -19,20 +17,14 @@
             :resource-test="resourceId"
             :resource="resource"
             :field="item"
-            :validation-errors="validationErrors"
             :class="{
                 'remove-bottom-border w-full': index == group.fields.length - 1,
             }"
         />
     </div>
 </template>
-
 <script>
-    import { HandlesValidationErrors } from "laravel-nova";
-
     export default {
-        mixins: [HandlesValidationErrors],
-
         props: [
             "attribute",
             "group",
