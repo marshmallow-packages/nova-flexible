@@ -144,6 +144,8 @@ class Layout implements LayoutInterface, JsonSerializable, ArrayAccess, Arrayabl
      */
     protected $exists = false;
 
+    protected $autoLoad = true;
+
     /**
      * Define that Layout is a model, when in fact it is not.
      *
@@ -865,6 +867,16 @@ class Layout implements LayoutInterface, JsonSerializable, ArrayAccess, Arrayabl
         }
 
         return $this;
+    }
+
+    /**
+     * Determine if accessing missing attributes is disabled.
+     *
+     * @return bool
+     */
+    public static function preventsAccessingMissingAttributes()
+    {
+        return false;
     }
 
     /**

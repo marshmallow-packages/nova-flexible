@@ -52,8 +52,6 @@ trait HasMediaLibrary
      */
     public function addMedia($file): \Spatie\MediaLibrary\MediaCollections\FileAdder
     {
-        ray($file, $this->getUnderlyingMediaModel(), $this->getSuffix());
-
         return app(FileAdderFactory::class)
             ->create($this->getUnderlyingMediaModel(), $file, $this->getSuffix())
             ->preservingOriginal();
