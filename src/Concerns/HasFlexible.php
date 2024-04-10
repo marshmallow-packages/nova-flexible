@@ -289,8 +289,12 @@ trait HasFlexible
             return $layout->attributes->name;
         }
 
-        if (isset($layout->attributes->title)) {
-            return $layout->attributes->title;
+        if ($title = Arr::get($layout, 'attributes.title')) {
+            return $title;
+        }
+
+        if ($name = Arr::get($layout, 'attributes.name')) {
+            return $name;
         }
 
         return __('Unknown');
