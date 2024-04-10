@@ -2,6 +2,7 @@
 
 namespace Marshmallow\Nova\Flexible\Concerns;
 
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Cache;
 use Laravel\Nova\NovaServiceProvider;
 use Illuminate\Database\Eloquent\Model;
@@ -315,17 +316,19 @@ trait HasFlexible
                 ->get()
                 ->each(function ($model) use (&$options, $columns, $ignore_layouts) {
                     foreach ($columns as $column) {
-                        $layouts = json_decode($model->{$column});
+                        $layouts = is_array($model->{$column}) ? $model->{$column} : json_decode($model->{$column});
                         if (!is_array($layouts)) {
                             continue;
                         }
                         foreach ($layouts as $key => $layout) {
                             try {
-                                if (in_array($layout->layout, $ignore_layouts)) {
+                                $layout_name = Arr::get($layout, 'layout') ?? $layout->layout;
+                                if (in_array($layout_name, $ignore_layouts)) {
                                     continue;
                                 }
 
-                                $key = "{$model->id}___{$column}___{$layout->key}";
+                                $layout_key = Arr::get($layout, 'key') ?? $layout->key;
+                                $key = "{$model->id}___{$column}___{$layout_key}";
 
                                 $label = self::getDependedLayoutLabel($layout);
                                 $group = $model->getDependedLayoutGroup($layout);
