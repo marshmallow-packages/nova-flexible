@@ -282,7 +282,7 @@ trait HasFlexible
             $name = (new \ReflectionClass($this))->getShortName();
         }
 
-        return  "{$name} (#{$this->id})";
+        return  "#{$this->id} - {$name}";
     }
 
     public static function getDependedLayoutLabel($layout): string
