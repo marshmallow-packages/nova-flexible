@@ -2,6 +2,7 @@
 
 namespace Marshmallow\Nova\Flexible\Concerns;
 
+use ErrorException;
 use Laravel\Nova\Nova;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Cache;
