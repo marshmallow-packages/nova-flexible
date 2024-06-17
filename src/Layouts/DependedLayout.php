@@ -49,8 +49,7 @@ class DependedLayout extends MarshmallowLayout
      */
     public function fields()
     {
-        $resource_model = NovaRequest::createFrom(request())
-            ->model();
+        $resource_model = NovaRequest::createFrom(request())->model();
 
         return [
             Select::make(__('Depended Layout'), 'layout')->options(
