@@ -386,7 +386,7 @@ trait HasFlexible
         return $cacheKey;
     }
 
-    public static function getOptionsForFlexibleSelect($key = 'id', $value = 'name', $orderBy = null, Closure $closure = null)
+    public static function getFlexibleOptionsForSelect($key = 'id', $value = 'name', $orderBy = null, Closure $closure = null)
     {
         $cacheKey = self::getFlexibleSelectCacheKey('_for_select');
 
