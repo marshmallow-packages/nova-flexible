@@ -349,12 +349,13 @@ trait HasFlexible
                                 }
 
                                 $layout_key = Arr::get($layout, 'key') ?? $layout->key;
-                                $key = "{$model->id}___{$column}___{$layout_key}";
+
+                                $layoutKey = "{$model->id}___{$column}___{$layout_key}";
 
                                 $label = self::getDependedLayoutLabel($layout);
-                                $options[$key] = ['label' => $label, 'group' => $group];
+
+                                $options[$layoutKey] = ['label' => $label, 'group' => $group];
                             } catch (ErrorException $e) {
-                                //
                                 ray($e)->red();
                             }
                         }
