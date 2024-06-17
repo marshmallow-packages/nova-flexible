@@ -2,9 +2,11 @@
 
 namespace Marshmallow\Nova\Flexible\Concerns;
 
+use Closure;
 use ErrorException;
 use Laravel\Nova\Nova;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Cache;
 use Laravel\Nova\NovaServiceProvider;
 use Illuminate\Database\Eloquent\Model;
@@ -374,5 +376,37 @@ trait HasFlexible
         }
 
         return $callable();
+    }
+
+
+    public static function getFlexibleSelectCacheKey($append = ''): string
+    {
+        $class = class_basename(self::class);
+        $cacheKey = Str::of($class)->plural()->slug()->append($append)->prepend('flexible_');
+        return $cacheKey;
+    }
+
+    public static function getOptionsForFlexibleSelect($key = 'id', $value = 'name', $orderBy = null, Closure $closure = null)
+    {
+        $cacheKey = self::getFlexibleSelectCacheKey('_for_select');
+
+        if (Cache::has($cacheKey)) {
+            return Cache::get($cacheKey);
+        }
+
+        $builder = self::query();
+
+        if ($closure) {
+            $builder = $closure($builder);
+        } elseif ($orderBy) {
+            $builder->orderBy($orderBy, 'desc');
+        } else {
+            $builder = self::orderBy($key, 'desc');
+        }
+
+        $items = $builder->pluck($value, $key);
+        Cache::set($cacheKey, $items, 3600);
+
+        return $items;
     }
 }
