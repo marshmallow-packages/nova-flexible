@@ -6,11 +6,12 @@ use Laravel\Nova\Nova;
 use Laravel\Nova\Events\ServingNova;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\ServiceProvider;
+use Marshmallow\Nova\Flexible\Commands\ListLayouts;
 use Marshmallow\Nova\Flexible\Commands\LayoutCommand;
-use Marshmallow\Nova\Flexible\Commands\MakeLayoutCommand;
-use Marshmallow\Nova\Flexible\Http\Middleware\InterceptFlexibleAttributes;
 use Marshmallow\Nova\Flexible\Layouts\MarshmallowLayout;
+use Marshmallow\Nova\Flexible\Commands\MakeLayoutCommand;
 use Marshmallow\Nova\Flexible\Layouts\MarshmallowMediaLayout;
+use Marshmallow\Nova\Flexible\Http\Middleware\InterceptFlexibleAttributes;
 
 class FieldServiceProvider extends ServiceProvider
 {
@@ -54,6 +55,7 @@ class FieldServiceProvider extends ServiceProvider
         $this->commands([
             LayoutCommand::class,
             MakeLayoutCommand::class,
+            ListLayouts::class,
         ]);
     }
 
