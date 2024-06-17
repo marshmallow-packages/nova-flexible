@@ -191,6 +191,8 @@ class Flexible extends Field
      */
     public function includeTags(array $tags): self
     {
+        $tags = array_merge($tags, ['Specials']);
+
         $this->includeTags = $tags;
         return $this->withMeta(['includeTags' => $tags]);
     }
