@@ -2,6 +2,7 @@
 
 namespace Marshmallow\Nova\Flexible\Concerns;
 
+use Laravel\Nova\Nova;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Cache;
 use Laravel\Nova\NovaServiceProvider;
@@ -272,11 +273,16 @@ trait HasFlexible
 
     public function getDependedLayoutGroup(): string
     {
-        if ($this->name) {
-            return $this->name;
+        $resourceClass = Nova::resourceForModel($this);
+        $titleColumn = $resourceClass::$title;
+
+        if ($this->{$titleColumn}) {
+            $name = $this->{$titleColumn};
+        } else {
+            $name = (new \ReflectionClass($this))->getShortName();
         }
-        $unknown_name = (new \ReflectionClass($this))->getShortName();
-        return  "{$unknown_name}: #{$this->id}";
+
+        return  "{$name} (#{$this->id})";
     }
 
     public static function getDependedLayoutLabel($layout): string
@@ -311,14 +317,24 @@ trait HasFlexible
     {
         $callable = function () use ($model) {
             $options = [];
-            $columns = $model::getDependedLayoutSelectColumns();
+
+            $resourceClass = Nova::resourceForModel($model);
+            $titleColumn = $resourceClass::$title;
+            $defaultColumns = [$titleColumn, 'id'];
+            $layoutColumns = $model::getDependedLayoutSelectColumns();
+
+            $columns = array_merge($defaultColumns, $layoutColumns);
+
             $ignore_layouts = array_merge(self::getLayoutsToIgnoreFromDependendLayout(), [
                 'depended-layout'
             ]);
 
-            self::getOptionsQueryBuilderForDependedLayoutSelect()
-                ->get()
+            $query = self::getOptionsQueryBuilderForDependedLayoutSelect();
+
+            $query->select($columns)->withoutEagerLoads()->get()
                 ->each(function ($model) use (&$options, $columns, $ignore_layouts) {
+                    $group = $model->getDependedLayoutGroup();
+
                     foreach ($columns as $column) {
                         $layouts = is_array($model->{$column}) ? $model->{$column} : json_decode($model->{$column});
                         if (!is_array($layouts)) {
@@ -335,7 +351,6 @@ trait HasFlexible
                                 $key = "{$model->id}___{$column}___{$layout_key}";
 
                                 $label = self::getDependedLayoutLabel($layout);
-                                $group = $model->getDependedLayoutGroup($layout);
                                 $options[$key] = ['label' => $label, 'group' => $group];
                             } catch (ErrorException $e) {
                                 //
