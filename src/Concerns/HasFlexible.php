@@ -339,6 +339,7 @@ trait HasFlexible
                                 $options[$key] = ['label' => $label, 'group' => $group];
                             } catch (ErrorException $e) {
                                 //
+                                ray($e)->red();
                             }
                         }
                     }
