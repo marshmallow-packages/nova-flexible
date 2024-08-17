@@ -107,15 +107,28 @@ trait HasFlexible
                 [$model_id, $column, $layout_key] = explode('___', $layout->layout);
                 $model_class = $this instanceof Model ? get_class($this) : $this->model;
                 $depended_page = $model_class::find($model_id);
-                $depended_page_layouts = $depended_page->{$column} instanceof Collection
-                    ? $depended_page->{$column}
-                    : $depended_page->flex($column);
+                if ($this->id === $depended_page->id) {
+                    /**
+                     * We are trying to get the depended layout from the same model.
+                     * We dont't need to get the data from the model again,
+                     * because we will end up in a loop.
+                     */
+                    $flexible_layouts->each(function ($layout) use ($layout_key, $layout_array_key, &$flexible_layouts) {
+                        if ($layout->key == $layout_key) {
+                            $flexible_layouts[$layout_array_key] = $layout;
+                        }
+                    });
+                } else {
+                    $depended_page_layouts = $depended_page->{$column} instanceof Collection
+                        ? $depended_page->{$column}
+                        : $depended_page->flex($column);
 
-                $depended_page_layouts->each(function ($layout) use ($layout_key, $layout_array_key, &$flexible_layouts) {
-                    if ($layout->key == $layout_key) {
-                        $flexible_layouts[$layout_array_key] = $layout;
-                    }
-                });
+                    $depended_page_layouts->each(function ($layout) use ($layout_key, $layout_array_key, &$flexible_layouts) {
+                        if ($layout->key == $layout_key) {
+                            $flexible_layouts[$layout_array_key] = $layout;
+                        }
+                    });
+                }
             }
         });
 
