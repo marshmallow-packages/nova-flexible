@@ -30,7 +30,7 @@ class WysiwygLayout extends MarshmallowLayout
     /**
      * Get the fields displayed by the layout.
      *
-     * @return array
+     * @return array<\Laravel\Nova\Fields\Field>
      */
     public function fields()
     {

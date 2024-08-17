@@ -38,7 +38,7 @@ class DependedLayout extends MarshmallowLayout
     /**
      * Add this layout to these tags.
      *
-     * @var array
+     * @var array<string>
      */
     protected $tags = ["Specials"];
 
@@ -46,6 +46,7 @@ class DependedLayout extends MarshmallowLayout
      * Get the fields displayed by the layout.
      *
      * @return array
+     * * @return array<\Laravel\Nova\Fields\Field>
      */
     public function fields()
     {

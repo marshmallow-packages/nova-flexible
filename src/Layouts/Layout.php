@@ -80,7 +80,7 @@ class Layout implements LayoutInterface, JsonSerializable, ArrayAccess, Arrayabl
     /**
      * Add this layout to these tags.
      *
-     * @var array
+     * @var array<string>
      */
     protected $tags = ['Custom'];
 
