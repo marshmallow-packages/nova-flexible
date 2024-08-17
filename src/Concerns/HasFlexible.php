@@ -279,25 +279,35 @@ trait HasFlexible
         return  "{$unknown_name}: #{$this->id}";
     }
 
-    public static function getDependedLayoutLabel($layout): string
+    public static function getDependedLayoutLabel($layout, ?Model $model = null, ?int $key = null): string
     {
+        $item_number = $key + 1;
+        $label = $key !== null ? "#{$item_number} " : '';
         if (isset($layout->attributes->title)) {
-            return $layout->attributes->title;
+            return $label . $layout->attributes->title;
         }
 
         if (isset($layout->attributes->name)) {
-            return $layout->attributes->name;
+            return $label . $layout->attributes->name;
         }
 
         if ($title = Arr::get($layout, 'attributes.title')) {
-            return $title;
+            return $label . $title;
         }
 
         if ($name = Arr::get($layout, 'attributes.name')) {
-            return $name;
+            return $label . $name;
         }
 
-        return __('Unknown');
+        if ($model) {
+            $layouts = Flex::getLayouts(get_class($model));
+            $layout = Arr::get($layout, 'layout');
+            $flex_class = Arr::get($layouts, $layout);
+            $flex = new $flex_class();
+            return $label . $flex->title();
+        }
+
+        return $label . __('Unknown');
     }
 
     public static function getLayoutsToIgnoreFromDependendLayout(): array
@@ -324,7 +334,7 @@ trait HasFlexible
                         if (!is_array($layouts)) {
                             continue;
                         }
-                        foreach ($layouts as $key => $layout) {
+                        foreach ($layouts as $loop_key => $layout) {
                             try {
                                 $layout_name = Arr::get($layout, 'layout') ?? $layout->layout;
                                 if (in_array($layout_name, $ignore_layouts)) {
@@ -334,7 +344,7 @@ trait HasFlexible
                                 $layout_key = Arr::get($layout, 'key') ?? $layout->key;
                                 $key = "{$model->id}___{$column}___{$layout_key}";
 
-                                $label = self::getDependedLayoutLabel($layout);
+                                $label = self::getDependedLayoutLabel($layout, $model, $loop_key);
                                 $group = $model->getDependedLayoutGroup($layout);
                                 $options[$key] = ['label' => $label, 'group' => $group];
                             } catch (ErrorException $e) {
