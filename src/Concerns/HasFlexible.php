@@ -314,6 +314,7 @@ trait HasFlexible
 
         if ($model) {
             $layouts = Flex::getLayouts(get_class($model));
+            $layout = (array) $layout;
             $layout = Arr::get($layout, 'layout');
             $flex_class = Arr::get($layouts, $layout);
             $flex = new $flex_class();
