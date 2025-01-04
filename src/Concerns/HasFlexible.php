@@ -33,6 +33,9 @@ trait HasFlexible
 
     public function clearCachedFlexibleData()
     {
+        if (!Cache::supportsTags()) {
+            return;
+        }
         $cache_tag = self::getCacheTagForDependedLayoutSelect();
         if ($cache_tag) {
             Cache::tags($cache_tag)->flush();
@@ -371,12 +374,14 @@ trait HasFlexible
             return $options;
         };
 
-        $cache_tag = self::getCacheTagForDependedLayoutSelect();
-        $cache_ttl = self::getCacheTtlForDependedLayoutSelect();
-        $cache_key = self::getCacheKeyForDependedLayoutSelect();
+        if (Cache::supportsTags()) {
+            $cache_tag = self::getCacheTagForDependedLayoutSelect();
+            $cache_ttl = self::getCacheTtlForDependedLayoutSelect();
+            $cache_key = self::getCacheKeyForDependedLayoutSelect();
 
-        if ($cache_tag) {
-            return Cache::tags($cache_tag)->remember($cache_key, $cache_ttl, $callable);
+            if ($cache_tag) {
+                return Cache::tags($cache_tag)->remember($cache_key, $cache_ttl, $callable);
+            }
         }
 
         return $callable();
