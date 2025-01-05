@@ -14,7 +14,7 @@ return [
      * layouts? You can specify your own in your custom layout. Please
      * use `config('pages.wysiwyg')::make('Content');` on your custom layouts.
      */
-    'wysiwyg' => env('NOVA_WYSIWYG', \Marshmallow\Nova\TinyMCE\TinyMCE::class),
+    'wysiwyg' => env('NOVA_WYSIWYG', '\Laravel\Nova\Fields\Trix'),
 
     /**
      * Your custom layouts. Please check the readme.md file for more
