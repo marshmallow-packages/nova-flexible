@@ -3,7 +3,6 @@
 namespace App\Flexible\Layouts{{subdirectory}};
 
 use Laravel\Nova\Fields\Text;
-use Marshmallow\Nova\TinyMCE\TinyMCE;
 use Marshmallow\Nova\Flexible\Layouts\MarshmallowLayout;
 
 class {{class}} extends MarshmallowLayout
