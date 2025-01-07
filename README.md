@@ -2,7 +2,8 @@
 
 # Marshmallow Nova Flexible
 
-This is a fork from the package of `whitecube/nova-flexible-content`. This is forked so we can build are own functionalities in to this and make it optimal for our customers.
+> [!important]
+> This package was originally forked from [whitecube/nova-flexible-content]([https://github.com/outl1ne/nova-multiselect-field](https://github.com/whitecube/nova-flexible-content)). Since we were making many opinionated changes, we decided to continue development in our own version rather than submitting pull requests that might not benefit all users of the original package. You’re welcome to use this package—we’re actively maintaining it. If you encounter any issues, please don’t hesitate to reach out.
 
 ## Installation
 
