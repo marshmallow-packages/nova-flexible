@@ -3,7 +3,7 @@
 # Marshmallow Nova Flexible
 
 > [!important]
-> This package was originally forked from [whitecube/nova-flexible-content]([https://github.com/outl1ne/nova-multiselect-field](https://github.com/whitecube/nova-flexible-content)). Since we were making many opinionated changes, we decided to continue development in our own version rather than submitting pull requests that might not benefit all users of the original package. You’re welcome to use this package—we’re actively maintaining it. If you encounter any issues, please don’t hesitate to reach out.
+> This package was originally forked from [whitecube/nova-flexible-content](<[https://github.com/outl1ne/nova-multiselect-field](https://github.com/whitecube/nova-flexible-content)>). Since we were making many opinionated changes, we decided to continue development in our own version rather than submitting pull requests that might not benefit all users of the original package. You’re welcome to use this package—we’re actively maintaining it. If you encounter any issues, please don’t hesitate to reach out.
 
 ## Installation
 
