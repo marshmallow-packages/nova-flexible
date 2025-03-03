@@ -5,28 +5,20 @@
         "development": "mix",
         "watch": "mix watch",
         "watch-poll": "mix watch -- --watch-options-poll=1000",
-        "hot": "mix watch --hot",
         "prod": "npm run production",
-        "production": "mix --production",
-        "nova:install": "npm --prefix='../../vendor/laravel/nova' ci"
+        "production": "mix --production"
     },
     "devDependencies": {
+        "@inertiajs/inertia": "^0.11.1",
         "@vue/babel-plugin-jsx": "^1.1.5",
         "@vue/compiler-sfc": "^3.3.9",
         "@vueform/multiselect": "^2.6.6",
         "autoprefixer": "^10.4.16",
-        "laravel-mix": "^6.0.49",
-        "laravel-nova": "^1.12.3",
-        "postcss": "^8.4.31",
-        "tailwindcss": "^3.3.5",
-        "@inertiajs/inertia": "^0.11.1",
-        "form-backend-validation": "^2.4.0",
-        "lodash": "^4.17.21",
-        "resolve-url-loader": "^5.0.0",
-        "sass": "^1.69.5",
-        "sass-loader": "13.3.2",
-        "vue-loader": "^17.3.1",
-        "vuex": "^4.1.0"
+        "@tailwindcss/forms": "^0.5.7",
+        "@tailwindcss/typography": "^0.5.10",
+        "laravel-nova-devtool": "file:vendor/laravel/nova-devtool",
+        "mix-tailwindcss": "^1.3.0",
+        "tailwindcss": "^3.3.6"
     },
     "dependencies": {
         "@inertiajs/inertia": "^0.11.1",

@@ -1,8 +1,17 @@
 module.exports = {
-    content: ["./resources/**/*.{vue,js,ts,jsx,tsx}"],
+    mode: "jit",
+    content: [
+        "./src/**/*.php",
+        "./src/**/*.vue",
+        "./resources/**/*{js,vue,blade.php}",
+    ],
+    prefix: "mm-",
     theme: {
         extend: {},
     },
-    plugins: [],
-    prefix: "mm-",
+    darkMode: "class",
+    plugins: [
+        require("@tailwindcss/forms"),
+        require("@tailwindcss/typography"),
+    ],
 };

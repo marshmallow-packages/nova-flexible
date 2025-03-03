@@ -12,31 +12,27 @@
                     <button
                         dusk="expand-group"
                         type="button"
-                        class="block w-8 h-8 border-r border-gray-200 shrink-0 group-control btn dark:border-gray-700"
+                        class="block w-8 h-8 text-center border-r border-gray-200 shrink-0 group-control btn dark:border-gray-700 tw-text-center"
                         :title="__('Expand')"
                         @click.prevent="expand"
                         v-if="collapsed"
                     >
-                        <icon
-                            type="plus"
-                            class="align-top"
-                            width="16"
-                            height="16"
+                        <Icon
+                            name="plus"
+                            class="tw-h-4 tw-w-4 tw-inline-block"
                         />
                     </button>
                     <button
                         dusk="collapse-group"
                         type="button"
-                        class="block w-8 h-8 border-r border-gray-200 group-control btn dark:border-gray-700"
+                        class="block w-8 h-8 border-r border-gray-200 group-control btn dark:border-gray-700 tw-text-center"
                         :title="__('Collapse')"
                         @click.prevent="collapse"
                         v-else
                     >
-                        <icon
-                            type="minus"
-                            class="align-top"
-                            width="16"
-                            height="16"
+                        <Icon
+                            name="minus"
+                            class="tw-h-4 tw-w-4 tw-inline-block"
                         />
                     </button>
 
@@ -58,11 +54,9 @@
                             :title="__('Move up')"
                             @click.prevent="moveUp"
                         >
-                            <icon
-                                type="arrow-up"
-                                class="align-top"
-                                width="16"
-                                height="16"
+                            <Icon
+                                name="arrow-up"
+                                class="tw-h-4 tw-w-4 tw-inline-block"
                             />
                         </button>
                         <button
@@ -72,11 +66,9 @@
                             :title="__('Move down')"
                             @click.prevent="moveDown"
                         >
-                            <icon
-                                type="arrow-down"
-                                class="align-top"
-                                width="16"
-                                height="16"
+                            <Icon
+                                name="arrow-down"
+                                class="tw-h-4 tw-w-4 tw-inline-block"
                             />
                         </button>
                         <button
@@ -86,7 +78,10 @@
                             :title="__('Delete')"
                             @click.prevent="confirmRemove"
                         >
-                            <icon type="trash" width="16" height="16" />
+                            <Icon
+                                name="trash"
+                                class="tw-h-4 tw-w-4 tw-inline-block"
+                            />
                         </button>
                         <delete-flexible-content-group-modal
                             v-if="removeMessage"
@@ -122,9 +117,14 @@
 
 <script>
     import BehavesAsPanel from "nova-mixins/BehavesAsPanel";
+    import { Icon } from "laravel-nova-ui";
 
     export default {
         mixins: [BehavesAsPanel],
+
+        components: {
+            Icon,
+        },
 
         props: ["errors", "group", "index", "field"],
 
