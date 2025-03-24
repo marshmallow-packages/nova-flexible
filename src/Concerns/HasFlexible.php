@@ -49,11 +49,11 @@ trait HasFlexible
      * @param array  $layoutMapping
      * @return \Marshmallow\Nova\Flexible\Layouts\Collection
      */
-    public function flexible($attribute, $layoutMapping = [])
+    public function flexible($attribute, $layoutMapping = [], bool $forceCasting = false)
     {
         $flexible = data_get($this->attributes, $attribute);
 
-        return $this->cast($flexible, $layoutMapping);
+        return $this->cast($flexible, $layoutMapping, $forceCasting);
     }
 
     /**
@@ -63,9 +63,9 @@ trait HasFlexible
      * @param array $layoutMapping
      * @return \Marshmallow\Nova\Flexible\Layouts\Collection
      */
-    public function cast($value, $layoutMapping = [])
+    public function cast($value, $layoutMapping = [], bool $forceCasting = false)
     {
-        if (app()->getProvider(NovaServiceProvider::class) && !app()->runningInConsole()) {
+        if (app()->getProvider(NovaServiceProvider::class) && !app()->runningInConsole() && !$forceCasting) {
             return $value;
         }
 
