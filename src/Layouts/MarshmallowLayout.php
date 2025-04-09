@@ -14,6 +14,7 @@
 namespace Marshmallow\Nova\Flexible\Layouts;
 
 use Livewire\Livewire;
+use Illuminate\Support\Facades\Storage;
 
 if (config('flexible.has_media_library')) {
     $className = \Marshmallow\Nova\Flexible\Layouts\MarshmallowMediaLayout::class;
@@ -65,6 +66,10 @@ class MarshmallowLayout extends MarshmallowDynamicLayout
     {
         if (!$this->hasImage($field)) {
             return null;
+        }
+
+        if (config('filesystems.default') == 's3') {
+            return Storage::disk('s3')->url($this->attributes[$field]);
         }
 
         if (config('app.asset_url')) {
