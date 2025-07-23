@@ -2,6 +2,7 @@
 
 namespace Marshmallow\Nova\Flexible\Concerns;
 
+use ErrorException;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Cache;
 use Laravel\Nova\NovaServiceProvider;
@@ -317,8 +318,12 @@ trait HasFlexible
             $layout = (array) $layout;
             $layout = Arr::get($layout, 'layout');
             $flex_class = Arr::get($layouts, $layout);
-            $flex = new $flex_class();
-            return $label . $flex->title();
+            
+            // Validate that $flex_class is a valid class name
+            if ($flex_class && is_string($flex_class) && class_exists($flex_class)) {
+                $flex = new $flex_class();
+                return $label . $flex->title();
+            }
         }
 
         return $label . __('Unknown');
