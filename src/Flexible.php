@@ -327,7 +327,7 @@ class Flexible extends Field
     {
         if (is_string($class)) {
             $preset = resolve($class, $params);
-        } else if ($class instanceof Preset) {
+        } elseif ($class instanceof Preset) {
             $preset = $class;
         }
 

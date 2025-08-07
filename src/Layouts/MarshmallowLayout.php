@@ -92,11 +92,11 @@ class MarshmallowLayout extends MarshmallowDynamicLayout
     }
 
     /**
-     * [hasTag description]
+     * Check if this layout has any of the given tags
      *
-     * @param [type] $tags [description]
+     * @param array $tags
      *
-     * @return bool [description]
+     * @return bool
      */
     public function hasTag($tags)
     {
