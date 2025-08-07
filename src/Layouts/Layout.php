@@ -306,7 +306,7 @@ class Layout implements LayoutInterface, JsonSerializable, ArrayAccess, Arrayabl
      */
     public function inUseKey()
     {
-        return $this->_key ?? $this->key();
+        return $this->_key ?: $this->key();
     }
 
     /**
@@ -716,7 +716,7 @@ class Layout implements LayoutInterface, JsonSerializable, ArrayAccess, Arrayabl
      */
     protected function getDates()
     {
-        return $this->dates ?? [];
+        return $this->dates ?: [];
     }
 
     /**
@@ -736,7 +736,7 @@ class Layout implements LayoutInterface, JsonSerializable, ArrayAccess, Arrayabl
      */
     public function getCasts()
     {
-        return $this->casts ?? [];
+        return $this->casts ?: [];
     }
 
     /**
@@ -809,7 +809,7 @@ class Layout implements LayoutInterface, JsonSerializable, ArrayAccess, Arrayabl
 
     protected function hasResolverForTitleAttribute()
     {
-        return ($this->resolveTitleCallback || method_exists($this, 'resolveTitleAttribute'));
+        return (bool)($this->resolveTitleCallback || method_exists($this, 'resolveTitleAttribute'));
     }
 
     /**

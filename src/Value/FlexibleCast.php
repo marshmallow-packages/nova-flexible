@@ -23,7 +23,7 @@ class FlexibleCast implements CastsAttributes
     protected $model;
 
     /**
-     * @return \Marshmallow\NovaFlexibleContent\Layouts\Collection|array<\Marshmallow\NovaFlexibleContent\Layouts\Layout>
+     * @return \Marshmallow\Nova\Flexible\Layouts\Collection
      */
     public function get($model, string $key, $value, array $attributes)
     {

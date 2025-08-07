@@ -109,7 +109,7 @@ class MakeLayoutCommand extends GeneratorCommand
             $this->line($line);
         }
 
-        if (!config('flexible.auto-discovery') || true) {
+        if (!config('flexible.auto-discovery')) {
             $slug_name      = str_replace('.', '-', $this->getView());
             $layout_name    = str_replace('/', '\\', $this->layout_class);
             $layout_path    = '\App\Flexible\Layouts' . $this->subdirectory . '\\' . $layout_name . '::class';

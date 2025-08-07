@@ -21,7 +21,7 @@ class Flex
         'wysiwyg' => WysiwygLayout::class,
     ];
 
-    protected function getDefaultLayouts(string $model = null)
+    protected function getDefaultLayouts(?string $model = null)
     {
         $layout = $this->default_layouts;
         if ($model && class_exists($model)) {
@@ -32,7 +32,7 @@ class Flex
         return $layout;
     }
 
-    public function getLayouts(string $model = null)
+    public function getLayouts(?string $model = null)
     {
         if ($this->autoDiscoveryIsActive()) {
             return $this->autoDiscoverLayouts($model);
@@ -74,7 +74,7 @@ class Flex
         return $html;
     }
 
-    protected function autoDiscoverLayouts(string $model = null): array
+    protected function autoDiscoverLayouts(?string $model = null): array
     {
         if ($this->loaded_layouts) {
             return $this->loaded_layouts;
@@ -160,7 +160,7 @@ class Flex
         return "marshmallow.flexible-layouts-cache";
     }
 
-    public function getLayoutsFromCache(string $model = null)
+    public function getLayoutsFromCache(?string $model = null)
     {
         return Cache::rememberForever(static::getCacheKey(), function () use ($model) {
             return self::getLayouts($model);

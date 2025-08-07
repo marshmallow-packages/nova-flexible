@@ -148,7 +148,7 @@ trait HasMediaLibrary
      *
      * @return mixed
      */
-    protected function removeCallback(Flexible $flexible, $layout)
+    protected function removeCallback(Flexible $flexible, Layout $layout)
     {
         if ($this->shouldDeletePreservingMedia()) return;
 
@@ -161,7 +161,7 @@ trait HasMediaLibrary
             });
 
         foreach ($collectionsToClear as $collection) {
-            $layout->clearMediaCollection($collection);
+            $this->getUnderlyingMediaModel()->clearMediaCollection($collection);
         }
     }
 }

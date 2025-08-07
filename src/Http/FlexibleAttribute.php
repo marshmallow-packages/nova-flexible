@@ -180,10 +180,10 @@ class FlexibleAttribute
      * @param string $group
      * @return null|string
      */
-    public static function formatGroupPrefix($group)
+    public static function formatGroupPrefix($group): ?string
     {
         if (!$group) {
-            return;
+            return null;
         }
 
         return $group . static::GROUP_SEPARATOR;
@@ -262,7 +262,6 @@ class FlexibleAttribute
     /**
      * Check attribute is an "upload" attribute and define it on the object
      *
-     * @param  mixed $group
      * @return void
      */
     protected function setUpload()

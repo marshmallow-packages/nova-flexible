@@ -15,7 +15,7 @@ class FileAdderFactory extends OriginalFileAdderFactory
      *
      * @return \Spatie\MediaLibrary\MediaCollections\FileAdder
      */
-    public static function create(Model $subject, $file, string $suffix = null): \Spatie\MediaLibrary\MediaCollections\FileAdder
+    public static function create(Model $subject, $file, ?string $suffix = null): \Spatie\MediaLibrary\MediaCollections\FileAdder
     {
         return app(NewFileAdder::class)
             ->setSubject($subject)

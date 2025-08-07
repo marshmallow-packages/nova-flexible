@@ -12,7 +12,7 @@ class DefaultPreset extends Preset
     /**
      * The available blocks
      *
-     * @var Illuminate\Support\Collection
+     * @var \Illuminate\Support\Collection
      */
     protected $layouts;
 
@@ -34,7 +34,7 @@ class DefaultPreset extends Preset
         $layouts = Flex::getLayoutsFromCache(
             get_class($request->model())
         );
-        $this->layouts = collect($layouts);
+        $this->layouts = \Illuminate\Support\Collection::make($layouts);
     }
 
     /**
@@ -42,7 +42,7 @@ class DefaultPreset extends Preset
      *
      * @return void
      */
-    public function handle(Flexible $field)
+    public function handle(Flexible $field): void
     {
         if ($this->isIndexRequest) return;
 
@@ -51,7 +51,5 @@ class DefaultPreset extends Preset
         $this->layouts->each(function ($layout) use ($field) {
             $field->addLayout($layout);
         });
-
-        return $field;
     }
 }

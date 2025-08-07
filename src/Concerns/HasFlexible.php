@@ -209,7 +209,7 @@ trait HasFlexible
         }
 
         if (is_null($name)) {
-            return;
+            return null;
         }
 
         return $this->createMappedLayout($name, $key, $attributes, $layoutMapping, $with);
@@ -232,7 +232,7 @@ trait HasFlexible
 
         $layout = new $classname($name, $name, [], $key, $attributes);
 
-        $model = is_a($this, FlexibleCast::class)
+        $model = $this instanceof FlexibleCast
             ? $this->model
             : $this;
 
@@ -261,7 +261,7 @@ trait HasFlexible
 
     public static function getOptionsQueryBuilderForDependedLayoutSelect(): Builder
     {
-        return self::query();
+        return static::query();
     }
 
     public static function getCacheTagForDependedLayoutSelect(): ?string
@@ -338,7 +338,7 @@ trait HasFlexible
     {
         $callable = function () use ($model) {
             $options = [];
-            $columns = $model::getDependedLayoutSelectColumns();
+            $columns = $model->getDependedLayoutSelectColumns();
             $ignore_layouts = array_merge(self::getLayoutsToIgnoreFromDependendLayout(), [
                 'depended-layout'
             ]);

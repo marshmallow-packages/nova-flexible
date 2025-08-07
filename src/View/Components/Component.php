@@ -46,8 +46,8 @@ class Component extends IlluminateViewComponent
      * This method will always be overruled by the component class
      * that extends this class.
      */
-    public function render()
+    public function render(): mixed
     {
-        //
+        return null;
     }
 }
