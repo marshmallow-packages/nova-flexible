@@ -33,7 +33,20 @@ trait HasMediaLibrary
         $model = Flexible::getOriginModel() ?? $this->model;
 
         while ($model instanceof Layout) {
-            $model = $model->getMediaModel();
+            if (method_exists($model, 'getMediaModel')) {
+                $model = $model->getMediaModel();
+            } else {
+                // If getMediaModel method doesn't exist, break out of the loop
+                // and use the current model or fallback to the original model
+                $model = $this->model ?? Flexible::getOriginModel();
+                break;
+            }
+            
+            // Ensure we don't get stuck in an infinite loop with invalid returns
+            if (is_array($model) || (!$model instanceof Layout && !$model instanceof HasMedia)) {
+                $model = $this->model ?? Flexible::getOriginModel();
+                break;
+            }
         }
 
         if (is_null($model) || !($model instanceof HasMedia)) {
