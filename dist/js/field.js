@@ -5288,14 +5288,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-Object(function webpackMissingModule() { var e = new Error("Cannot find module 'nova-mixins/BehavesAsPanel'"); e.code = 'MODULE_NOT_FOUND'; throw e; }());
-Object(function webpackMissingModule() { var e = new Error("Cannot find module 'laravel-nova-ui'"); e.code = 'MODULE_NOT_FOUND'; throw e; }());
+/* harmony import */ var nova_mixins_BehavesAsPanel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! nova-mixins/BehavesAsPanel */ "./vendor/laravel/nova/resources/js/mixins/BehavesAsPanel.js");
+/* harmony import */ var laravel_nova_ui__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! laravel-nova-ui */ "laravel-nova-ui");
+/* harmony import */ var laravel_nova_ui__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(laravel_nova_ui__WEBPACK_IMPORTED_MODULE_1__);
 
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
-  mixins: [Object(function webpackMissingModule() { var e = new Error("Cannot find module 'nova-mixins/BehavesAsPanel'"); e.code = 'MODULE_NOT_FOUND'; throw e; }())],
+  mixins: [nova_mixins_BehavesAsPanel__WEBPACK_IMPORTED_MODULE_0__["default"]],
   components: {
-    Icon: Object(function webpackMissingModule() { var e = new Error("Cannot find module 'laravel-nova-ui'"); e.code = 'MODULE_NOT_FOUND'; throw e; }())
+    Icon: laravel_nova_ui__WEBPACK_IMPORTED_MODULE_1__.Icon
   },
   props: ["errors", "group", "index", "field"],
   emits: ["move-up", "move-down", "remove"],
@@ -8195,6 +8196,45 @@ var Group = /*#__PURE__*/function () {
 
 /***/ }),
 
+/***/ "./resources/sass/field.scss":
+/*!***********************************!*\
+  !*** ./resources/sass/field.scss ***!
+  \***********************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+// extracted by mini-css-extract-plugin
+
+
+/***/ }),
+
+/***/ "./vendor/laravel/nova/resources/js/mixins/BehavesAsPanel.js":
+/*!*******************************************************************!*\
+  !*** ./vendor/laravel/nova/resources/js/mixins/BehavesAsPanel.js ***!
+  \*******************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
+  emits: ['actionExecuted'],
+  props: ['resourceName', 'resourceId', 'resource', 'panel'],
+  methods: {
+    /**
+     * Handle the actionExecuted event and pass it up the chain.
+     */
+    actionExecuted: function actionExecuted() {
+      this.$emit('actionExecuted');
+    }
+  }
+});
+
+/***/ }),
+
 /***/ "laravel-nova":
 /*!******************************!*\
   !*** external "LaravelNova" ***!
@@ -8203,6 +8243,17 @@ var Group = /*#__PURE__*/function () {
 
 "use strict";
 module.exports = LaravelNova;
+
+/***/ }),
+
+/***/ "laravel-nova-ui":
+/*!********************************!*\
+  !*** external "LaravelNovaUi" ***!
+  \********************************/
+/***/ ((module) => {
+
+"use strict";
+module.exports = LaravelNovaUi;
 
 /***/ }),
 
@@ -8328,7 +8379,8 @@ module.exports = Vue;
 /******/ 		// [resolve, reject, Promise] = chunk loading, 0 = chunk loaded
 /******/ 		var installedChunks = {
 /******/ 			"/js/field": 0,
-/******/ 			"css/modal": 0
+/******/ 			"css/modal": 0,
+/******/ 			"css/field": 0
 /******/ 		};
 /******/ 		
 /******/ 		// no chunk on demand loading
@@ -8383,8 +8435,9 @@ module.exports = Vue;
 /******/ 	// startup
 /******/ 	// Load entry module and return exports
 /******/ 	// This entry module depends on other loaded chunks and execution need to be delayed
-/******/ 	__webpack_require__.O(undefined, ["css/modal"], () => (__webpack_require__("./resources/js/field.js")))
-/******/ 	var __webpack_exports__ = __webpack_require__.O(undefined, ["css/modal"], () => (__webpack_require__("./resources/css/modal.css")))
+/******/ 	__webpack_require__.O(undefined, ["css/modal","css/field"], () => (__webpack_require__("./resources/js/field.js")))
+/******/ 	__webpack_require__.O(undefined, ["css/modal","css/field"], () => (__webpack_require__("./resources/sass/field.scss")))
+/******/ 	var __webpack_exports__ = __webpack_require__.O(undefined, ["css/modal","css/field"], () => (__webpack_require__("./resources/css/modal.css")))
 /******/ 	__webpack_exports__ = __webpack_require__.O(__webpack_exports__);
 /******/ 	
 /******/ })()
