@@ -5288,15 +5288,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var nova_mixins_BehavesAsPanel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! nova-mixins/BehavesAsPanel */ "./vendor/laravel/nova/resources/js/mixins/BehavesAsPanel.js");
-/* harmony import */ var laravel_nova_ui__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! laravel-nova-ui */ "laravel-nova-ui");
-/* harmony import */ var laravel_nova_ui__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(laravel_nova_ui__WEBPACK_IMPORTED_MODULE_1__);
+Object(function webpackMissingModule() { var e = new Error("Cannot find module 'nova-mixins/BehavesAsPanel'"); e.code = 'MODULE_NOT_FOUND'; throw e; }());
+Object(function webpackMissingModule() { var e = new Error("Cannot find module 'laravel-nova-ui'"); e.code = 'MODULE_NOT_FOUND'; throw e; }());
 
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
-  mixins: [nova_mixins_BehavesAsPanel__WEBPACK_IMPORTED_MODULE_0__["default"]],
+  mixins: [Object(function webpackMissingModule() { var e = new Error("Cannot find module 'nova-mixins/BehavesAsPanel'"); e.code = 'MODULE_NOT_FOUND'; throw e; }())],
   components: {
-    Icon: laravel_nova_ui__WEBPACK_IMPORTED_MODULE_1__.Icon
+    Icon: Object(function webpackMissingModule() { var e = new Error("Cannot find module 'laravel-nova-ui'"); e.code = 'MODULE_NOT_FOUND'; throw e; }())
   },
   props: ["errors", "group", "index", "field"],
   emits: ["move-up", "move-down", "remove"],
@@ -6093,17 +6092,32 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
             return $options.remove(group.key);
           }
         }, null, 8 /* PROPS */, ["dusk", "field", "group", "index", "resource-name", "resource-id", "errors", "onMoveUp", "onMoveDown", "onRemove"]);
-      }), 128 /* KEYED_FRAGMENT */))])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), _this.limitCounter != 0 && _ctx.currentField.allowedToCreate ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("button", {
+      }), 128 /* KEYED_FRAGMENT */))])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" Simple dropdown menu for flexible-drop-menu component "), _ctx.currentField.menu.component === 'flexible-drop-menu' && _this.limitCounter != 0 && _ctx.currentField.allowedToCreate ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)((0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveDynamicComponent)(_ctx.currentField.menu.component), {
         key: 1,
+        layouts: $options.layouts,
+        field: _ctx.currentField,
+        "resource-name": $props.resourceName,
+        "resource-id": $props.resourceId,
+        errors: _ctx.errors,
+        "limit-counter": $options.limitCounter,
+        "allowed-to-create": _ctx.currentField.allowedToCreate,
+        "allowed-to-delete": _ctx.currentField.allowedToDelete,
+        "allowed-to-change-order": _ctx.currentField.allowedToChangeOrder,
+        "limit-per-layout-counter": $options.limitPerLayoutCounter,
+        onAddGroup: _cache[0] || (_cache[0] = function ($event) {
+          return $options.addGroup($event);
+        })
+      }, null, 40 /* PROPS, NEED_HYDRATION */, ["layouts", "field", "resource-name", "resource-id", "errors", "limit-counter", "allowed-to-create", "allowed-to-delete", "allowed-to-change-order", "limit-per-layout-counter"])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" Default button for modal-based selection "), _ctx.currentField.menu.component !== 'flexible-drop-menu' && _this.limitCounter != 0 && _ctx.currentField.allowedToCreate ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("button", {
+        key: 2,
         "class": "inline-flex items-center flex-shrink-0 px-4 text-sm font-bold text-white rounded shadow focus:outline-none focus:ring bg-primary-500 hover:bg-primary-400 active:bg-primary-600 dark:text-gray-800 h-9",
-        onClick: _cache[0] || (_cache[0] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.withModifiers)(function () {
+        onClick: _cache[1] || (_cache[1] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.withModifiers)(function () {
           return $options.toggleLayoutsDropdownOrAddDefault && $options.toggleLayoutsDropdownOrAddDefault.apply($options, arguments);
         }, ["prevent"])),
         textContent: (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(_ctx.currentField.button)
       }, null, 8 /* PROPS */, _hoisted_2)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), _ctx.modalOpen ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)(_component_SelectorModal, {
-        key: 2,
+        key: 3,
         "class": "max-w-3xl nova-flexible-modal",
-        onConfirm: _cache[1] || (_cache[1] = function ($event) {
+        onConfirm: _cache[2] || (_cache[2] = function ($event) {
           return $options.confirmModal($event);
         }),
         onClose: $options.closeModal,
@@ -6115,7 +6129,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
         errors: _ctx.errors,
         "resource-name": $props.resourceName,
         "resource-id": $props.resourceId,
-        onAddGroup: _cache[2] || (_cache[2] = function ($event) {
+        onAddGroup: _cache[3] || (_cache[3] = function ($event) {
           return $options.addGroup($event);
         })
       }, null, 8 /* PROPS */, ["onClose", "layouts", "limit-per-layout-counter", "is", "field", "limit-counter", "errors", "resource-name", "resource-id"])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)];
@@ -8181,32 +8195,6 @@ var Group = /*#__PURE__*/function () {
 
 /***/ }),
 
-/***/ "./vendor/laravel/nova/resources/js/mixins/BehavesAsPanel.js":
-/*!*******************************************************************!*\
-  !*** ./vendor/laravel/nova/resources/js/mixins/BehavesAsPanel.js ***!
-  \*******************************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
-  emits: ['actionExecuted'],
-  props: ['resourceName', 'resourceId', 'resource', 'panel'],
-  methods: {
-    /**
-     * Handle the actionExecuted event and pass it up the chain.
-     */
-    actionExecuted: function actionExecuted() {
-      this.$emit('actionExecuted');
-    }
-  }
-});
-
-/***/ }),
-
 /***/ "laravel-nova":
 /*!******************************!*\
   !*** external "LaravelNova" ***!
@@ -8215,17 +8203,6 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 module.exports = LaravelNova;
-
-/***/ }),
-
-/***/ "laravel-nova-ui":
-/*!********************************!*\
-  !*** external "LaravelNovaUi" ***!
-  \********************************/
-/***/ ((module) => {
-
-"use strict";
-module.exports = LaravelNovaUi;
 
 /***/ }),
 
