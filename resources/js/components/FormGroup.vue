@@ -4,10 +4,6 @@
             <div :class="titleStyle" v-if="group.title">
                 <div
                     class="box-content flex items-center h-8 h-full leading-normal"
-                    :class="{
-                        'border-b border-gray-200 dark:border-gray-700 ':
-                            !collapsed,
-                    }"
                 >
                     <button
                         dusk="expand-group"
@@ -15,7 +11,7 @@
                         class="block w-8 h-8 text-center border-r border-gray-200 shrink-0 group-control btn dark:border-gray-700 tw-text-center"
                         :title="__('Expand')"
                         @click.prevent="expand"
-                        v-if="collapsed"
+                        v-if="collapsed && group.fields && group.fields.length > 0"
                     >
                         <Icon
                             name="plus"
@@ -28,13 +24,18 @@
                         class="block w-8 h-8 border-r border-gray-200 group-control btn dark:border-gray-700 tw-text-center"
                         :title="__('Collapse')"
                         @click.prevent="collapse"
-                        v-else
+                        v-else-if="!collapsed && group.fields && group.fields.length > 0"
                     >
                         <Icon
                             name="minus"
                             class="tw-h-4 tw-w-4 tw-inline-block"
                         />
                     </button>
+                    <!-- Spacer to maintain alignment when no toggle buttons -->
+                    <div
+                        class="block w-8 h-8 border-r border-gray-200 shrink-0 dark:border-gray-700"
+                        v-else-if="!group.fields || group.fields.length === 0"
+                    ></div>
 
                     <p class="px-4 text-80 grow">
                         <span class="mr-3 font-semibold">#{{ index + 1 }}</span>
@@ -143,34 +144,43 @@
             titleStyle() {
                 let classes = [
                     "border-t",
-                    "border-r",
+                    "border-r", 
                     "border-l",
                     "border-gray-200",
                     "dark:border-gray-700",
                     "rounded-t-lg",
                 ];
-                if (this.collapsed) {
+                // Only add bottom border if collapsed or no fields (complete box)
+                if (this.collapsed || !this.group.fields || this.group.fields.length === 0) {
                     classes.push("border-b rounded-b-lg");
                 }
+                // When expanded with fields, don't add border-b to avoid double border
                 return classes;
             },
             containerStyle() {
-                let classes = [
-                    "grow",
-                    "border-b",
-                    "border-r",
-                    "border-l",
-                    "border-gray-200",
-                    "dark:border-gray-700",
-                    "rounded-b-lg",
-                ];
-                if (!this.group.title) {
-                    classes.push("border-t");
-                    classes.push("rounded-tr-lg");
+                let classes = ["grow"];
+                
+                // Only add borders if there are fields to display
+                if (this.group.fields && this.group.fields.length > 0) {
+                    classes.push(
+                        "border-t",
+                        "border-b",
+                        "border-r", 
+                        "border-l",
+                        "border-gray-200",
+                        "dark:border-gray-700",
+                        "rounded-b-lg"
+                    );
+                    
+                    if (!this.group.title) {
+                        classes.push("rounded-tr-lg");
+                    }
                 }
+                
                 if (this.collapsed) {
                     classes.push("hidden");
                 }
+                
                 return classes;
             },
         },

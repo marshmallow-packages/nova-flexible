@@ -5311,16 +5311,22 @@ __webpack_require__.r(__webpack_exports__);
   computed: {
     titleStyle: function titleStyle() {
       var classes = ["border-t", "border-r", "border-l", "border-gray-200", "dark:border-gray-700", "rounded-t-lg"];
-      if (this.collapsed) {
+      // Only add bottom border if collapsed or no fields (complete box)
+      if (this.collapsed || !this.group.fields || this.group.fields.length === 0) {
         classes.push("border-b rounded-b-lg");
       }
+      // When expanded with fields, don't add border-b to avoid double border
       return classes;
     },
     containerStyle: function containerStyle() {
-      var classes = ["grow", "border-b", "border-r", "border-l", "border-gray-200", "dark:border-gray-700", "rounded-b-lg"];
-      if (!this.group.title) {
-        classes.push("border-t");
-        classes.push("rounded-tr-lg");
+      var classes = ["grow"];
+
+      // Only add borders if there are fields to display
+      if (this.group.fields && this.group.fields.length > 0) {
+        classes.push("border-t", "border-b", "border-r", "border-l", "border-gray-200", "dark:border-gray-700", "rounded-b-lg");
+        if (!this.group.title) {
+          classes.push("rounded-tr-lg");
+        }
       }
       if (this.collapsed) {
         classes.push("hidden");
@@ -5466,7 +5472,59 @@ __webpack_require__.r(__webpack_exports__);
       return (this.limitCounter > 0 || this.limitCounter === null) && this.filteredLayouts.length > 0;
     }
   },
+  mounted: function mounted() {
+    // Add click outside listener
+    document.addEventListener('click', this.handleClickOutside);
+    // Add scroll listener to close dropdown when scrolling
+    window.addEventListener('scroll', this.handleScroll, true);
+    window.addEventListener('resize', this.handleResize);
+  },
+  beforeUnmount: function beforeUnmount() {
+    // Remove listeners
+    document.removeEventListener('click', this.handleClickOutside);
+    window.removeEventListener('scroll', this.handleScroll, true);
+    window.removeEventListener('resize', this.handleResize);
+  },
   methods: {
+    /**
+     * Handle clicks outside the dropdown to close it
+     */
+    handleClickOutside: function handleClickOutside(event) {
+      if (this.isLayoutsDropdownOpen && this.$el && !this.$el.contains(event.target)) {
+        this.isLayoutsDropdownOpen = false;
+      }
+    },
+    /**
+     * Handle scroll events to close dropdown
+     */
+    handleScroll: function handleScroll() {
+      if (this.isLayoutsDropdownOpen) {
+        this.isLayoutsDropdownOpen = false;
+      }
+    },
+    /**
+     * Handle resize events to close dropdown
+     */
+    handleResize: function handleResize() {
+      if (this.isLayoutsDropdownOpen) {
+        this.isLayoutsDropdownOpen = false;
+      }
+    },
+    /**
+     * Position the dropdown relative to the button
+     */
+    positionDropdown: function positionDropdown() {
+      var _this2 = this;
+      this.$nextTick(function () {
+        if (_this2.$refs.dropdown && _this2.$refs.button) {
+          var button = _this2.$refs.button;
+          var dropdown = _this2.$refs.dropdown;
+          var rect = button.getBoundingClientRect();
+          dropdown.style.top = "".concat(rect.bottom + 4, "px");
+          dropdown.style.left = "".concat(rect.left, "px");
+        }
+      });
+    },
     /**
      * Display or hide the layouts choice dropdown if there are multiple layouts
      * or directly add the only available layout.
@@ -5476,6 +5534,9 @@ __webpack_require__.r(__webpack_exports__);
         return this.addGroup(this.layouts[0]);
       }
       this.isLayoutsDropdownOpen = !this.isLayoutsDropdownOpen;
+      if (this.isLayoutsDropdownOpen) {
+        this.positionDropdown();
+      }
     },
     /**
      * Append the given layout to flexible content's list
@@ -6093,17 +6154,32 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
             return $options.remove(group.key);
           }
         }, null, 8 /* PROPS */, ["dusk", "field", "group", "index", "resource-name", "resource-id", "errors", "onMoveUp", "onMoveDown", "onRemove"]);
-      }), 128 /* KEYED_FRAGMENT */))])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), _this.limitCounter != 0 && _ctx.currentField.allowedToCreate ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("button", {
+      }), 128 /* KEYED_FRAGMENT */))])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" Simple dropdown menu for flexible-drop-menu component "), _ctx.currentField.menu.component === 'flexible-drop-menu' && _this.limitCounter != 0 && _ctx.currentField.allowedToCreate ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)((0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveDynamicComponent)(_ctx.currentField.menu.component), {
         key: 1,
+        layouts: $options.layouts,
+        field: _ctx.currentField,
+        "resource-name": $props.resourceName,
+        "resource-id": $props.resourceId,
+        errors: _ctx.errors,
+        "limit-counter": $options.limitCounter,
+        "allowed-to-create": _ctx.currentField.allowedToCreate,
+        "allowed-to-delete": _ctx.currentField.allowedToDelete,
+        "allowed-to-change-order": _ctx.currentField.allowedToChangeOrder,
+        "limit-per-layout-counter": $options.limitPerLayoutCounter,
+        onAddGroup: _cache[0] || (_cache[0] = function ($event) {
+          return $options.addGroup($event);
+        })
+      }, null, 40 /* PROPS, NEED_HYDRATION */, ["layouts", "field", "resource-name", "resource-id", "errors", "limit-counter", "allowed-to-create", "allowed-to-delete", "allowed-to-change-order", "limit-per-layout-counter"])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" Default button for modal-based selection "), _ctx.currentField.menu.component !== 'flexible-drop-menu' && _this.limitCounter != 0 && _ctx.currentField.allowedToCreate ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("button", {
+        key: 2,
         "class": "inline-flex items-center flex-shrink-0 px-4 text-sm font-bold text-white rounded shadow focus:outline-none focus:ring bg-primary-500 hover:bg-primary-400 active:bg-primary-600 dark:text-gray-800 h-9",
-        onClick: _cache[0] || (_cache[0] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.withModifiers)(function () {
+        onClick: _cache[1] || (_cache[1] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.withModifiers)(function () {
           return $options.toggleLayoutsDropdownOrAddDefault && $options.toggleLayoutsDropdownOrAddDefault.apply($options, arguments);
         }, ["prevent"])),
         textContent: (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(_ctx.currentField.button)
       }, null, 8 /* PROPS */, _hoisted_2)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), _ctx.modalOpen ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)(_component_SelectorModal, {
-        key: 2,
+        key: 3,
         "class": "max-w-3xl nova-flexible-modal",
-        onConfirm: _cache[1] || (_cache[1] = function ($event) {
+        onConfirm: _cache[2] || (_cache[2] = function ($event) {
           return $options.confirmModal($event);
         }),
         onClose: $options.closeModal,
@@ -6115,7 +6191,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
         errors: _ctx.errors,
         "resource-name": $props.resourceName,
         "resource-id": $props.resourceId,
-        onAddGroup: _cache[2] || (_cache[2] = function ($event) {
+        onAddGroup: _cache[3] || (_cache[3] = function ($event) {
           return $options.addGroup($event);
         })
       }, null, 8 /* PROPS */, ["onClose", "layouts", "limit-per-layout-counter", "is", "field", "limit-counter", "errors", "resource-name", "resource-id"])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)];
@@ -6144,27 +6220,30 @@ var _hoisted_1 = ["id"];
 var _hoisted_2 = {
   "class": "w-full shrink"
 };
-var _hoisted_3 = ["title"];
+var _hoisted_3 = {
+  "class": "box-content flex items-center h-8 h-full leading-normal"
+};
 var _hoisted_4 = ["title"];
-var _hoisted_5 = {
+var _hoisted_5 = ["title"];
+var _hoisted_6 = {
   "class": "px-4 text-80 grow"
 };
-var _hoisted_6 = {
-  "class": "mr-3 font-semibold"
-};
 var _hoisted_7 = {
-  key: 0
+  "class": "mr-3 font-semibold"
 };
 var _hoisted_8 = {
-  "class": "mr-3 font-semibold"
+  key: 0
 };
 var _hoisted_9 = {
-  key: 2,
+  "class": "mr-3 font-semibold"
+};
+var _hoisted_10 = {
+  key: 3,
   "class": "flex"
 };
-var _hoisted_10 = ["title"];
 var _hoisted_11 = ["title"];
 var _hoisted_12 = ["title"];
+var _hoisted_13 = ["title"];
 function render(_ctx, _cache, $props, $setup, $data, $options) {
   var _component_Icon = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("Icon");
   var _component_delete_flexible_content_group_modal = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("delete-flexible-content-group-modal");
@@ -6174,11 +6253,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_2, [$props.group.title ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", {
     key: 0,
     "class": (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeClass)($options.titleStyle)
-  }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
-    "class": (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeClass)(["box-content flex items-center h-8 h-full leading-normal", {
-      'border-b border-gray-200 dark:border-gray-700 ': !$data.collapsed
-    }])
-  }, [$data.collapsed ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("button", {
+  }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_3, [$data.collapsed && $props.group.fields && $props.group.fields.length > 0 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("button", {
     key: 0,
     dusk: "expand-group",
     type: "button",
@@ -6190,7 +6265,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_Icon, {
     name: "plus",
     "class": "tw-h-4 tw-w-4 tw-inline-block"
-  })], 8 /* PROPS */, _hoisted_3)) : ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("button", {
+  })], 8 /* PROPS */, _hoisted_4)) : !$data.collapsed && $props.group.fields && $props.group.fields.length > 0 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("button", {
     key: 1,
     dusk: "collapse-group",
     type: "button",
@@ -6202,7 +6277,11 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_Icon, {
     name: "minus",
     "class": "tw-h-4 tw-w-4 tw-inline-block"
-  })], 8 /* PROPS */, _hoisted_4)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("p", _hoisted_5, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_6, "#" + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.index + 1), 1 /* TEXT */), $props.group.title_from_content ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("span", _hoisted_7, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_8, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.group.title_from_content), 1 /* TEXT */)])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.group.title), 1 /* TEXT */)]), !$data.readonly ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_9, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
+  })], 8 /* PROPS */, _hoisted_5)) : !$props.group.fields || $props.group.fields.length === 0 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, {
+    key: 2
+  }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" Spacer to maintain alignment when no toggle buttons "), _cache[6] || (_cache[6] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
+    "class": "block w-8 h-8 border-r border-gray-200 shrink-0 dark:border-gray-700"
+  }, null, -1 /* HOISTED */))], 2112 /* STABLE_FRAGMENT, DEV_ROOT_FRAGMENT */)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("p", _hoisted_6, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_7, "#" + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.index + 1), 1 /* TEXT */), $props.group.title_from_content ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("span", _hoisted_8, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_9, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.group.title_from_content), 1 /* TEXT */)])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.group.title), 1 /* TEXT */)]), !$data.readonly ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_10, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
     dusk: "move-up-group",
     type: "button",
     "class": "block w-8 h-8 border-l border-gray-200 group-control btn dark:border-gray-700",
@@ -6213,7 +6292,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_Icon, {
     name: "arrow-up",
     "class": "tw-h-4 tw-w-4 tw-inline-block"
-  })], 8 /* PROPS */, _hoisted_10), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
+  })], 8 /* PROPS */, _hoisted_11), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
     dusk: "move-down-group",
     type: "button",
     "class": "block w-8 h-8 border-l border-gray-200 group-control btn dark:border-gray-700",
@@ -6224,7 +6303,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_Icon, {
     name: "arrow-down",
     "class": "tw-h-4 tw-w-4 tw-inline-block"
-  })], 8 /* PROPS */, _hoisted_11), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
+  })], 8 /* PROPS */, _hoisted_12), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
     dusk: "delete-group",
     type: "button",
     "class": "block w-8 h-8 border-l border-gray-200 group-control btn dark:border-gray-700",
@@ -6235,7 +6314,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_Icon, {
     name: "trash",
     "class": "tw-h-4 tw-w-4 tw-inline-block"
-  })], 8 /* PROPS */, _hoisted_12), $data.removeMessage ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)(_component_delete_flexible_content_group_modal, {
+  })], 8 /* PROPS */, _hoisted_13), $data.removeMessage ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)(_component_delete_flexible_content_group_modal, {
     key: 0,
     onConfirm: $options.remove,
     onClose: _cache[5] || (_cache[5] = function ($event) {
@@ -6244,7 +6323,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     message: $props.field.confirmRemoveMessage,
     yes: $props.field.confirmRemoveYes,
     no: $props.field.confirmRemoveNo
-  }, null, 8 /* PROPS */, ["onConfirm", "message", "yes", "no"])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)], 2 /* CLASS */)], 2 /* CLASS */)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
+  }, null, 8 /* PROPS */, ["onConfirm", "message", "yes", "no"])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])], 2 /* CLASS */)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
     "class": (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeClass)($options.containerStyle)
   }, [((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)($props.group.fields, function (item, index) {
     return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)((0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveDynamicComponent)('form-' + item.component), {
@@ -6347,15 +6426,20 @@ __webpack_require__.r(__webpack_exports__);
 
 var _hoisted_1 = {
   key: 0,
-  "class": "relative"
+  "class": "relative nova-flexible-dropdown"
 };
 var _hoisted_2 = {
   key: 0,
-  "class": "z-20"
+  "class": "relative"
 };
 var _hoisted_3 = {
   key: 0,
-  "class": "z-20 absolute rounded-lg shadow-lg max-w-full top-full mt-3 pin-b max-h-search overflow-y-auto border border-gray-100 dark:border-gray-700"
+  ref: "dropdown",
+  "class": "fixed rounded-lg shadow-lg w-64 max-h-60 overflow-y-auto border border-gray-100 dark:border-gray-700 bg-white dark:bg-gray-800",
+  style: {
+    "z-index": "10000",
+    "min-width": "250px"
+  }
 };
 var _hoisted_4 = {
   "class": "list-reset"
@@ -6365,7 +6449,6 @@ var _hoisted_6 = {
   "class": "text-90"
 };
 function render(_ctx, _cache, $props, $setup, $data, $options) {
-  var _component_default_button = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("default-button");
   return $props.layouts ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_1, [$props.layouts.length > 1 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_2, [$data.isLayoutsDropdownOpen ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_3, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("ul", _hoisted_4, [((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)($options.filteredLayouts, function (layout) {
     return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("li", {
       "class": "border-b border-gray-100 dark:border-gray-700",
@@ -6377,18 +6460,17 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
       },
       "class": "cursor-pointer flex items-center hover:bg-gray-50 dark:hover:bg-gray-900 block py-2 px-3 no-underline font-normal bg-white dark:bg-gray-800"
     }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("p", _hoisted_6, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(layout.title), 1 /* TEXT */)])], 8 /* PROPS */, _hoisted_5)]);
-  }), 128 /* KEYED_FRAGMENT */))])])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), $options.isBelowLayoutLimits ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)(_component_default_button, {
+  }), 128 /* KEYED_FRAGMENT */))])])], 512 /* NEED_PATCH */)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), $options.isBelowLayoutLimits ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("button", {
     key: 1,
+    ref: "button",
+    "class": "inline-flex items-center flex-shrink-0 px-4 text-sm font-bold text-white rounded shadow focus:outline-none focus:ring bg-primary-500 hover:bg-primary-400 active:bg-primary-600 dark:text-gray-800 h-9",
     dusk: "toggle-layouts-dropdown-or-add-default",
     type: "button",
     tabindex: "0",
-    onClick: $options.toggleLayoutsDropdownOrAddDefault
-  }, {
-    "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-      return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.field.button), 1 /* TEXT */)];
-    }),
-    _: 1 /* STABLE */
-  }, 8 /* PROPS */, ["onClick"])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true);
+    onClick: _cache[0] || (_cache[0] = function () {
+      return $options.toggleLayoutsDropdownOrAddDefault && $options.toggleLayoutsDropdownOrAddDefault.apply($options, arguments);
+    })
+  }, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.field.button), 513 /* TEXT, NEED_PATCH */)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true);
 }
 
 /***/ }),
@@ -6686,7 +6768,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "\n.nova-flexible-modal .inner i {\n        font-size: 3rem;\n}\n.close-icon {\n        display: none;\n        position: absolute;\n        top: 0;\n        right: 0;\n\n        opacity: 0.75;\n        cursor: pointer;\n\n        transition: all 0.2s ease-in-out;\n\n        transform: translate(50%, -50%);\n}\n.close-icon:hover {\n        opacity: 1;\n}\n.close-icon i {\n        font-size: 1.5rem !important;\n}\n.nova-flexible-inner {\n        height: 90%;\n        overflow: scroll;\n}\n.h-90p {\n        height: 90%;\n}\n.nova-flexible-close {\n        position: absolute;\n        top: 50%;\n        transform: translateY(-50%);\n        right: 1.5rem;\n        font-size: 1.5rem;\n        color: #3c4655;\n}\n.icon-name {\n        display: block;\n        font-size: 12px;\n        margin-top: 0.5em;\n        background: #fafafa;\n        padding: 0.2em;\n}\n.border-red {\n        border-color: #ff123b;\n}\n.mm-icon-box {\n        outline: 1px solid #e0e0e0;\n        outline-offset: -0.5rem;\n}\n.mm-icon-box:hover {\n        outline: 1px solid #ff123b;\n        color: #ff123b;\n}\n.border-gray {\n        border-color: #e0e0e0;\n}\n@media (max-width: 900px) {\n.h-90p {\n            height: 80%;\n}\n}\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "\n.nova-flexible-modal .inner .icon-selection i {\n        font-size: 3rem;\n}\n\n    /* Ensure flexible content group icons maintain proper size and alignment */\nform-nova-flexible-content-group svg,\n    .group-control svg {\n        width: 1rem !important;\n        height: 1rem !important;\n        font-size: 1rem !important;\n}\n\n    /* Fix icon alignment within buttons */\n.group-control {\n        display: flex !important;\n        align-items: center !important;\n        justify-content: center !important;\n}\n\n    /* Fix double border issue when layout has no fields */\nform-nova-flexible-content-group .grow {\n        min-height: 0;\n}\n\n    /* Hide bottom border when container is empty or has no visible content */\nform-nova-flexible-content-group .grow:empty,\n    form-nova-flexible-content-group .grow:has(.hidden) {\n        border-bottom: none !important;\n        border-left: none !important;\n        border-right: none !important;\n        border-radius: 0 !important;\n}\n.close-icon {\n        display: none;\n        position: absolute;\n        top: 0;\n        right: 0;\n\n        opacity: 0.75;\n        cursor: pointer;\n\n        transition: all 0.2s ease-in-out;\n\n        transform: translate(50%, -50%);\n}\n.close-icon:hover {\n        opacity: 1;\n}\n.close-icon i {\n        font-size: 1.5rem !important;\n}\n.nova-flexible-inner {\n        height: 90%;\n        overflow: scroll;\n}\n.h-90p {\n        height: 90%;\n}\n.nova-flexible-close {\n        position: absolute;\n        top: 50%;\n        transform: translateY(-50%);\n        right: 1.5rem;\n        font-size: 1.5rem;\n        color: #3c4655;\n}\n.icon-name {\n        display: block;\n        font-size: 12px;\n        margin-top: 0.5em;\n        background: #fafafa;\n        padding: 0.2em;\n}\n.border-red {\n        border-color: #ff123b;\n}\n.mm-icon-box {\n        outline: 1px solid #e0e0e0;\n        outline-offset: -0.5rem;\n}\n.mm-icon-box:hover {\n        outline: 1px solid #ff123b;\n        color: #ff123b;\n}\n.border-gray {\n        border-color: #e0e0e0;\n}\n@media (max-width: 900px) {\n.h-90p {\n            height: 80%;\n}\n}\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -6734,7 +6816,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "\n.top-full {\n        top: 100%;\n}\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "\n.nova-flexible-dropdown {\n        position: relative;\n}\n.nova-flexible-dropdown .fixed {\n        /* Ensure dropdown appears above all Nova content */\n        z-index: 10000 !important;\n        /* Add subtle shadow for better visibility */\n        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);\n}\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -8181,6 +8263,19 @@ var Group = /*#__PURE__*/function () {
 
 /***/ }),
 
+/***/ "./resources/sass/field.scss":
+/*!***********************************!*\
+  !*** ./resources/sass/field.scss ***!
+  \***********************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+// extracted by mini-css-extract-plugin
+
+
+/***/ }),
+
 /***/ "./vendor/laravel/nova/resources/js/mixins/BehavesAsPanel.js":
 /*!*******************************************************************!*\
   !*** ./vendor/laravel/nova/resources/js/mixins/BehavesAsPanel.js ***!
@@ -8351,7 +8446,8 @@ module.exports = Vue;
 /******/ 		// [resolve, reject, Promise] = chunk loading, 0 = chunk loaded
 /******/ 		var installedChunks = {
 /******/ 			"/js/field": 0,
-/******/ 			"css/modal": 0
+/******/ 			"css/modal": 0,
+/******/ 			"css/field": 0
 /******/ 		};
 /******/ 		
 /******/ 		// no chunk on demand loading
@@ -8406,8 +8502,9 @@ module.exports = Vue;
 /******/ 	// startup
 /******/ 	// Load entry module and return exports
 /******/ 	// This entry module depends on other loaded chunks and execution need to be delayed
-/******/ 	__webpack_require__.O(undefined, ["css/modal"], () => (__webpack_require__("./resources/js/field.js")))
-/******/ 	var __webpack_exports__ = __webpack_require__.O(undefined, ["css/modal"], () => (__webpack_require__("./resources/css/modal.css")))
+/******/ 	__webpack_require__.O(undefined, ["css/modal","css/field"], () => (__webpack_require__("./resources/js/field.js")))
+/******/ 	__webpack_require__.O(undefined, ["css/modal","css/field"], () => (__webpack_require__("./resources/sass/field.scss")))
+/******/ 	var __webpack_exports__ = __webpack_require__.O(undefined, ["css/modal","css/field"], () => (__webpack_require__("./resources/css/modal.css")))
 /******/ 	__webpack_exports__ = __webpack_require__.O(__webpack_exports__);
 /******/ 	
 /******/ })()
