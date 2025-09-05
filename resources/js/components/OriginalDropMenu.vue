@@ -1,9 +1,11 @@
 <template>
     <div class="relative nova-flexible-dropdown" v-if="layouts">
-        <div class="z-20" v-if="layouts.length > 1">
+        <div class="relative" v-if="layouts.length > 1">
             <div
                 v-if="isLayoutsDropdownOpen"
-                class="z-50 absolute rounded-lg shadow-lg w-64 top-full mt-2 left-0 max-h-60 overflow-y-auto border border-gray-100 dark:border-gray-700 bg-white dark:bg-gray-800"
+                ref="dropdown"
+                class="fixed rounded-lg shadow-lg w-64 max-h-60 overflow-y-auto border border-gray-100 dark:border-gray-700 bg-white dark:bg-gray-800"
+                style="z-index: 10000; min-width: 250px;"
             >
                 <div>
                     <ul class="list-reset">
@@ -26,15 +28,17 @@
                 </div>
             </div>
         </div>
-        <default-button
+        <button
+            ref="button"
+            class="inline-flex items-center flex-shrink-0 px-4 text-sm font-bold text-white rounded shadow focus:outline-none focus:ring bg-primary-500 hover:bg-primary-400 active:bg-primary-600 dark:text-gray-800 h-9"
             dusk="toggle-layouts-dropdown-or-add-default"
             type="button"
             tabindex="0"
             @click="toggleLayoutsDropdownOrAddDefault"
             v-if="isBelowLayoutLimits"
         >
-            <span>{{ field.button }}</span>
-        </default-button>
+            {{ field.button }}
+        </button>
     </div>
 </template>
 
@@ -83,7 +87,65 @@
             },
         },
 
+        mounted() {
+            // Add click outside listener
+            document.addEventListener('click', this.handleClickOutside);
+            // Add scroll listener to close dropdown when scrolling
+            window.addEventListener('scroll', this.handleScroll, true);
+            window.addEventListener('resize', this.handleResize);
+        },
+
+        beforeUnmount() {
+            // Remove listeners
+            document.removeEventListener('click', this.handleClickOutside);
+            window.removeEventListener('scroll', this.handleScroll, true);
+            window.removeEventListener('resize', this.handleResize);
+        },
+
         methods: {
+            /**
+             * Handle clicks outside the dropdown to close it
+             */
+            handleClickOutside(event) {
+                if (this.isLayoutsDropdownOpen && this.$el && !this.$el.contains(event.target)) {
+                    this.isLayoutsDropdownOpen = false;
+                }
+            },
+
+            /**
+             * Handle scroll events to close dropdown
+             */
+            handleScroll() {
+                if (this.isLayoutsDropdownOpen) {
+                    this.isLayoutsDropdownOpen = false;
+                }
+            },
+
+            /**
+             * Handle resize events to close dropdown
+             */
+            handleResize() {
+                if (this.isLayoutsDropdownOpen) {
+                    this.isLayoutsDropdownOpen = false;
+                }
+            },
+
+            /**
+             * Position the dropdown relative to the button
+             */
+            positionDropdown() {
+                this.$nextTick(() => {
+                    if (this.$refs.dropdown && this.$refs.button) {
+                        const button = this.$refs.button;
+                        const dropdown = this.$refs.dropdown;
+                        const rect = button.getBoundingClientRect();
+                        
+                        dropdown.style.top = `${rect.bottom + 4}px`;
+                        dropdown.style.left = `${rect.left}px`;
+                    }
+                });
+            },
+
             /**
              * Display or hide the layouts choice dropdown if there are multiple layouts
              * or directly add the only available layout.
@@ -94,6 +156,10 @@
                 }
 
                 this.isLayoutsDropdownOpen = !this.isLayoutsDropdownOpen;
+                
+                if (this.isLayoutsDropdownOpen) {
+                    this.positionDropdown();
+                }
             },
 
             /**
@@ -112,18 +178,14 @@
 </script>
 
 <style>
-    .top-full {
-        top: 100%;
-    }
-    
-    /* Ensure dropdown appears above other content */
     .nova-flexible-dropdown {
         position: relative;
-        z-index: 1000;
     }
     
-    /* Ensure the dropdown menu itself has high z-index */
-    .nova-flexible-dropdown .z-50 {
-        z-index: 1050 !important;
+    .nova-flexible-dropdown .fixed {
+        /* Ensure dropdown appears above all Nova content */
+        z-index: 10000 !important;
+        /* Add subtle shadow for better visibility */
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
     }
 </style>

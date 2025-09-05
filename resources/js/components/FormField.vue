@@ -332,8 +332,37 @@
 </script>
 
 <style>
-    .nova-flexible-modal .inner i {
+    .nova-flexible-modal .inner .icon-selection i {
         font-size: 3rem;
+    }
+
+    /* Ensure flexible content group icons maintain proper size and alignment */
+    form-nova-flexible-content-group svg,
+    .group-control svg {
+        width: 1rem !important;
+        height: 1rem !important;
+        font-size: 1rem !important;
+    }
+
+    /* Fix icon alignment within buttons */
+    .group-control {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+    }
+
+    /* Fix double border issue when layout has no fields */
+    form-nova-flexible-content-group .grow {
+        min-height: 0;
+    }
+
+    /* Hide bottom border when container is empty or has no visible content */
+    form-nova-flexible-content-group .grow:empty,
+    form-nova-flexible-content-group .grow:has(.hidden) {
+        border-bottom: none !important;
+        border-left: none !important;
+        border-right: none !important;
+        border-radius: 0 !important;
     }
 
     .close-icon {
