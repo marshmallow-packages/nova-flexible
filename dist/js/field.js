@@ -6362,7 +6362,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var _hoisted_1 = {
   key: 0,
-  "class": "relative"
+  "class": "relative nova-flexible-dropdown"
 };
 var _hoisted_2 = {
   key: 0,
@@ -6370,7 +6370,7 @@ var _hoisted_2 = {
 };
 var _hoisted_3 = {
   key: 0,
-  "class": "z-20 absolute rounded-lg shadow-lg max-w-full top-full mt-3 pin-b max-h-search overflow-y-auto border border-gray-100 dark:border-gray-700"
+  "class": "z-50 absolute rounded-lg shadow-lg w-64 top-full mt-2 left-0 max-h-60 overflow-y-auto border border-gray-100 dark:border-gray-700 bg-white dark:bg-gray-800"
 };
 var _hoisted_4 = {
   "class": "list-reset"
@@ -6749,7 +6749,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "\n.top-full {\n        top: 100%;\n}\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "\n.top-full {\n        top: 100%;\n}\n    \n    /* Ensure dropdown appears above other content */\n.nova-flexible-dropdown {\n        position: relative;\n        z-index: 1000;\n}\n    \n    /* Ensure the dropdown menu itself has high z-index */\n.nova-flexible-dropdown .z-50 {\n        z-index: 1050 !important;\n}\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 

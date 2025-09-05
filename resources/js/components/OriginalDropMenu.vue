@@ -1,9 +1,9 @@
 <template>
-    <div class="relative" v-if="layouts">
+    <div class="relative nova-flexible-dropdown" v-if="layouts">
         <div class="z-20" v-if="layouts.length > 1">
             <div
                 v-if="isLayoutsDropdownOpen"
-                class="z-20 absolute rounded-lg shadow-lg max-w-full top-full mt-3 pin-b max-h-search overflow-y-auto border border-gray-100 dark:border-gray-700"
+                class="z-50 absolute rounded-lg shadow-lg w-64 top-full mt-2 left-0 max-h-60 overflow-y-auto border border-gray-100 dark:border-gray-700 bg-white dark:bg-gray-800"
             >
                 <div>
                     <ul class="list-reset">
@@ -114,5 +114,16 @@
 <style>
     .top-full {
         top: 100%;
+    }
+    
+    /* Ensure dropdown appears above other content */
+    .nova-flexible-dropdown {
+        position: relative;
+        z-index: 1000;
+    }
+    
+    /* Ensure the dropdown menu itself has high z-index */
+    .nova-flexible-dropdown .z-50 {
+        z-index: 1050 !important;
     }
 </style>

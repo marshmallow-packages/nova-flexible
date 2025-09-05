@@ -28,7 +28,11 @@
 
             <!-- Simple dropdown menu for flexible-drop-menu component -->
             <component
-                v-if="currentField.menu.component === 'flexible-drop-menu' && this.limitCounter != 0 && currentField.allowedToCreate"
+                v-if="
+                    currentField.menu.component === 'flexible-drop-menu' &&
+                    this.limitCounter != 0 &&
+                    currentField.allowedToCreate
+                "
                 :is="currentField.menu.component"
                 :layouts="layouts"
                 :field="currentField"
@@ -47,7 +51,11 @@
             <button
                 class="inline-flex items-center flex-shrink-0 px-4 text-sm font-bold text-white rounded shadow focus:outline-none focus:ring bg-primary-500 hover:bg-primary-400 active:bg-primary-600 dark:text-gray-800 h-9"
                 @click.prevent="toggleLayoutsDropdownOrAddDefault"
-                v-if="currentField.menu.component !== 'flexible-drop-menu' && this.limitCounter != 0 && currentField.allowedToCreate"
+                v-if="
+                    currentField.menu.component !== 'flexible-drop-menu' &&
+                    this.limitCounter != 0 &&
+                    currentField.allowedToCreate
+                "
                 v-text="currentField.button"
             ></button>
 
@@ -72,9 +80,9 @@
 
 <script>
     import "./../../css/modal.css";
-    import FullWidthField from './FullWidthField';
-    import { DependentFormField, HandlesValidationErrors } from 'laravel-nova';
-    import Group from '../group';
+    import FullWidthField from "./FullWidthField";
+    import { DependentFormField, HandlesValidationErrors } from "laravel-nova";
+    import Group from "../group";
     import SelectorModal from "./SelectorModal.vue";
 
     export default {
@@ -102,7 +110,9 @@
                     return null;
                 }
 
-                return this.currentField.limit - Object.keys(this.groups).length;
+                return (
+                    this.currentField.limit - Object.keys(this.groups).length
+                );
             },
 
             limitPerLayoutCounter() {
@@ -188,7 +198,10 @@
                     this.files = { ...this.files, ...group.files };
                 }
 
-                this.appendFieldAttribute(formData, this.currentField.attribute);
+                this.appendFieldAttribute(
+                    formData,
+                    this.currentField.attribute
+                );
                 formData.append(
                     this.currentField.attribute,
                     this.value.length ? JSON.stringify(this.value) : ""
@@ -264,7 +277,8 @@
 
                 collapsed = collapsed || false;
 
-                let fields = attributes || JSON.parse(JSON.stringify(layout.fields)),
+                let fields =
+                        attributes || JSON.parse(JSON.stringify(layout.fields)),
                     group = new Group(
                         layout.name,
                         layout.title,
