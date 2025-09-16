@@ -142,7 +142,7 @@ trait HasMediaLibrary
     public function resolveForDisplay(array $attributes = [])
     {
         $this->fields->each(function ($field) use ($attributes) {
-            if (is_a($field, Media::class)) {
+            if (is_a($field, Media::class) || is_a($field, \Marshmallow\AdvancedNovaMediaLibrary\Fields\Media::class)) {
                 $field->resolveForDisplay($this->getUnderlyingMediaModel(), $field->attribute . $this->getSuffix());
             } else {
                 $field->resolveForDisplay($attributes);
