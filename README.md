@@ -17,15 +17,15 @@ For Nova use 'marshmallow/advanced-nova-media-library' and follow the instructio
 
 ## Table of Contents
 
--   [Prepare](#Prepare)
-    -   [Nova Resource](#Prepare)
-    -   [Models](#Models)
--   [Commands](#Commands)
--   [Customize](#Customize)
-    -   [Title on Layout classes](#Customize)
-    -   [Title on custom layouts](#Customize)
-    -   ['Config methods'](#ConfigMethods)
--   [Helpers](#Helpers)
+- [Prepare](#Prepare)
+    - [Nova Resource](#Prepare)
+    - [Models](#Models)
+- [Commands](#Commands)
+- [Customize](#Customize)
+    - [Title on Layout classes](#Customize)
+    - [Title on custom layouts](#Customize)
+    - ['Config methods'](#ConfigMethods)
+- [Helpers](#Helpers)
 
 ## Commands
 
@@ -134,6 +134,24 @@ protected $titleFromContent = 'title';
         });
     }
 )
+```
+
+### Translatable Columns
+
+When working with the [Marshmallow Translatable package](https://github.com/marshmallow-packages/translatable), you can specify which fields should be shown when translating content. By default, all fields are shown, but you can limit this to only the translatable fields.
+
+```php
+// Layout class
+// In a layout class you can define which fields should be visible during translation
+protected function translatableColumns(): array
+{
+    return [
+        'title',
+        'content',
+        'description',
+        // Only these fields will be shown when translating
+    ];
+}
 ```
 
 <a id="ConfigMethods"></a>
