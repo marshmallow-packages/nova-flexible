@@ -8,15 +8,14 @@ use ArrayAccess;
 use JsonSerializable;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
+use Illuminate\Http\Request;
 use Laravel\Nova\Fields\Field;
-use Laravel\Nova\Fields\Heading;
 use Illuminate\Database\Eloquent\Model;
 use Marshmallow\Nova\Flexible\Flexible;
 use Laravel\Nova\Fields\FieldCollection;
 use Illuminate\Contracts\Support\Arrayable;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Marshmallow\HelperFunctions\Facades\URL;
-use Marshmallow\Nova\Flexible\Layouts\Layout;
 use Marshmallow\Nova\Flexible\Http\ScopedRequest;
 use Marshmallow\Nova\Flexible\Concerns\HasFlexible;
 use Marshmallow\Nova\Flexible\Http\FlexibleAttribute;
@@ -192,6 +191,11 @@ class Layout implements LayoutInterface, JsonSerializable, ArrayAccess, Arrayabl
         $this->setRawAttributes($this->cleanAttributes($attributes));
     }
 
+    public function translatableColumns(): ?array
+    {
+        return null;
+    }
+
     protected function getFieldsArray($fields = null)
     {
         if ($fields) {
@@ -205,6 +209,18 @@ class Layout implements LayoutInterface, JsonSerializable, ArrayAccess, Arrayabl
          */
         if (URL::isNova(request())) {
             $fields = $this->fields();
+
+            if ($this->weAreTranslating()) {
+                $columns = $this->translatableColumns();
+                if (is_array($columns)) {
+                    $fields = collect($fields)
+                        ->filter(function ($field) use ($columns) {
+                            return in_array($field->attribute, $columns);
+                        })
+                        ->values()
+                        ->toArray();
+                }
+            }
         }
 
         if (!empty($fields)) {
@@ -840,6 +856,16 @@ class Layout implements LayoutInterface, JsonSerializable, ArrayAccess, Arrayabl
         }
 
         return substr(bin2hex($bytes), 0, 16);
+    }
+
+    public function weAreTranslating()
+    {
+        if (Request::hasMacro('getTranslatableLocale')) {
+            $default_locale = config('app.default_locale') ?? config('app.locale');
+            return Request::getTranslatableLocale() !== $default_locale;
+        }
+
+        return false;
     }
 
     /**
