@@ -10,16 +10,13 @@ use RecursiveIteratorIterator;
 use RecursiveDirectoryIterator;
 use Illuminate\Support\Facades\Cache;
 use Marshmallow\Nova\Flexible\Layouts\MarshmallowLayout;
-use Marshmallow\Nova\Flexible\Layouts\Defaults\WysiwygLayout;
 use Marshmallow\Nova\Flexible\Layouts\DependedLayout;
 
 class Flex
 {
     protected $loaded_layouts;
 
-    protected $default_layouts = [
-        'wysiwyg' => WysiwygLayout::class,
-    ];
+    protected $default_layouts = [];
 
     protected function getDefaultLayouts(?string $model = null)
     {
