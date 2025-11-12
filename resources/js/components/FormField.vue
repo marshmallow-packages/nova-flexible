@@ -332,6 +332,16 @@
 </script>
 
 <style>
+    /* Fix Nova modal backdrop to allow interaction with modal content */
+    [data-modal-open="true"] + [dusk="modal-backdrop"] {
+        pointer-events: none !important;
+    }
+
+    /* Ensure modal content itself can receive clicks */
+    .modal[data-modal-open="true"] {
+        z-index: 60 !important;
+    }
+
     .nova-flexible-modal .inner .icon-selection i {
         font-size: 3rem;
     }
