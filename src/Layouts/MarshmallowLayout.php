@@ -80,15 +80,16 @@ class MarshmallowLayout extends MarshmallowDynamicLayout
     }
 
     /**
-     * [hasImage description]
+     * Check if a non-empty image value exists for the given field.
      *
-     * @param string $field [description]
+     * @param string $field Field name to check
      *
-     * @return bool        [description]
+     * @return bool True if the field exists and has a non-empty value
      */
     public function hasImage(string $field = 'image')
     {
-        return (array_key_exists($field, $this->attributes));
+        return array_key_exists($field, $this->attributes) 
+            && !empty($this->attributes[$field]);
     }
 
     /**
