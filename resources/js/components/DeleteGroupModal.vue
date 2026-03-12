@@ -18,25 +18,25 @@
 
             <ModalFooter>
                 <div class="ml-auto">
-                    <link-button
-                        type="button"
+                    <Button
+                        variant="link"
+                        state="mellow"
                         data-testid="cancel-button"
                         dusk="cancel-delete-button"
-                        @click.prevent="this.$emit('close')"
+                        @click.prevent="$emit('close')"
                         class="mr-3"
                     >
                         {{ no }}
-                    </link-button>
+                    </Button>
 
-                    <danger-button
+                    <Button
                         ref="confirmButton"
                         dusk="confirm-delete-button"
-                        :processing="working"
-                        :disabled="working"
+                        :loading="working"
+                        state="danger"
                         type="submit"
-                    >
-                        {{ yes }}
-                    </danger-button>
+                        :label="yes"
+                    />
                 </div>
             </ModalFooter>
         </form>
@@ -44,18 +44,30 @@
 </template>
 
 <script>
+    import { Button } from "laravel-nova-ui";
+
     export default {
+        components: { Button },
+
         props: ["message", "yes", "no"],
 
         emits: ["close", "confirm"],
 
-        /**
-         * Mount the component.
-         */
-        mounted() {
-            this.$nextTick(() => {
-                // this.$refs.confirmButton.button.focus()
-            });
+        data() {
+            return {
+                working: false,
+            };
+        },
+
+        methods: {
+            handleClose() {
+                this.$emit("close");
+                this.working = false;
+            },
+            handleConfirm() {
+                this.$emit("confirm");
+                this.working = true;
+            },
         },
     };
 </script>
