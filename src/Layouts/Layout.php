@@ -761,9 +761,20 @@ class Layout implements LayoutInterface, JsonSerializable, ArrayAccess, Arrayabl
      *
      * @return bool
      */
-    protected function relationLoaded()
+    public function relationLoaded($key = null)
     {
-        return false;
+        return array_key_exists($key, $this->relations);
+    }
+
+    /**
+     * Eager load relations on the layout. No-op since layouts have no relations.
+     *
+     * @param  array|string  $relations
+     * @return $this
+     */
+    public function load($relations)
+    {
+        return $this;
     }
 
     /**
