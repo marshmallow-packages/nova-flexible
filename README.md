@@ -2,6 +2,12 @@
 
 # Marshmallow Nova Flexible
 
+[![Latest Version on Packagist](https://img.shields.io/packagist/v/marshmallow/nova-flexible.svg?style=flat-square)](https://packagist.org/packages/marshmallow/nova-flexible)
+[![Total Downloads](https://img.shields.io/packagist/dt/marshmallow/nova-flexible.svg?style=flat-square)](https://packagist.org/packages/marshmallow/nova-flexible)
+[![License](https://img.shields.io/packagist/l/marshmallow/nova-flexible.svg?style=flat-square)](https://packagist.org/packages/marshmallow/nova-flexible)
+
+Flexible Content & Repeater Fields for Laravel Nova, based on the flexible package from WhiteCube.
+
 > [!important]
 > This package was originally forked from [whitecube/nova-flexible-content](<[https://github.com/outl1ne/nova-multiselect-field](https://github.com/whitecube/nova-flexible-content)>). Since we were making many opinionated changes, we decided to continue development in our own version rather than submitting pull requests that might not benefit all users of the original package. You’re welcome to use this package—we’re actively maintaining it. If you encounter any issues, please don’t hesitate to reach out.
 
@@ -202,13 +208,7 @@ Flexible::make(__('Marshmallow'), 'marshmallow')
 
 ---
 
-## Credits
-
-See https://github.com/whitecube/nova-flexible-content - [Whitecube](https://github.com/whitecube)
-
-Copyright (c) 2020 marshmallow.
-
-## License
+## Layouts
 
 #### The Layouts Collection
 
@@ -236,23 +236,23 @@ When using the Flexible Content field, you'll quickly come across of some use ca
 
 ### Custom Layout Classes
 
-Sometimes, `addLayout` definitions can get quite long, or maybe you want them to be shared with other `Flexible` fields. The answer to this is to extract your Layout into its own class. [See the docs for more information on this](https://Marshmallow.github.io/nova-flexible-content/#/?id=custom-layout-classes).
+Sometimes, `addLayout` definitions can get quite long, or maybe you want them to be shared with other `Flexible` fields. The answer to this is to extract your Layout into its own class. [See the docs for more information on this](https://github.com/marshmallow-packages/nova-flexible).
 
 ### Predefined Preset Classes
 
-In addition to reusable Layout classes, you can go a step further and create `Preset` classes for your Flexible fields. These allow you to reuse your whole Flexible field anywhere you want. They also make it easier to make your Flexible fields dynamic, for example if you want to add Layouts conditionally. And last but not least, they also have the added benefit of cleaning up your Nova Resource classes, if your Flexible field has a lot of `addLayout` definitions. [See the docs for more information on this](https://Marshmallow.github.io/nova-flexible-content/#/?id=predefined-preset-classes).
+In addition to reusable Layout classes, you can go a step further and create `Preset` classes for your Flexible fields. These allow you to reuse your whole Flexible field anywhere you want. They also make it easier to make your Flexible fields dynamic, for example if you want to add Layouts conditionally. And last but not least, they also have the added benefit of cleaning up your Nova Resource classes, if your Flexible field has a lot of `addLayout` definitions. [See the docs for more information on this](https://github.com/marshmallow-packages/nova-flexible).
 
 ### Custom Resolver Classes
 
 By default, the field takes advantage of a **JSON column** on your model's table. In some cases, you'd really like to use this field, but for some reason a JSON attribute is just not the way to go. For example, you could want to store the values in another table (meaning you'll be using the Flexible Content field instead of a traditional BelongsToMany or HasMany field). No worries, we've got you covered!
 
-Tell the field how to store and retrieve its content by creating your own Resolver class, which basically just contains two simple methods: `get` and `set`. [See the docs for more information on this](https://Marshmallow.github.io/nova-flexible-content/#/?id=custom-resolver-classes).
+Tell the field how to store and retrieve its content by creating your own Resolver class, which basically just contains two simple methods: `get` and `set`. [See the docs for more information on this](https://github.com/marshmallow-packages/nova-flexible).
 
 ### Usage with nova-page
 
-Maybe you heard of one of our other packages, [nova-page](https://github.com/Marshmallow/nova-page), which is a Nova Tool that allows to edit static pages such as an _"About"_ page (or similar) without having to declare a model for it individually. More often than not, the Flexible Content Field comes in handy. Don't worry, both packages work well together! First create a [nova page template](https://github.com/Marshmallow/nova-page#creating-templates) and add a [flexible content](https://github.com/Marshmallow/nova-flexible-content#adding-layouts) to the template's fields.
+Maybe you heard of one of our other packages, [nova-page](https://github.com/marshmallow-packages/nova-page), which is a Nova Tool that allows to edit static pages such as an _"About"_ page (or similar) without having to declare a model for it individually. More often than not, the Flexible Content Field comes in handy. Don't worry, both packages work well together! First create a [nova page template](https://github.com/marshmallow-packages/nova-page#creating-templates) and add a [flexible content](https://github.com/marshmallow-packages/nova-flexible#adding-layouts) to the template's fields.
 
-As explained in the documentation, you can [access nova-page's static content](https://github.com/Marshmallow/nova-page#accessing-the-data-in-your-views) in your blade views using `{{ Page::get('attribute') }}`. When requesting the flexible content like this, it returns a raw JSON string describing the flexible content, which is of course not very useful. Instead, you can simply implement the `Marshmallow\Nova\Flexible\Concerns\HasFlexible` trait on your page Templates, which will expose the `Page::flexible('attribute')` facade method and will take care of the flexible content's transformation.
+As explained in the documentation, you can [access nova-page's static content](https://github.com/marshmallow-packages/nova-page#accessing-the-data-in-your-views) in your blade views using `{{ Page::get('attribute') }}`. When requesting the flexible content like this, it returns a raw JSON string describing the flexible content, which is of course not very useful. Instead, you can simply implement the `Marshmallow\Nova\Flexible\Concerns\HasFlexible` trait on your page Templates, which will expose the `Page::flexible('attribute')` facade method and will take care of the flexible content's transformation.
 
 ```php
 namespace App\Nova\Templates;
@@ -270,7 +270,7 @@ class Home extends Template
 
 ## 💖 Sponsorships
 
-If you are reliant on this package in your production applications, consider [sponsoring us](https://github.com/sponsors/Marshmallow)! It is the best way to help us keep doing what we love to do: making great open source software.
+If you are reliant on this package in your production applications, consider [sponsoring us](https://github.com/sponsors/marshmallow-packages)! It is the best way to help us keep doing what we love to do: making great open source software.
 
 ## Contributing
 
@@ -278,15 +278,33 @@ Feel free to suggest changes, ask for new features or fix bugs yourself. We're s
 
 Thanks!
 
-### Unit tests
-
-When adding a new feature or fixing a bug, please add corresponding unit tests. The current set of tests is limited, but every unit test added will improve the quality of the package.
+## Testing
 
 Run PHPUnit by calling `composer test`.
 
+When adding a new feature or fixing a bug, please add corresponding unit tests. The current set of tests is limited, but every unit test added will improve the quality of the package.
+
+## Changelog
+
+Please see [CHANGELOG](CHANGELOG.md) for recent changes.
+
+## Security Vulnerabilities
+
+Please report security vulnerabilities by email to [stef@marshmallow.dev](mailto:stef@marshmallow.dev) rather than via the public issue tracker.
+
+## Credits
+
+- [Stef van Esch](https://github.com/marshmallow-packages)
+- [Toon Van den Bos](https://github.com/whitecube) (original [whitecube/nova-flexible-content](https://github.com/whitecube/nova-flexible-content))
+- [All Contributors](https://github.com/marshmallow-packages/nova-flexible/contributors)
+
+## License
+
+The MIT License. Please see the [License File](LICENSE.md) for more information.
+
 ## Made with ❤️ for open source
 
-At [Marshmallow](https://www.Marshmallow.be) we use a lot of open source software as part of our daily work.
+At [Marshmallow](https://marshmallow.dev) we use a lot of open source software as part of our daily work.
 So when we have an opportunity to give something back, we're super excited!
 
-We hope you will enjoy this small contribution from us and would love to [hear from you](mailto:hello@Marshmallow.be) if you find it useful in your projects. Follow us on [Twitter](https://twitter.com/Marshmallow_be) for more updates!
+We hope you will enjoy this small contribution from us and would love to [hear from you](mailto:hello@marshmallow.dev) if you find it useful in your projects.
